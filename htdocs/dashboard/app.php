@@ -180,7 +180,7 @@ if (isset($_POST['create_account'])) {
             <header style="padding: 1rem 0;">
                 <div style="padding: 1rem;">
                     <a href="https://velmorabank.us" id="logo">
-                        <span style="font-size: 28px; font-weight: 700; color: #0a2e73; letter-spacing: 0.2px;">Velmora Bank</span>
+                        <img src="https://velmorabank.us/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
                     </a>
                 </div>
             </header>
@@ -276,7 +276,7 @@ if (isset($_POST['create_account'])) {
     //                         <header style="padding: 1rem 0;">
     //                             <div style="padding: 1rem;">
     //                                 <a href="https://velmorabank.us" id="logo">
-    //                                     <span style="font-size: 28px; font-weight: 700; color: #0a2e73; letter-spacing: 0.2px;">Velmora Bank</span>
+    //                                     <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
     //                                 </a>
     //                             </div>
     //                         </header>
@@ -579,7 +579,7 @@ if (isset($_POST['transfer_funds'])) {
         <header style="padding: 1rem 0;">
             <div style="padding: 1rem;">
                 <a href="https://velmorabank.us" id="logo">
-                    <span style="font-size: 28px; font-weight: 700; color: #0a2e73; letter-spacing: 0.2px;">Velmora Bank</span>
+                    <img src="https://velmorabank.us/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
                 </a>
             </div>
         </header>
@@ -651,7 +651,7 @@ ADMIN_HTML;
     <header style="padding: 1rem 0;">
         <div style="padding: 1rem;">
             <a href="https://velmorabank.us" id="logo">
-                <span style="font-size: 28px; font-weight: 700; color: #0a2e73; letter-spacing: 0.2px;">Velmora Bank</span>
+                <img src="https://velmorabank.us/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
             </a>
         </div>
     </header>

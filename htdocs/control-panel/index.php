@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
     <title>Control Panel</title>
     <link rel="stylesheet" href="/assets/stylesheets/control-panel.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/tab/control-panel.css?v=<?php echo time(); ?>" media="screen and (max-width: 1000px)">
@@ -12,7 +13,7 @@
 <header>
     <div class="container">
         <a href="/" id="logo">
-            <span class="wordmark">Velmora Bank</span>
+            <img src="/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 40px; width: auto;">
         </a>
         <nav>
             <ul>

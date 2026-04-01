@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
     <title>Sign In</title>
     
     <link rel="stylesheet" href="/assets/stylesheets/sign-in.css?v=<?php echo time(); ?>">
