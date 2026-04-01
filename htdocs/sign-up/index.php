@@ -44,5 +44,6 @@
         </div>
     </div>
 </section>
+<?php include('../common-sections/smartsupp-live-chat.html'); ?>
 </body>
 </html>
