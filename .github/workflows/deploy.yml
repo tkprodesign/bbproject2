@@ -1,40 +1,66 @@
-name: Pull server files into repo
+name: Deploy changed files to server
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  ftp-pull-all:
+  ftp-push-changed:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
-      - name: Install lftp
-        run: sudo apt-get update && sudo apt-get install -y lftp
-
-      - name: Download all files from server
+      - name: Upload only changed files
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          REMOTE_DIR: /velmorabank.us/htdocs
         run: |
           if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ]; then
             echo "Missing FTP secrets"
             exit 1
           fi
 
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" <<EOF
-          set ssl:verify-certificate no
-          mirror --verbose \
-            --delete \
-            /velmorabank.us/htdocs ./
+          echo "Changed files:"
+          git diff --name-status HEAD^ HEAD || true
+
+          git diff --name-status HEAD^ HEAD | while IFS=$'\t' read -r status file; do
+            [ -z "$file" ] && continue
+
+            case "$file" in
+              .github/*|.git/*|node_modules/*)
+                echo "Skipping $file"
+                continue
+                ;;
+            esac
+
+            remote_path="$REMOTE_DIR/$file"
+            remote_dir="$(dirname "$remote_path")"
+
+            if [ "$status" = "D" ]; then
+              echo "Deleting remote file: $remote_path"
+              curl --silent --show-error --fail \
+                --user "$FTP_USERNAME:$FTP_PASSWORD" \
+                -Q "-DELE $remote_path" \
+                "ftp://$FTP_SERVER/" || true
+            else
+              echo "Uploading: $file -> $remote_path"
+              curl --silent --show-error --fail \
+                --user "$FTP_USERNAME:$FTP_PASSWORD" \
+                --ftp-create-dirs \
+                -T "$file" \
+                "ftp://$FTP_SERVER$remote_dir/"
+            fi
+          done            /velmorabank.us/htdocs ./
           bye
           EOF
 
