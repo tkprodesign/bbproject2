@@ -60,7 +60,7 @@ jobs:
                 -T "$file" \
                 "ftp://$FTP_SERVER$remote_dir/"
             fi
-          done            /velmorabank.us/htdocs ./
+          done            /velmorabank.us/
           bye
           EOF
 
