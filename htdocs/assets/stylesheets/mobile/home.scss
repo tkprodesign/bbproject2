@@ -1,0 +1,82 @@
+@import url('/assets/stylesheets/mobile/main.css');
+
+
+
+
+
+section.hero{
+    .content{
+        place-content: center;
+        h1{
+            width: unset;
+            font-size: 51px;
+        }
+        p{
+            width: unset;
+        }
+    }
+}
+
+
+
+
+
+section.stats{
+    .stats{
+        position: unset;
+        transform: unset;
+        .container{
+            flex-direction: column;
+            gap: 64px;
+            justify-content: unset;
+        }
+    }
+}
+
+
+
+
+
+section.steps{
+    .container{
+        grid-template-columns: 100%;
+        gap: 64px;
+    }
+}
+
+
+
+
+
+
+section.services{
+    .row{
+        grid-template-columns: 100%;
+    }
+}
+
+
+
+
+
+
+section.credit-card{
+    .container{
+        width: 100%;
+        max-width: unset;
+        .content{
+            max-width: 960px;
+            grid-template-columns: 100%;
+            gap: 64px;
+            .left{
+                .lists{
+                    grid-template-columns: 100%;
+                }
+            }
+
+            .right{
+                max-width: 500px;
+            }
+        }
+    }
+}

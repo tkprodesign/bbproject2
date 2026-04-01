@@ -1,0 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+@import url("/assets/stylesheets/main.css");
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  text-decoration: none;
+  list-style-type: none;
+  color: inherit;
+}
+
+body {
+  background: #f2f2f2;
+  color: #09101f;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.container {
+  width: 95%;
+  margin: auto;
+}
+
+.alert-info {
+  color: #057080;
+  background-color: #cef7fd;
+  border-color: #baf4fd;
+  padding: 16px 0;
+}
+
+section.sign-in .container, section.sign-up .container {
+  margin-top: 5%;
+}
+section.sign-in .container .content, section.sign-up .container .content {
+  background-color: #ffffff;
+  width: 30%;
+  max-width: 500px;
+  min-width: 400px;
+  margin: auto;
+  place-content: center;
+  overflow: hidden;
+  padding: 50px;
+}
+section.sign-in .container .content .logo, section.sign-up .container .content .logo {
+  margin-bottom: 15px;
+}
+section.sign-in .container .content .logo img, section.sign-up .container .content .logo img {
+  width: 100%;
+}
+section.sign-in .container .content h3, section.sign-up .container .content h3 {
+  color: #6c7293;
+  font-weight: 400;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+section.sign-in .container .content p, section.sign-up .container .content p {
+  color: grey;
+  margin-bottom: 20px;
+  font-weight: 300;
+  font-size: 15px;
+}
+section.sign-in .container .content .error, section.sign-up .container .content .error {
+  color: #7c2f2f;
+  background-color: #fcdede;
+  border-color: #fad1d1;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+}
+section.sign-in .container .content .error p, section.sign-up .container .content .error p {
+  font-weight: 500 !important;
+  color: #7c2f2f;
+  margin-bottom: unset;
+}
+section.sign-in .container .content .input, section.sign-up .container .content .input {
+  margin-bottom: 20px;
+  width: 100%;
+}
+section.sign-in .container .content .input input, section.sign-up .container .content .input input {
+  border: 1px solid gray;
+  padding: 20px 40px 20px 20px;
+  width: 100%;
+}
+section.sign-in .container .content .input input:focus, section.sign-up .container .content .input input:focus {
+  border: 2px solid #131cd4;
+}
+section.sign-in .container .content input[type=checkbox], section.sign-up .container .content input[type=checkbox] {
+  height: 15px;
+  width: 15px;
+}
+section.sign-in .container .content button, section.sign-up .container .content button {
+  background-color: #464dee;
+  color: #ffffff;
+  font-size: 0.875rem;
+  padding: 20px;
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+section.sign-in .container .content button:hover, section.sign-up .container .content button:hover {
+  background: #232beb;
+}
+section.sign-in .container .content .checkbox, section.sign-up .container .content .checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+section.sign-in .container .content .checkbox label, section.sign-up .container .content .checkbox label {
+  color: #a7afb7;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+section.sign-in .container .content .checkbox a:hover, section.sign-up .container .content .checkbox a:hover {
+  text-decoration: underline;
+}
+section.sign-in .container .content .footer, section.sign-up .container .content .footer {
+  display: grid;
+  place-content: center;
+}
+section.sign-in .container .content .footer span, section.sign-up .container .content .footer span {
+  font-weight: 300;
+  color: #a7afb7;
+}
+section.sign-in .container .content .footer span a, section.sign-up .container .content .footer span a {
+  color: #131cd4;
+}
+section.sign-in .container .content .footer span a:hover, section.sign-up .container .content .footer span a:hover {
+  text-decoration: underline;
+}/*# sourceMappingURL=sign-in.css.map */

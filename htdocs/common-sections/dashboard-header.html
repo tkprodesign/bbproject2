@@ -1,0 +1,176 @@
+<?php if(isset($user_kyc_level) && $user_kyc_level == 0) :?>
+<div class="pre-header">
+    <div class="container">
+        <div class="left">
+            <p>Your account has not been activated, please complete your KYC to activate your account</p>
+        </div>
+        <div class="right">
+            <a href="/dashboard/security/complete-kyc" class="cta">Complete Account Information</a>
+            <a href="#" class="close">
+                <span class="material-symbols-outlined">
+                    close
+                    </span>
+            </a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+<div class="header-gap"></div>
+<header>
+    <div class="container">
+        <a href="/dashboard">
+            <span class="material-symbols-outlined">
+                space_dashboard
+                </span>
+            <p>Dashboard</p>
+        </a>
+        <a href="/dashboard/fund/transfer">
+        <!-- <a href="#"> -->
+            <span class="material-symbols-outlined">
+                payments
+                </span>
+            <p>Transfer Funds</p>
+        </a>
+        <div class="madre">
+            <span class="material-symbols-outlined">
+                deployed_code
+                </span>
+            <p>My Account</p>
+            <div class="miracle">
+                <a href="/dashboard/accounts/create">
+                    <span class="material-symbols-outlined">
+                        remove
+                        </span>
+                    <text>Add Account</text>
+                </a>
+                <a href="/dashboard/accounts">
+                    <span class="material-symbols-outlined">
+                        remove
+                        </span>
+                    <text>Manage Account</text>
+                </a>
+            </div>
+        </div>
+        <a href="/dashboard/accounts/transactions">
+            <span class="material-symbols-outlined">
+                notifications
+                </span>
+            <p>Transaction Alerts <count><?php echo $transaction_count;?></count></p>
+        </a>
+        <a href="/dashboard/profile">
+            <span class="material-symbols-outlined">
+                person
+                </span>
+            <p>Profile</p>
+        </a>
+        <div href="#" class="madre">
+            <span class="material-symbols-outlined">
+                admin_panel_settings
+                </span>
+            <p>Security</p>
+            <div class="miracle">
+                <a href="/dashboard/security/change-password">
+                    <span class="material-symbols-outlined">
+                        remove
+                        </span>
+                    <text>Change Password</text>
+                </a>
+                <a href="/dashboard/security/change-password">
+                    <span class="material-symbols-outlined">
+                        remove
+                        </span>
+                    <text>Security Preferences</text>
+                </a>
+            </div>
+        </div>
+        <a href="?logout=1">
+            <span class="material-symbols-outlined">
+                logout
+                </span>
+            <p>Sign Out</p>
+        </a>
+    </div>
+    <nav>
+        <a href="/" class="logo">
+            <img src="/new-assets/images/branding/Logo.png" alt="London Holdings Bank logo">
+        </a>
+        <a href="/dashboard">
+            <span class="material-symbols-outlined">
+                space_dashboard
+                </span>
+            <p>Dashboard</p>
+        </a>
+        <a href="/dashboard/fund/transfer">
+            <span class="material-symbols-outlined">
+                payments
+                </span>
+            <p>Transfer Funds</p>
+        </a>
+        <div class="madre">
+            <span class="material-symbols-outlined">
+                deployed_code
+                </span>
+            <p>My Account</p>
+            <div class="miracle">
+                <a href="/dashboard/accounts/create">
+                    <span class="material-symbols-outlined">
+                        remove
+                        </span>
+                    <text>Add Account</text>
+                </a>
+                <a href="/dashboard/accounts">
+                    <span class="material-symbols-outlined">
+                        remove
+                        </span>
+                    <text>Manage Account</text>
+                </a>
+            </div>
+        </div>
+        <a href="/dashboard/accounts/transactions">
+            <span class="material-symbols-outlined">
+                notifications
+                </span>
+            <p>Transaction Alerts <count><?php echo $transaction_count;?></count></p>
+        </a>
+        <a href="/dashboard/profile">
+            <span class="material-symbols-outlined">
+                person
+                </span>
+            <p>Profile</p>
+        </a>
+        <div href="#" class="madre">
+            <span class="material-symbols-outlined">
+                admin_panel_settings
+                </span>
+            <p>Security</p>
+            <div class="miracle">
+                <a href="/dashboard/security/change-password">
+                    <span class="material-symbols-outlined">
+                        remove
+                        </span>
+                    <text>Change Password</text>
+                </a>
+                <a href="/dashboard/security/change-password">
+                    <span class="material-symbols-outlined">
+                        remove
+                        </span>
+                    <text>Security Preferences</text>
+                </a>
+            </div>
+        </div>
+        <a href="?logout=1">
+            <span class="material-symbols-outlined">
+                logout
+                </span>
+            <p>Sign Out</p>
+        </a>
+    </nav>
+    <a href="#" id="menuToggle">
+        <span class="material-symbols-outlined open">
+            menu
+            </span>
+        <span class="material-symbols-outlined close">
+            close
+            </span>
+    </a>
+</header>

@@ -1,0 +1,90 @@
+body.active {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden !important;
+}
+
+.container {
+  max-width: unset;
+  width: 90%;
+}
+
+header {
+  position: relative;
+  z-index: 4;
+  background: #fff;
+}
+header .pre-header {
+  position: relative;
+  z-index: 2;
+}
+header .container {
+  position: relative;
+  z-index: 2;
+}
+header .container .sec-2 {
+  background: #fff;
+  padding: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+header .container .sec-2 nav {
+  display: none;
+}
+header .container .sec-2 .sec-cta {
+  display: none;
+}
+header .container .sec-2 #desktopNav {
+  display: none;
+}
+header #menuToggle {
+  display: inline-block;
+}
+header #menuToggle span {
+  font-size: 46px;
+}
+header #mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  align-items: unset;
+  padding: 20vh 5vw 20vh 5vw;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #fff;
+  height: 100vh;
+  width: 80vw;
+  max-width: 800px;
+  z-index: 1;
+  transition: all 0.3s ease;
+  transform: translateX(-100%);
+}
+header #mobileNav.active {
+  transform: translateX(0);
+  height: 100vh;
+  overflow-y: scroll;
+}
+header #mobileNav .ctas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+header #mobileNav .ctas .pri-cta {
+  font-weight: 600;
+}
+header #mobileNav .ctas .sec-cta {
+  padding: 1rem 2rem;
+  background: #f2132b;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 600;
+}
+
+footer .container {
+  grid-template-columns: 100%;
+  gap: 64px;
+}/*# sourceMappingURL=main.css.map */

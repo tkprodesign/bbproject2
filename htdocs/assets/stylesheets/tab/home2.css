@@ -1,0 +1,69 @@
+@import url("./main2.css");
+section.features-1 {
+  z-index: 20;
+}
+section.features-1 .container {
+  grid-template-columns: 100%;
+}
+section.features-1 .container .feature {
+  border-right: unset;
+  border-bottom: 1px solid rgba(245, 245, 245, 0.4);
+}
+
+section.features-2 .container .features {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+section.loan-calculator .container .left {
+  grid-template-columns: 100%;
+  width: 100%;
+  padding-bottom: 428px;
+}
+section.loan-calculator .container .left .calculator {
+  justify-self: center;
+}
+section.loan-calculator .container .right {
+  height: 300px;
+  width: calc(100% - 64px);
+  -webkit-clip-path: unset;
+          clip-path: unset;
+  top: unset;
+  right: unset;
+  bottom: 32px;
+  left: 32px;
+  padding: 48px;
+}
+section.loan-calculator .container .right div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+section.loan-calculator .container .right a {
+  margin-bottom: 200px;
+}
+
+section.about-us .container .container-wrapper {
+  grid-template-columns: 100%;
+}
+section.about-us .container .container-wrapper .left {
+  height: 350px;
+}
+
+section.benefits .container .benefits {
+  grid-template-columns: 100%;
+}
+section.benefits .container .benefits .left {
+  height: 350px;
+}
+section.benefits .container .benefits .center {
+  top: 318px;
+}
+section.benefits .container .benefits .right {
+  height: 318px;
+}
+
+section.faq .container .questions {
+  grid-template-columns: 100%;
+}/*# sourceMappingURL=home2.css.map */

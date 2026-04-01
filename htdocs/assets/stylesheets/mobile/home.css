@@ -1,0 +1,46 @@
+@import url("/assets/stylesheets/mobile/main.css");
+section.hero .content {
+  place-content: center;
+}
+section.hero .content h1 {
+  width: unset;
+  font-size: 51px;
+}
+section.hero .content p {
+  width: unset;
+}
+
+section.stats .stats {
+  position: unset;
+  transform: unset;
+}
+section.stats .stats .container {
+  flex-direction: column;
+  gap: 64px;
+  justify-content: unset;
+}
+
+section.steps .container {
+  grid-template-columns: 100%;
+  gap: 64px;
+}
+
+section.services .row {
+  grid-template-columns: 100%;
+}
+
+section.credit-card .container {
+  width: 100%;
+  max-width: unset;
+}
+section.credit-card .container .content {
+  max-width: 960px;
+  grid-template-columns: 100%;
+  gap: 64px;
+}
+section.credit-card .container .content .left .lists {
+  grid-template-columns: 100%;
+}
+section.credit-card .container .content .right {
+  max-width: 500px;
+}/*# sourceMappingURL=home.css.map */
