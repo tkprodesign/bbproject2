@@ -109,7 +109,7 @@ if (isset($_POST['debit_user'])) {
                 <header style="padding: 1rem 0;">
                     <div style="padding: 1rem;">
                         <a href="https://velmorabank.us" id="logo">
-                            <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
+                            <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
                         </a>
                     </div>
                 </header>
@@ -297,7 +297,7 @@ if (isset($_POST['debit_user'])) {
         <header style="padding: 1rem 0;">
             <div style="padding: 1rem;">
                 <a href="https://velmorabank.us" id="logo">
-                    <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
+                    <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
                 </a>
             </div>
         </header>
@@ -494,7 +494,7 @@ if (isset($_POST['judge_withdrawal'])) {
                 <header style="padding: 1rem 0;">
                     <div style="padding: 1rem;">
                         <a href="https://velmorabank.us" id="logo">
-                            <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
+                            <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
                         </a>
                     </div>
                 </header>
@@ -689,7 +689,7 @@ if (isset($_POST['judge_kyc'])) {
                 <header style="padding: 1rem 0;">
                     <div style="padding: 1rem;">
                         <a href="https://velmorabank.us" id="logo">
-                            <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
+                            <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
                         </a>
                     </div>
                 </header>

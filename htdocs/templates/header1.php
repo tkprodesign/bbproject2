@@ -22,7 +22,7 @@
     <div>
         <div class="container">
             <a href="/" id="logo">
-                <span class="wordmark">Velmora Bank</span>
+                <img src="/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 40px; width: auto;">
             </a>
             <nav>
                 <ul>

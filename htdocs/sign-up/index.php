@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title><link rel="shortcut icon" href="https://www.dl.dropboxusercontent.com/scl/fi/rxhv5315cpjwwdddnv2zw/icon.png?rlkey=7fd557rqi3canun393nvvxu0p&st=qibb1noj" type="image/png">
+    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
+    <title>Sign Up</title>
     
     <link rel="stylesheet" href="/assets/stylesheets/sign-in.css?v=<?php echo time(); ?>">
-    <link rel="shortcut icon" href="/assets/images/brand/favicon.png" type="image/png">
 </head>
 <body>
     <?php

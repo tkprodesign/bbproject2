@@ -14,6 +14,7 @@ if (!isset($_GET['nos'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
     <title>Dashboard</title>
     <link rel="stylesheet" href="/assets/stylesheets/dashboard.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -35,7 +36,7 @@ window.smartsupp||(function(d) {
 <?php include('../../../common-sections/dashboard-header.html')?>
 <section class="account-success">
     <div class="content">
-        <img src="/assets/images/dashboard/success.ico">
+        <div class="success-mark" aria-hidden="true">✓</div>
         <p>Congratulations, a new account has been created with account number <strong><?php echo $account_number; ?></strong>.</p>
         <a href="../" class="cta">View Details</a>
     </div>
