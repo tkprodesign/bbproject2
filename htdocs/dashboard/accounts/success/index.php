@@ -35,7 +35,7 @@ window.smartsupp||(function(d) {
 <?php include('../../../common-sections/dashboard-header.html')?>
 <section class="account-success">
     <div class="content">
-        <img src="/assets/images/dashboard/success.ico">
+        <div class="success-mark" aria-hidden="true">✓</div>
         <p>Congratulations, a new account has been created with account number <strong><?php echo $account_number; ?></strong>.</p>
         <a href="../" class="cta">View Details</a>
     </div>
