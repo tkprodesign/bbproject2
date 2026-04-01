@@ -18,7 +18,7 @@
         <div class="content">
             <form action="" method="post">
                 <div class="logo">
-                    <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g">
+                    <h2>Velmora Bank</h2>
                 </div>
                 <h3>Hello! let's get started</h3>
                 <p>Sign in to continue.</p>
