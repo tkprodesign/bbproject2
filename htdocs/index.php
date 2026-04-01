@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
+    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
             
     <!-- Primary Meta Tags -->
     <title>Velmora Bank — Digital Financial Solutions</title>
@@ -547,5 +547,6 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/new-assets/scripts/home.js"></script>
+<?php include('./common-sections/smartsupp-live-chat.html'); ?>
 </body>
 </html>

@@ -22,7 +22,7 @@
     <div>
         <div class="container">
             <a href="/" id="logo">
-                <img src="/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 40px; width: auto;">
+                <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 40px; width: auto;">
             </a>
             <nav>
                 <ul>
