@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
             
     <!-- Primary Meta Tags -->
-    <title>First Citizens Bank — Global Financial Solutions</title>
-    <meta name="title" content="First Citizens Bank — Global Financial Solutions">
-    <meta name="description" content="First Citizens Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
+    <title>Velmora Bank — Digital Financial Solutions</title>
+    <meta name="title" content="Velmora Bank — Digital Financial Solutions">
+    <meta name="description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://FirstCitizensGlobal.com/">
-    <meta property="og:title" content="First Citizens Bank — Global Financial Solutions">
-    <meta property="og:description" content="First Citizens Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta property="og:image" content="https://FirstCitizensGlobal.com/assets/images/branding/logo.png">
+    <meta property="og:url" content="https://velmorabank.us/">
+    <meta property="og:title" content="Velmora Bank — Digital Financial Solutions">
+    <meta property="og:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
+    <meta property="og:image" content="https://velmorabank.us/assets/images/home/business-increase.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://FirstCitizensGlobal.com/">
-    <meta name="twitter:title" content="First Citizens Bank — Global Financial Solutions">
-    <meta name="twitter:description" content="First Citizens Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta name="twitter:image" content="https://FirstCitizensGlobal.com/assets/images/branding/logo.png">
+    <meta name="twitter:url" content="https://velmorabank.us/">
+    <meta name="twitter:title" content="Velmora Bank — Digital Financial Solutions">
+    <meta name="twitter:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
+    <meta name="twitter:image" content="https://velmorabank.us/assets/images/home/business-increase.png">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://www.dl.dropboxusercontent.com/scl/fi/rxhv5315cpjwwdddnv2zw/icon.png?rlkey=7fd557rqi3canun393nvvxu0p&st=qibb1noj">
@@ -391,7 +391,7 @@
 <section class="features-3">
     <div class="container">
         <div class="heading">
-            <h2>First Citizens Bank Services</h2>
+            <h2>Velmora Bank Services</h2>
             <p>Whether it's your child's first savings account, your personal savings account, your first retirement plan or a business loan, we offer personal and corporate banking products and services tailored to meet your needs. </p>
         </div>
         <div class="swiper-2">
@@ -528,7 +528,7 @@
             </form>
             <div class="contacts">
                 <a href="#" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
-                <a href="mailto:support@firstcitizensglobal.com" style="display: block; margin-bottom: 8px;">support@firstcitizensglobal.com</a>
+                <a href="mailto:support@velmorabank.us" style="display: block; margin-bottom: 8px;">support@velmorabank.us</a>
                 <a href="#" style="display: block; margin-bottom: 8px;">+10000000000</a>
             </div>
             <div class="social-links">

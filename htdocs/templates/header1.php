@@ -2,9 +2,9 @@
     <div>
         <div class="container">
             <div>
-                <a href="mailto:support@firstcitizensglobal.com">
+                <a href="mailto:support@velmorabank.us">
                     <i class="bi bi-envelope-fill"></i>
-                    <span>support@firstcitizensglobal.com</span>
+                    <span>support@velmorabank.us</span>
                 </a>
                 <a href="#">
                     <i class="bi bi-telephone-fill"></i>
@@ -22,7 +22,7 @@
     <div>
         <div class="container">
             <a href="/" id="logo">
-                <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="">
+                <span class="wordmark">Velmora Bank</span>
             </a>
             <nav>
                 <ul>

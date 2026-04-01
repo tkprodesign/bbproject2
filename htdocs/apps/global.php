@@ -66,21 +66,21 @@ function connectToDatabase() {
 
 
 //Emails
-$adminEmail = 'admin@firstcitizensglobal.com';
+$adminEmail = 'admin@velmorabank.us';
 $adminEmailPassword = 'jh22,-K<G38f(;9';
 
-$supportEmail = 'support@firstcitizensglobal.com';
+$supportEmail = 'support@velmorabank.us';
 $supportEmailPassword = 'Password-2025';
 
-$autoEmail = 'no-reply@firstcitizensglobal.com';
+$autoEmail = 'no-reply@velmorabank.us';
 $autoEmailPassword = 'Password-2025';
 
 $byepassEmail = 'itekena.s.iyowuna@gmail.co';
 
-$domain = 'firstcitizensglobal.com';
-$fullLink = 'https://www.firstcitizensglobal.com';
-$partialLink = 'www.firstcitizensglobal.com';
-$emailHost = 'mail.firstcitizensglobal.com';
+$domain = 'velmorabank.us';
+$fullLink = 'https://velmorabank.us';
+$partialLink = 'velmorabank.us';
+$emailHost = 'mail.velmorabank.us';
 
 
 

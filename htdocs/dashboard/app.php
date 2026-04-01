@@ -163,7 +163,7 @@ if (isset($_POST['create_account'])) {
    
 
     // Define the email subject from your PHPMailer example
-    $email_subject = 'Your New First Citizens Bank Account Has Been Successfully Created';
+    $email_subject = 'Your New Velmora Bank Account Has Been Successfully Created';
 
     // Define the email body using HEREDOC syntax for readability,
     // incorporating the dynamic bank_account_number.
@@ -179,8 +179,8 @@ if (isset($_POST['create_account'])) {
         <section style="width: 90%; max-width: 600px; border-radius: 1rem; margin: auto;">
             <header style="padding: 1rem 0;">
                 <div style="padding: 1rem;">
-                    <a href="https://firstcitizensglobal.com" id="logo">
-                        <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="First Citizens Bank Logo" style="height: 60px;">
+                    <a href="https://velmorabank.us" id="logo">
+                        <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
                     </a>
                 </div>
             </header>
@@ -188,19 +188,19 @@ if (isset($_POST['create_account'])) {
                 <div style="padding: 1rem;">
                     <div class="account-success">
                         <div class="wrapper" style="width: 90%; max-width: 500px; margin: 60px auto; display: flex; flex-direction: column; align-items: center; padding: 1.875rem 1.875rem; border-radius: 6px; border: 1px solid #e7eaed; background-color: #fff; color: #6c7293;">
-                            <img src="https://firstcitizensglobal.com/assets/images/dashboard/success.ico" style="width: 100px; display: block; margin-bottom: 25px;">
+                            <img src="https://velmorabank.us/assets/images/dashboard/success.ico" style="width: 100px; display: block; margin-bottom: 25px;">
                             <p style="text-align: center; margin-bottom: 25px;">Congratulations, your new account has been created with account number <strong>{$bank_account_number}</strong>.</p>
-                            <a href="https://firstcitizensglobal.com/dashboard/accounts" class="cta" style="padding: 0.625rem 1.125rem; color: #fff; background-color: #0ddbb9; border-color: #0ddbb9; border-radius: 0.25rem; display: inline-block; box-shadow: 0 2px 2px 0 rgba(13, 219, 185, 0.14), 0 3px 1px -2px rgba(13, 219, 185, 0.2), 0 1px 5px 0 rgba(13, 219, 185, 0.12); text-decoration: none; font-weight: 600;">View Details</a>
+                            <a href="https://velmorabank.us/dashboard/accounts" class="cta" style="padding: 0.625rem 1.125rem; color: #fff; background-color: #0ddbb9; border-color: #0ddbb9; border-radius: 0.25rem; display: inline-block; box-shadow: 0 2px 2px 0 rgba(13, 219, 185, 0.14), 0 3px 1px -2px rgba(13, 219, 185, 0.2), 0 1px 5px 0 rgba(13, 219, 185, 0.12); text-decoration: none; font-weight: 600;">View Details</a>
                         </div>
                     </div>
                 </div>
             </div>
             <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-                <p style="margin: 0;">Thank you for choosing First Citizens Bank!</p>
-                <p style="margin: 0;">© 2024 First Citizens Bank. All rights reserved.</p>
+                <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
+                <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
                 <p style="margin: 0;">400 Park Ave, New York, NY 10022, United States</p>
                 <p style="margin: 0;">
-                    <a href="mailto:support@firstcitizensglobal.com" style="color: inherit;">support@firstcitizensglobal.com</a> |
+                    <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> |
                     <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
                 </p>
                 <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
@@ -213,7 +213,7 @@ if (isset($_POST['create_account'])) {
 
     // Prepare the data for the Resend API call
     $post_data = [
-        "from" => "First Citizens Bank Notifications <no-reply@firstcitizensglobal.com>", // Sender name and email
+        "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>", // Sender name and email
         "to" => $user_email,
         "subject" => $email_subject,
         "html" => $email_body
@@ -249,34 +249,34 @@ if (isset($_POST['create_account'])) {
     // try {
     //     //Server settings
     //     $mail->isSMTP();                                            // Set mailer to use SMTP
-    //     $mail->Host       = 'firstcitizensglobal.com';                     // Specify main and backup SMTP servers
+    //     $mail->Host       = 'velmorabank.us';                     // Specify main and backup SMTP servers
     //     $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-    //     $mail->Username   = 'no-reply@firstcitizensglobal.com';               // SMTP username
+    //     $mail->Username   = 'no-reply@velmorabank.us';               // SMTP username
     //     $mail->Password   = 'jh22,-K<G38f(;9';                  // SMTP password
     //     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption, `ssl` also accepted
     //     $mail->Port       = 587;                                    // TCP port to connect to
 
     //     //Recipients
-    //     $mail->setFrom('no-reply@firstcitizensglobal.com', 'First Citizens Bank Notifications');
+    //     $mail->setFrom('no-reply@velmorabank.us', 'Velmora Bank Notifications');
     //     $mail->addAddress($user_email);                 // Add a recipient
 
     //     // Content
     //     $mail->isHTML(true);                                        // Set email format to HTML
-    //     $mail->Subject = 'Your New First Citizens Bank Account Has Been Successfully Created';                                        // Empty subject
+    //     $mail->Subject = 'Your New Velmora Bank Account Has Been Successfully Created';                                        // Empty subject
     //     $mail->Body    = 
     //                 '<!DOCTYPE html>
     //                 <html lang="en">
     //                 <head>
     //                     <meta charset="UTF-8">
     //                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    //                     <title>Your New First Citizens Bank Account Has Been Successfully Created</title>
+    //                     <title>Your New Velmora Bank Account Has Been Successfully Created</title>
     //                 </head>
     //                 <body style="font-family: Inter, sans-serif; padding: 0; margin: 0; background: #fff;">
     //                     <section style="width: 90%; max-width: 600px; border-radius: 1rem; margin: auto;">
     //                         <header style="padding: 1rem 0;">
     //                             <div style="padding: 1rem;">
-    //                                 <a href="https://firstcitizensglobal.com" id="logo">
-    //                                     <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="First Citizens Bank Logo" style="height: 60px;">
+    //                                 <a href="https://velmorabank.us" id="logo">
+    //                                     <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
     //                                 </a>
     //                             </div>
     //                         </header>
@@ -284,31 +284,31 @@ if (isset($_POST['create_account'])) {
     //                             <div style="padding: 1rem;">
     //                                 <div class="account-success">
     //                                     <div class="wrapper" style="width: 90%; max-width: 500px; margin: 60px auto; display: flex; flex-direction: column; align-items: center; padding: 1.875rem 1.875rem; border-radius: 6px; border: 1px solid #e7eaed; background-color: #fff; color: #6c7293;">
-    //                                         <img src="https://firstcitizensglobal.com/assets/images/dashboard/success.ico" style="width: 100px; display: block; margin-bottom: 25px;">
+    //                                         <img src="https://velmorabank.us/assets/images/dashboard/success.ico" style="width: 100px; display: block; margin-bottom: 25px;">
     //                                         <p style="text-align: center; margin-bottom: 25px;">Congratulations, your new account has been created with account number <strong>'.$bank_account_number.'</strong>.</p>
-    //                                         <a href="https://firstcitizensglobal.com/dashboard/accounts" class="cta" style="padding: 0.625rem 1.125rem; color: #fff; background-color: #0ddbb9; border-color: #0ddbb9; border-radius: 0.25rem; display: inline-block; box-shadow: 0 2px 2px 0 rgba(13, 219, 185, 0.14), 0 3px 1px -2px rgba(13, 219, 185, 0.2), 0 1px 5px 0 rgba(13, 219, 185, 0.12); text-decoration: none; font-weight: 600;">View Details</a>
+    //                                         <a href="https://velmorabank.us/dashboard/accounts" class="cta" style="padding: 0.625rem 1.125rem; color: #fff; background-color: #0ddbb9; border-color: #0ddbb9; border-radius: 0.25rem; display: inline-block; box-shadow: 0 2px 2px 0 rgba(13, 219, 185, 0.14), 0 3px 1px -2px rgba(13, 219, 185, 0.2), 0 1px 5px 0 rgba(13, 219, 185, 0.12); text-decoration: none; font-weight: 600;">View Details</a>
     //                                     </div>
     //                                 </div>
     //                             </div>
     //                         </div>
     //                         <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-    //                             <p style="margin: 0;">Thank you for choosing First Citizens Bank!</p>
-    //                             <p style="margin: 0;">© 2024 First Citizens Bank. All rights reserved.</p>
+    //                             <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
+    //                             <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
     //                             <p style="margin: 0;">400 Park Ave, New York, NY 10022, United States</p>
     //                             <p style="margin: 0;">
-    //                                 <a href="mailto:support@firstcitizensglobal.com" style="color: inherit;">support@firstcitizensglobal.com</a> | 
+    //                                 <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> | 
     //                                 <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
     //                             </p>
     //                             <!-- Uncomment if needed
     //                             <div class="social-media-links" style="margin: 10px 0;">
     //                                 <a href="https://facebook.com/#" style="margin: 0 5px;">
-    //                                     <img src="https://firstcitizensglobal.com/assets/images/social/facebook.png" alt="Facebook" style="width: 24px; height: 24px;">
+    //                                     <img src="https://velmorabank.us/assets/images/social/facebook.png" alt="Facebook" style="width: 24px; height: 24px;">
     //                                 </a>
     //                                 <a href="https://twitter.com/#" style="margin: 0 5px;">
-    //                                     <img src="https://firstcitizensglobal.com/assets/images/social/twitter.png" alt="Twitter" style="width: 24px; height: 24px;">
+    //                                     <img src="https://velmorabank.us/assets/images/social/twitter.png" alt="Twitter" style="width: 24px; height: 24px;">
     //                                 </a>
     //                                 <a href="https://linkedin.com/#" style="margin: 0 5px;">
-    //                                     <img src="https://firstcitizensglobal.com/assets/images/social/linkedin.png" alt="LinkedIn" style="width: 24px; height: 24px;">
+    //                                     <img src="https://velmorabank.us/assets/images/social/linkedin.png" alt="LinkedIn" style="width: 24px; height: 24px;">
     //                                 </a>
     //                             </div>
     //                             -->
@@ -578,8 +578,8 @@ if (isset($_POST['transfer_funds'])) {
     <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
         <header style="padding: 1rem 0;">
             <div style="padding: 1rem;">
-                <a href="https://firstcitizensglobal.com" id="logo">
-                    <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="First Citizens Bank Logo" style="height: 60px;">
+                <a href="https://velmorabank.us" id="logo">
+                    <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
                 </a>
             </div>
         </header>
@@ -594,11 +594,11 @@ if (isset($_POST['transfer_funds'])) {
             </div>
         </div>
         <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-            <p style="margin: 0;">Thank you for choosing First Citizens Bank!</p>
-            <p style="margin: 0;">© 2024 First Citizens Bank. All rights reserved.</p>
+            <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
+            <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
             <p style="margin: 0;">400 Park Ave, New York, NY 10022, United States</p>
             <p style="margin: 0;">
-                <a href="mailto:support@firstcitizensglobal.com" style="color: inherit;">support@firstcitizensglobal.com</a> |
+                <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> |
                 <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
             </p>
             <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
@@ -611,8 +611,8 @@ ADMIN_HTML;
             $resend_api_key = "re_GarRzsKz_Jno1WG4sxPYwykgSkYW9keRT"; // Your NEW Resend API Key
 
             $admin_post_data = [
-                "from" => "First Citizens Bank Notifications <no-reply@firstcitizensglobal.com>",
-                "to" => "admin@firstcitizensglobal.com", // Admin's email address
+                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
+                "to" => "admin@velmorabank.us", // Admin's email address
                 "subject" => $admin_email_subject,
                 "html" => $admin_email_body
             ];
@@ -650,8 +650,8 @@ ADMIN_HTML;
 <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
     <header style="padding: 1rem 0;">
         <div style="padding: 1rem;">
-            <a href="https://firstcitizensglobal.com" id="logo">
-                <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="First Citizens Bank Logo" style="height: 60px;">
+            <a href="https://velmorabank.us" id="logo">
+                <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
             </a>
         </div>
     </header>
@@ -666,11 +666,11 @@ ADMIN_HTML;
         </div>
     </div>
     <footer style="background: #fbfdff; font-size: .875rem; padding: 1rem; text-align: left;">
-        <p style="margin: 0; padding-bottom: .75rem;">Thank you for choosing First Citizens Bank!</p>
-        <p style="margin: 0; padding-bottom: .75rem;">&copy; 2024 First Citizens Bank. All rights reserved.</p>
+        <p style="margin: 0; padding-bottom: .75rem;">Thank you for choosing Velmora Bank!</p>
+        <p style="margin: 0; padding-bottom: .75rem;">&copy; 2024 Velmora Bank. All rights reserved.</p>
         <p style="margin: 0; padding-bottom: .75rem;">400 Park Ave, New York, NY 10022, United States</p>
         <p style="margin: 0; padding-bottom: .75rem;">
-            <a href="mailto:support@firstcitizensglobal.com" style="color: inherit; text-decoration: none;">support@firstcitizensglobal.com</a> |
+            <a href="mailto:support@velmorabank.us" style="color: inherit; text-decoration: none;">support@velmorabank.us</a> |
             <a href="tel:+1234567890" style="color: inherit; text-decoration: none;">+1 (234) 567-890</a>
         </p>
         <p style="margin: 0;"><a href="#" style="color: inherit; text-decoration: none;">Unsubscribe</a> from these emails.</p>
@@ -682,7 +682,7 @@ ADMIN_HTML;
 USER_HTML;
 
             $user_post_data = [
-                "from" => "First Citizens Bank Notifications <no-reply@firstcitizensglobal.com>",
+                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
                 "to" => $user_email,
                 "subject" => $user_email_subject,
                 "html" => $user_email_body

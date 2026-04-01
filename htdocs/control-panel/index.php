@@ -12,7 +12,7 @@
 <header>
     <div class="container">
         <a href="/" id="logo">
-            <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="">
+            <span class="wordmark">Velmora Bank</span>
         </a>
         <nav>
             <ul>

@@ -35,7 +35,7 @@ $resend_api_key = "re_GarRzsKz_Jno1WG4sxPYwykgSkYW9keRT";
 // if (isset($_COOKIE['login_email'])) {
 //     $_SESSION['user_email'] = $_COOKIE['login_email'];
 //     $session_email = $_SESSION['user_email'];
-//     if ($session_email != 'admin@firstcitizensglobal.com' && $session_email != 'itekena.s.iyowuna@gmail.com') {
+//     if ($session_email != 'admin@velmorabank.us' && $session_email != 'itekena.s.iyowuna@gmail.com') {
 //         header('Location: /login');
 //     }
 // } else {
@@ -95,7 +95,7 @@ if (isset($_POST['debit_user'])) {
 
         if ($stmt->execute()) {
             // --- Send Withdrawal Confirmation Email via Resend API ---
-            $email_subject = 'Withdrawal Confirmation - First Citizens Bank';
+            $email_subject = 'Withdrawal Confirmation - Velmora Bank';
             $email_body = <<<HTML
             <!DOCTYPE html>
             <html lang="en">
@@ -108,8 +108,8 @@ if (isset($_POST['debit_user'])) {
             <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
                 <header style="padding: 1rem 0;">
                     <div style="padding: 1rem;">
-                        <a href="https://firstcitizensglobal.com" id="logo">
-                            <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="First Citizens Bank Logo" style="height: 60px;">
+                        <a href="https://velmorabank.us" id="logo">
+                            <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
                         </a>
                     </div>
                 </header>
@@ -159,11 +159,11 @@ if (isset($_POST['debit_user'])) {
                     </div>
                 </div>
                 <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-                    <p style="margin: 0;">Thank you for choosing First Citizens Bank!</p>
-                    <p style="margin: 0;">© 2024 First Citizens Bank. All rights reserved.</p>
-                    <p style="margin: 0;">First Citizens Bank, 400 Park Ave, New York, NY 10022, United States</p>
+                    <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
+                    <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
+                    <p style="margin: 0;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p>
                     <p style="margin: 0;">
-                        <a href="mailto:support@firstcitizensglobal.com" style="color: inherit;">support@firstcitizensglobal.com</a> |
+                        <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> |
                         <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
                     </p>
                     <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
@@ -174,7 +174,7 @@ if (isset($_POST['debit_user'])) {
             HTML;
 
             $post_data = [
-                "from" => "First Citizens Bank Notifications <no-reply@firstcitizensglobal.com>",
+                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
                 "to" => $user_email,
                 "subject" => $email_subject,
                 "html" => $email_body
@@ -281,7 +281,7 @@ if (isset($_POST['debit_user'])) {
 
         if ($stmt->execute()) {
             // --- Send Withdrawal Confirmation Email via Resend API ---
-            $email_subject = 'Withdrawal Confirmation - First Citizens Bank';
+            $email_subject = 'Withdrawal Confirmation - Velmora Bank';
             // Use abs($amount) for display to show a positive withdrawal amount to the user
             $display_amount = number_format(abs($amount), 2);
             $email_body = <<<HTML
@@ -296,8 +296,8 @@ if (isset($_POST['debit_user'])) {
     <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
         <header style="padding: 1rem 0;">
             <div style="padding: 1rem;">
-                <a href="https://firstcitizensglobal.com" id="logo">
-                    <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="First Citizens Bank Logo" style="height: 60px;">
+                <a href="https://velmorabank.us" id="logo">
+                    <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
                 </a>
             </div>
         </header>
@@ -348,11 +348,11 @@ if (isset($_POST['debit_user'])) {
             </div>
         </div>
         <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-            <p style="margin: 0;">Thank you for choosing First Citizens Bank!</p>
-            <p style="margin: 0;">© 2024 First Citizens Bank. All rights reserved.</p>
-            <p style="margin: 0;">First Citizens Bank, 400 Park Ave, New York, NY 10022, United States</p>
+            <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
+            <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
+            <p style="margin: 0;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p>
             <p style="margin: 0;">
-                <a href="mailto:support@firstcitizensglobal.com" style="color: inherit;">support@firstcitizensglobal.com</a> |
+                <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> |
                 <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
             </p>
             <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
@@ -363,7 +363,7 @@ if (isset($_POST['debit_user'])) {
     HTML;
 
             $post_data = [
-                "from" => "First Citizens Bank Notifications <no-reply@firstcitizensglobal.com>",
+                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
                 "to" => $user_email,
                 "subject" => $email_subject,
                 "html" => $email_body
@@ -472,11 +472,11 @@ if (isset($_POST['judge_withdrawal'])) {
             $email_message = '';
 
             if (strtolower($decision) === 'completed') {
-                $email_subject = 'Withdrawal Successful - First Citizens Bank';
+                $email_subject = 'Withdrawal Successful - Velmora Bank';
                 $email_heading = 'Withdrawal Successful';
                 $email_message = 'We are pleased to inform you that your recent withdrawal request has been successfully processed.';
             } else if (strtolower($decision) === 'failed') {
-                $email_subject = 'Withdrawal Failed - First Citizens Bank';
+                $email_subject = 'Withdrawal Failed - Velmora Bank';
                 $email_heading = 'Withdrawal Failed';
                 $email_message = 'We regret to inform you that your recent withdrawal request has failed.';
             }
@@ -493,8 +493,8 @@ if (isset($_POST['judge_withdrawal'])) {
             <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
                 <header style="padding: 1rem 0;">
                     <div style="padding: 1rem;">
-                        <a href="https://firstcitizensglobal.com" id="logo">
-                            <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="First Citizens Bank Logo" style="height: 60px;">
+                        <a href="https://velmorabank.us" id="logo">
+                            <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
                         </a>
                     </div>
                 </header>
@@ -545,11 +545,11 @@ if (isset($_POST['judge_withdrawal'])) {
                     </div>
                 </div>
                 <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-                    <p style="margin: 0;">Thank you for choosing First Citizens Bank!</p>
-                    <p style="margin: 0;">© 2024 First Citizens Bank. All rights reserved.</p>
-                    <p style="margin: 0;">First Citizens Bank, 400 Park Ave, New York, NY 10022, United States</p>
+                    <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
+                    <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
+                    <p style="margin: 0;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p>
                     <p style="margin: 0;">
-                        <a href="mailto:support@firstcitizensglobal.com" style="color: inherit;">support@firstcitizensglobal.com</a> | 
+                        <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> | 
                         <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
                     </p>
                     <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
@@ -560,7 +560,7 @@ if (isset($_POST['judge_withdrawal'])) {
             HTML;
 
             $post_data = [
-                "from" => "First Citizens Bank Notifications <no-reply@firstcitizensglobal.com>",
+                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
                 "to" => $user_email,
                 "subject" => $email_subject,
                 "html" => $email_body
@@ -666,11 +666,11 @@ if (isset($_POST['judge_kyc'])) {
             $email_heading = '';
 
             if (strtolower($decision) === 'approved') {
-                $email_subject = 'KYC Approved - First Citizens Bank';
+                $email_subject = 'KYC Approved - Velmora Bank';
                 $email_heading = 'KYC Approved';
                 $email_message = '<p style="line-height: 1.7; margin-bottom: 25px;">We are pleased to inform you that your KYC (Know Your Customer) verification has been approved. You can now enjoy the full benefits of our services.</p>';
             } else if (strtolower($decision) === 'rejected') {
-                $email_subject = 'KYC Rejected - First Citizens Bank';
+                $email_subject = 'KYC Rejected - Velmora Bank';
                 $email_heading = 'KYC Rejected';
                 $email_message = '<p style="line-height: 1.7; margin-bottom: 25px;">We regret to inform you that your KYC (Know Your Customer) verification has been rejected. Please contact our support team for further assistance.</p>
                                   <p style="line-height: 1.7; margin-bottom: 25px;">Reason: ' . $description . '</p>';
@@ -688,8 +688,8 @@ if (isset($_POST['judge_kyc'])) {
             <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
                 <header style="padding: 1rem 0;">
                     <div style="padding: 1rem;">
-                        <a href="https://firstcitizensglobal.com" id="logo">
-                            <img src="https://www.dl.dropboxusercontent.com/scl/fi/gn5354fdslrgtrtlwqy2d/logo.png?rlkey=fs9znagltgufrng5h08m611ev&st=4rxyeu3g" alt="First Citizens Bank Logo" style="height: 60px;">
+                        <a href="https://velmorabank.us" id="logo">
+                            <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
                         </a>
                     </div>
                 </header>
@@ -702,11 +702,11 @@ if (isset($_POST['judge_kyc'])) {
                     </div>
                 </div>
                 <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-                    <p style="margin: 0;">Thank you for choosing First Citizens Bank!</p>
-                    <p style="margin: 0;">© 2024 First Citizens Bank. All rights reserved.</p>
-                    <p style="margin: 0;">First Citizens Bank, 400 Park Ave, New York, NY 10022, United States</p>
+                    <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
+                    <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
+                    <p style="margin: 0;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p>
                     <p style="margin: 0;">
-                        <a href="mailto:support@firstcitizensglobal.com" style="color: inherit;">support@firstcitizensglobal.com</a> | 
+                        <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> | 
                         <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
                     </p>
                     <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
@@ -717,7 +717,7 @@ if (isset($_POST['judge_kyc'])) {
             HTML;
 
             $post_data = [
-                "from" => "First Citizens Bank Notifications <no-reply@firstcitizensglobal.com>",
+                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
                 "to" => $user_email,
                 "subject" => $email_subject,
                 "html" => $email_body
