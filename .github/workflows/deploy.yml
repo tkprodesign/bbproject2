@@ -23,17 +23,25 @@ jobs:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          REMOTE_DIR: /velmorabank.us/htdocs
+          REMOTE_DIR: /velmorabank.us
         run: |
+          set -e
+
           if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ]; then
             echo "Missing FTP secrets"
             exit 1
           fi
 
-          echo "Changed files:"
-          git diff --name-status HEAD^ HEAD || true
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            CHANGED_FILES=$(git diff --name-status HEAD^ HEAD)
+          else
+            CHANGED_FILES=$(git diff-tree --no-commit-id --name-status -r HEAD)
+          fi
 
-          git diff --name-status HEAD^ HEAD | while IFS=$'\t' read -r status file; do
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          echo "$CHANGED_FILES" | while IFS=$'\t' read -r status file; do
             [ -z "$file" ] && continue
 
             case "$file" in
@@ -50,9 +58,14 @@ jobs:
               echo "Deleting remote file: $remote_path"
               curl --silent --show-error --fail \
                 --user "$FTP_USERNAME:$FTP_PASSWORD" \
-                -Q "-DELE $remote_path" \
+                --quote "DELE $remote_path" \
                 "ftp://$FTP_SERVER/" || true
             else
+              if [ ! -f "$file" ]; then
+                echo "Local file not found, skipping: $file"
+                continue
+              fi
+
               echo "Uploading: $file -> $remote_path"
               curl --silent --show-error --fail \
                 --user "$FTP_USERNAME:$FTP_PASSWORD" \
@@ -60,39 +73,4 @@ jobs:
                 -T "$file" \
                 "ftp://$FTP_SERVER$remote_dir/"
             fi
-          done            /velmorabank.us/
-          bye
-          EOF
-
-      - name: Commit files
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add -A
-
-          if git diff --cached --quiet; then
-            echo "No changes detected"
-            exit 0
-          fi
-
-          git commit -m "Sync files from server"
-
-      - name: Push files to repo
-        run: git push origin HEAD:main
-      - name: Commit files
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add -A
-
-          if git diff --cached --quiet; then
-            echo "No changes detected"
-            exit 0
-          fi
-
-          git commit -m "Sync files from server"
-
-      - name: Push files to repo
-        run: git push origin HEAD:main
+          done
