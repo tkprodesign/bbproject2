@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="shortcut icon" href="https://www.dl.dropboxusercontent.com/scl/fi/rxhv5315cpjwwdddnv2zw/icon.png?rlkey=7fd557rqi3canun393nvvxu0p&st=qibb1noj" type="image/png">
     
     <link rel="stylesheet" href="/assets/stylesheets/dashboard.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/tab/dashboard.css?v=<?php echo time(); ?>" media="screen and (max-width: 1000px)">

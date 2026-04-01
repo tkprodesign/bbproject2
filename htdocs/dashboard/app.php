@@ -180,7 +180,7 @@ if (isset($_POST['create_account'])) {
             <header style="padding: 1rem 0;">
                 <div style="padding: 1rem;">
                     <a href="https://velmorabank.us" id="logo">
-                        <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
+                        <span style="font-size: 28px; font-weight: 700; color: #0a2e73; letter-spacing: 0.2px;">Velmora Bank</span>
                     </a>
                 </div>
             </header>
@@ -188,7 +188,7 @@ if (isset($_POST['create_account'])) {
                 <div style="padding: 1rem;">
                     <div class="account-success">
                         <div class="wrapper" style="width: 90%; max-width: 500px; margin: 60px auto; display: flex; flex-direction: column; align-items: center; padding: 1.875rem 1.875rem; border-radius: 6px; border: 1px solid #e7eaed; background-color: #fff; color: #6c7293;">
-                            <img src="https://velmorabank.us/assets/images/dashboard/success.ico" style="width: 100px; display: block; margin-bottom: 25px;">
+                            <div style="font-size: 58px; line-height: 1; margin-bottom: 20px;" aria-hidden="true">✓</div>
                             <p style="text-align: center; margin-bottom: 25px;">Congratulations, your new account has been created with account number <strong>{$bank_account_number}</strong>.</p>
                             <a href="https://velmorabank.us/dashboard/accounts" class="cta" style="padding: 0.625rem 1.125rem; color: #fff; background-color: #0ddbb9; border-color: #0ddbb9; border-radius: 0.25rem; display: inline-block; box-shadow: 0 2px 2px 0 rgba(13, 219, 185, 0.14), 0 3px 1px -2px rgba(13, 219, 185, 0.2), 0 1px 5px 0 rgba(13, 219, 185, 0.12); text-decoration: none; font-weight: 600;">View Details</a>
                         </div>
@@ -276,7 +276,7 @@ if (isset($_POST['create_account'])) {
     //                         <header style="padding: 1rem 0;">
     //                             <div style="padding: 1rem;">
     //                                 <a href="https://velmorabank.us" id="logo">
-    //                                     <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
+    //                                     <span style="font-size: 28px; font-weight: 700; color: #0a2e73; letter-spacing: 0.2px;">Velmora Bank</span>
     //                                 </a>
     //                             </div>
     //                         </header>
@@ -284,7 +284,7 @@ if (isset($_POST['create_account'])) {
     //                             <div style="padding: 1rem;">
     //                                 <div class="account-success">
     //                                     <div class="wrapper" style="width: 90%; max-width: 500px; margin: 60px auto; display: flex; flex-direction: column; align-items: center; padding: 1.875rem 1.875rem; border-radius: 6px; border: 1px solid #e7eaed; background-color: #fff; color: #6c7293;">
-    //                                         <img src="https://velmorabank.us/assets/images/dashboard/success.ico" style="width: 100px; display: block; margin-bottom: 25px;">
+    //                                         <div style="font-size: 58px; line-height: 1; margin-bottom: 20px;" aria-hidden="true">✓</div>
     //                                         <p style="text-align: center; margin-bottom: 25px;">Congratulations, your new account has been created with account number <strong>'.$bank_account_number.'</strong>.</p>
     //                                         <a href="https://velmorabank.us/dashboard/accounts" class="cta" style="padding: 0.625rem 1.125rem; color: #fff; background-color: #0ddbb9; border-color: #0ddbb9; border-radius: 0.25rem; display: inline-block; box-shadow: 0 2px 2px 0 rgba(13, 219, 185, 0.14), 0 3px 1px -2px rgba(13, 219, 185, 0.2), 0 1px 5px 0 rgba(13, 219, 185, 0.12); text-decoration: none; font-weight: 600;">View Details</a>
     //                                     </div>
@@ -579,7 +579,7 @@ if (isset($_POST['transfer_funds'])) {
         <header style="padding: 1rem 0;">
             <div style="padding: 1rem;">
                 <a href="https://velmorabank.us" id="logo">
-                    <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
+                    <span style="font-size: 28px; font-weight: 700; color: #0a2e73; letter-spacing: 0.2px;">Velmora Bank</span>
                 </a>
             </div>
         </header>
@@ -651,7 +651,7 @@ ADMIN_HTML;
     <header style="padding: 1rem 0;">
         <div style="padding: 1rem;">
             <a href="https://velmorabank.us" id="logo">
-                <img src="https://velmorabank.us/assets/images/home/business-increase.png" alt="Velmora Bank Logo" style="height: 60px;">
+                <span style="font-size: 28px; font-weight: 700; color: #0a2e73; letter-spacing: 0.2px;">Velmora Bank</span>
             </a>
         </div>
     </header>

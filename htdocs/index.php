@@ -24,8 +24,6 @@
     <meta name="twitter:image" content="https://velmorabank.us/assets/images/home/business-increase.png">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://www.dl.dropboxusercontent.com/scl/fi/rxhv5315cpjwwdddnv2zw/icon.png?rlkey=7fd557rqi3canun393nvvxu0p&st=qibb1noj">
-    <link rel="shortcut icon" href="https://www.dl.dropboxusercontent.com/scl/fi/rxhv5315cpjwwdddnv2zw/icon.png?rlkey=7fd557rqi3canun393nvvxu0p&st=qibb1noj" type="image/png">
     
     <link rel="stylesheet" href="/assets/stylesheets/home2.css">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/home2.css">
