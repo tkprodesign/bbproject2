@@ -31,7 +31,7 @@ body {
 }
 
 section.auth-page .container {
-  padding: 40px 0;
+  padding: 40px 0 60px;
 }
 section.auth-page .content {
   background-color: #ffffff;

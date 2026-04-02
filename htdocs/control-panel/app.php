@@ -20,7 +20,7 @@ if (file_exists($appPath)) {
 }
 
 // Your Resend API Key
-$resend_api_key = "re_GarRzsKz_Jno1WG4sxPYwykgSkYW9keRT";
+$resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8";
 
 
 

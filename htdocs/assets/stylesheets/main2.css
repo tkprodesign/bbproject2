@@ -76,12 +76,16 @@ header > div:nth-child(2) .container #logo {
   margin-left: 2.5vw;
 }
 header > div:nth-child(2) .container #logo img {
-  height: 48px;
+  height: 64px;
+  width: auto;
 }
 header > div:nth-child(2) .container nav ul {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
+}
+header > div:nth-child(2) .container nav ul li a {
+  font-size: 14px;
 }
 header > div:nth-child(2) .container .cta {
   justify-self: right;

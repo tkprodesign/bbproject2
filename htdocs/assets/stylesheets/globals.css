@@ -86,9 +86,9 @@ header .container .sec-2 #logo {
   align-items: center;
 }
 header .container .sec-2 img {
-  height: 42px;
+  height: 56px;
   width: auto;
-  max-width: 180px;
+  max-width: 240px;
   -o-object-fit: contain;
      object-fit: contain;
 }
@@ -227,8 +227,8 @@ footer .bottom {
     display: none;
   }
   header .container .sec-2 img {
-    height: 36px;
-    max-width: 150px;
+    height: 46px;
+    max-width: 200px;
   }
 
   footer .container {
