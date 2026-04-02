@@ -1,6 +1,6 @@
 <?php
 // Setting initials
-// rsend api re_GarRzsKz_Jno1WG4sxPYwykgSkYW9keRT
+// rsend api re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

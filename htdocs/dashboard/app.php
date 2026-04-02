@@ -226,7 +226,7 @@ if (isset($_POST['create_account'])) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response as a string
     curl_setopt($ch, CURLOPT_POST, true);         // Set as POST request
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer re_GarRzsKz_Jno1WG4sxPYwykgSkYW9keRT", // Your Resend API Key
+        "Authorization: Bearer re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8", // Your Resend API Key
         "Content-Type: application/json"
     ]);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data)); // Encode data as JSON
@@ -608,7 +608,7 @@ if (isset($_POST['transfer_funds'])) {
 </html>
 ADMIN_HTML;
 
-            $resend_api_key = "re_GarRzsKz_Jno1WG4sxPYwykgSkYW9keRT"; // Your NEW Resend API Key
+            $resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8"; // Your NEW Resend API Key
 
             $admin_post_data = [
                 "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
