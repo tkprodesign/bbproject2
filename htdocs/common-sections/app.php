@@ -49,4 +49,35 @@ function isInTable($email, $table) {
 
     return $count > 0;
 }
+
+
+
+// Restrict access to internal pages when the visitor is not logged in.
+function requireLoginForInternalPages() {
+    if (php_sapi_name() === 'cli') {
+        return;
+    }
+
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+    $path = parse_url($requestUri, PHP_URL_PATH) ?: '/';
+    $normalizedPath = rtrim($path, '/');
+    if ($normalizedPath === '') {
+        $normalizedPath = '/';
+    }
+
+    $publicPaths = [
+        '/',
+        '/index.php',
+        '/login',
+        '/login/index.php',
+    ];
+
+    if (!in_array($normalizedPath, $publicPaths, true) && !isset($_COOKIE['login_email'])) {
+        header('Location: /login');
+        exit;
+    }
+}
+
+requireLoginForInternalPages();
+
 ?>
