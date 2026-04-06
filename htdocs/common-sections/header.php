@@ -2,7 +2,7 @@
     <div class="demo-disclaimer">
         Demo Website Only — Not a real bank. Do not submit real personal or financial information.
     </div>
-    <div>
+    <div class="header-topbar">
         <div class="container">
             <div>
                 <a href="mailto:support@velmorabank.us">
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div>
+    <div class="header-main">
         <div class="container">
             <a href="/" id="logo" aria-label="Velmora Bank Home">
                 <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank">
@@ -47,7 +47,7 @@
             </a>
         </div>
     </div>
-    <nav class="mobile-nav">
+    <nav id="mobileNav" class="mobile-nav">
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/personal/">Personal Banking</a></li>

@@ -7,7 +7,7 @@ body.active {
   overflow: hidden;
 }
 
-header > div:nth-child(2) .container {
+header .header-topbar .container {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
@@ -15,19 +15,19 @@ header > div:nth-child(2) .container {
   padding: 10px 0;
 }
 
-header > div:nth-child(2) .container > div {
+header .header-topbar .container > div {
   gap: 12px;
   flex-wrap: wrap;
 }
 
-header > div:nth-child(3) .container {
+header .header-main .container {
   grid-template-columns: auto auto;
   gap: 14px;
   min-height: 74px;
 }
 
-header > div:nth-child(3) nav,
-header > div:nth-child(3) .cta {
+header .header-main nav,
+header .header-main .cta {
   display: none;
 }
 
