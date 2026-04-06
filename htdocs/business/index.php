@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Business Banking | Velmora Bank</title><link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png"><link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css"></head><body>
-<?php include('../common-sections/header.php'); ?>
+<?php include('../templates/header1.php'); ?>
 <section class="page-hero"><div class="container"><h1>Business Banking That Scales With You</h1><p>Whether you're a startup or established enterprise, Velmora gives you the tools to move faster and manage cash flow efficiently.</p></div></section>
 <section class="page-content"><div class="container grid">
 <article class="card"><h3>Business Current Accounts</h3><p>Flexible account plans with role-based access for teams and finance officers.</p></article>

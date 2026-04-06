@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Loans | Velmora Bank</title><link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png"><link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css"></head><body>
-<?php include('../common-sections/header.php'); ?>
+<?php include('../templates/header1.php'); ?>
 <section class="page-hero"><div class="container"><h1>Loan Options for Life and Business Goals</h1><p>From personal loans to expansion financing, our lending experts help you find a plan that fits your timeline and budget.</p></div></section>
 <section class="page-content"><div class="container grid">
 <article class="card"><h3>Personal Loans</h3><p>Fast approvals and fixed-rate repayment plans tailored to your needs.</p></article>

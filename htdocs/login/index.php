@@ -7,12 +7,12 @@
     <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
     <title>Sign In | Velmora Bank</title>
 
-    <link rel="stylesheet" href="/assets/stylesheets/site-shell.css">
+    <link rel="stylesheet" href="/assets/stylesheets/main2.css">
     <link rel="stylesheet" href="/assets/stylesheets/sign-in.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 </head>
 <body>
-<?php include('../common-sections/header.php'); ?>
+<?php include('../templates/header1.php'); ?>
 <?php echo $_GET['alert_info_section']; ?>
 <section class="sign-in auth-page">
     <div class="container">

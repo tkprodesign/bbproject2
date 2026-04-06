@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 </head>
 <body>
-<?php include('./common-sections/header.php'); ?>
+<?php include('./templates/header1.php'); ?>
 
 
 
