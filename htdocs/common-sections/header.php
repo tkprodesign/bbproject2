@@ -1,5 +1,8 @@
-<header>
-    <div>
+<div class="site-demo-banner">
+    Demo Website Only — Not a real bank. Do not submit real personal or financial information.
+</div>
+<header class="site-header">
+    <div class="site-header-top">
         <div class="container">
             <div>
                 <a href="mailto:support@velmorabank.us">
@@ -19,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div>
+    <div class="site-header-main">
         <div class="container">
             <a href="/" id="logo" aria-label="Velmora Bank Home">
                 <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank">

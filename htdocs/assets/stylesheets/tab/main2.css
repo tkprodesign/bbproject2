@@ -7,52 +7,52 @@ body.active {
   overflow: hidden;
 }
 
-header {
+header.site-header {
   z-index: 21;
   position: relative;
 }
-header > div:first-child {
+header.site-header .site-header-top {
   z-index: 21;
   position: relative;
 }
-header > div:first-child .container > div:first-child {
+header.site-header .site-header-top .container > div:first-child {
   align-items: start;
   gap: 8px;
   flex-direction: column;
 }
-header > div:nth-child(2) {
+header.site-header .site-header-main {
   z-index: 21;
   position: relative;
 }
-header > div:nth-child(2) .container {
+header.site-header .site-header-main .container {
   grid-template-columns: repeat(2, auto);
   padding: 17px 0;
   margin: auto;
 }
-header > div:nth-child(2) .container nav {
+header.site-header .site-header-main .container nav {
   display: none;
 }
-header > div:nth-child(2) .container .cta {
+header.site-header .site-header-main .container .cta {
   display: none;
 }
-header > div:nth-child(2) .container #menuToggle {
+header.site-header .site-header-main .container #menuToggle {
   display: inline-block;
   font-size: 24px;
   justify-self: end;
 }
-header > div:nth-child(2) .container #menuToggle .open {
+header.site-header .site-header-main .container #menuToggle .open {
   display: inline;
 }
-header > div:nth-child(2) .container #menuToggle .close {
+header.site-header .site-header-main .container #menuToggle .close {
   display: none;
 }
-header > div:nth-child(2) .container #menuToggle.active .open {
+header.site-header .site-header-main .container #menuToggle.active .open {
   display: none;
 }
-header > div:nth-child(2) .container #menuToggle.active .close {
+header.site-header .site-header-main .container #menuToggle.active .close {
   display: inline;
 }
-header .mobile-nav {
+header.site-header .mobile-nav {
   display: block;
   height: 100vw;
   width: 80%;
@@ -66,14 +66,19 @@ header .mobile-nav {
   opacity: 0;
   transition: all 0.3s ease;
 }
-header .mobile-nav ul {
+header.site-header .mobile-nav ul {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-header .mobile-nav.active {
+header.site-header .mobile-nav.active {
   left: 0;
   opacity: 1;
+}
+
+.site-demo-banner {
+  font-size: 10px;
+  padding: 8px;
 }
 
 footer .container {

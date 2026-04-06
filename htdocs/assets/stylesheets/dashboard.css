@@ -20,6 +20,17 @@ body {
   background: #f2f2f2;
 }
 
+.site-demo-banner {
+  background: #f13223;
+  color: #fff;
+  text-align: center;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.25px;
+  text-transform: uppercase;
+}
+
 .pre-header {
   background: linear-gradient(230deg, #7A3EC8, #297FC8);
 }
