@@ -27,6 +27,8 @@
 
     <!-- Favicon -->
     
+    <link rel="stylesheet" href="/assets/stylesheets/site-shell.css">
+    <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/site-shell.css">
     <link rel="stylesheet" href="/assets/stylesheets/home2.css">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/home2.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
