@@ -16,6 +16,7 @@
     <meta property="og:title" content="Velmora Bank — Digital Financial Solutions">
     <meta property="og:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
     <meta property="og:image" content="https://velmorabank.us/assets/images/home/business-increase.png">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
@@ -525,6 +526,9 @@
                 <input type="email" name="email" placeholder="Your Email Address">
                 <button type="submit">Subcribe</button>
             </form>
+            <p style="font-size:12px;line-height:1.5;color:#ffd7d2;margin-bottom:14px;">
+                Demo notice: This is a non-production demonstration website built for UI/testing purposes only.
+            </p>
             <div class="contacts">
                 <a href="#" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
                 <a href="mailto:support@velmorabank.us" style="display: block; margin-bottom: 8px;">support@velmorabank.us</a>

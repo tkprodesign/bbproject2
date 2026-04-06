@@ -1,4 +1,7 @@
 <header>
+    <div class="demo-disclaimer" style="background:#f13223;color:#fff;text-align:center;padding:8px 12px;font-size:12px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;">
+        Demo Website Only — Not a real bank. Do not submit real personal or financial information.
+    </div>
     <div>
         <div class="container">
             <div>
