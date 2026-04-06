@@ -125,7 +125,7 @@ section.features-1 .container {
   grid-template-columns: repeat(4, 1fr);
 }
 section.features-1 .container .feature {
-  background: #163555;
+  background: #444444;
   color: #fff;
   padding: 16px 24px;
   border-right: 1px solid rgba(245, 245, 245, 0.4);
@@ -151,7 +151,7 @@ section.features-1 .container .feature p {
 }
 
 section.latest-news {
-  border-bottom: 4px solid #163555;
+  border-bottom: 4px solid #444444;
   border-top: 1px solid rgba(245, 245, 245, 0.4);
   background: #fff;
   display: grid;
@@ -239,7 +239,7 @@ section.loan-calculator .container {
 }
 section.loan-calculator .container .left {
   color: #fff;
-  background: #163555;
+  background: #444444;
   width: 70%;
   display: grid;
   grid-template-columns: 45% 55%;
@@ -261,7 +261,7 @@ section.loan-calculator .container .left .details p {
 }
 section.loan-calculator .container .left .details p.no {
   margin-bottom: unset;
-  background: #112941;
+  background: #2f2f2f;
   padding: 16px;
   display: flex;
   align-items: center;
@@ -301,7 +301,7 @@ section.loan-calculator .container .left .calculator .toggle-box .toggle .ball {
   transform: translate(0, -50%);
   width: 32px;
   height: 32px;
-  border: 3px solid #163555;
+  border: 3px solid #444444;
   border-radius: 50%;
   background: #ebeefa;
 }
@@ -327,7 +327,7 @@ section.loan-calculator .container .right > p:first-child {
 }
 section.loan-calculator .container .right h1 {
   font-size: 48px;
-  color: #163555;
+  color: #444444;
   margin-bottom: 25px;
 }
 section.loan-calculator .container .right div {
@@ -457,7 +457,7 @@ section.benefits .container .benefits .center {
   z-index: 10;
 }
 section.benefits .container .benefits .center > div {
-  background: #007bff;
+  background: #f13223;
   color: #fff;
   font-size: 18px;
   border-radius: 4px;
@@ -489,7 +489,7 @@ section.benefits .container .benefits .right .benefit:first-child {
 }
 section.benefits .container .benefits .right .benefit h2 {
   margin-bottom: 16px;
-  color: #007bff;
+  color: #f13223;
   font-weight: 700;
   font-size: 36px;
 }
@@ -538,7 +538,7 @@ section.features-3 .container .swiper-2 .swiper-slide .content {
   left: 0;
   bottom: 0;
   z-index: 3;
-  background: rgba(0, 123, 255, 0.1882352941);
+  background: rgba(241, 50, 35, 0.19);
   width: 100%;
   height: 100px;
   font-size: 24px;
@@ -553,7 +553,7 @@ section.faq .container .heading {
   margin-bottom: 64px;
 }
 section.faq .container .heading h2 {
-  color: #007bff;
+  color: #f13223;
   font-size: 40px;
   font-weight: 900;
   text-align: center;
