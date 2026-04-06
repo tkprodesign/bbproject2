@@ -1,4 +1,4 @@
-@import url("./main2.css");
+@import url("./site.css");
 section.hero {
   height: 80vh;
   width: 100vw;
@@ -571,4 +571,4 @@ section.faq .container .questions h2 {
 section.faq .container .questions p {
   color: gray;
   line-height: 1.7;
-}/*# sourceMappingURL=home2.css.map */
+}/*# sourceMappingURL=home.css.map */

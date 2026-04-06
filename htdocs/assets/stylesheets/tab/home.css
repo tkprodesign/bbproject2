@@ -1,4 +1,4 @@
-@import url("./main2.css");
+@import url("./site.css");
 section.features-1 {
   z-index: 20;
 }
@@ -66,4 +66,4 @@ section.benefits .container .benefits .right {
 
 section.faq .container .questions {
   grid-template-columns: 100%;
-}/*# sourceMappingURL=home2.css.map */
+}/*# sourceMappingURL=home.css.map */

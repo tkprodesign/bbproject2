@@ -1,0 +1,110 @@
+@import url('./site.css');
+
+
+
+
+
+
+section.features-1{
+    z-index: 20;
+    .container{
+        grid-template-columns: 100%;
+        .feature{
+            border-right: unset;
+            border-bottom: 1px solid rgba(245, 245, 245, .4);
+        }
+    }
+}
+
+
+
+
+section.features-2{
+    .container{
+        .features{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+}
+
+
+
+
+section.loan-calculator{
+    .container{
+        .left{
+            grid-template-columns: 100%;
+            width: 100%;
+            padding-bottom: 428px;
+            .calculator{
+                justify-self: center;
+            }
+        }
+        .right{
+            height: 300px;
+            width: calc(100% - 64px);
+            clip-path: unset;
+            top: unset;
+            right: unset;
+            bottom: 32px;
+            left: 32px;
+            padding: 48px;
+            div{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            a{
+                margin-bottom: 200px;
+            }
+        }
+    }
+}
+
+
+
+
+section.about-us{
+    .container{
+        .container-wrapper{
+            grid-template-columns: 100%;
+            .left{
+                height: 350px;
+            }
+        }
+    }
+}
+
+
+
+
+section.benefits{
+    .container{
+        .benefits{
+            grid-template-columns: 100%;
+            .left{
+                height: 350px;
+            }
+            .center{
+                top: 318px;
+            }
+            .right{
+                height: 318px;
+            }
+        }
+    }
+}
+
+
+
+
+
+section.faq{
+    .container{
+        .questions{
+            grid-template-columns: 100%;
+        }
+    }
+}

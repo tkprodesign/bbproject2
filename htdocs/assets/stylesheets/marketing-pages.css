@@ -1,6 +1,16 @@
-@import url('/assets/stylesheets/main2.css');
+@import url('/assets/stylesheets/site.css');
 
-body { background: #f6f8fb; }
+body {
+  background: #f6f8fb;
+  color: #1b2b40;
+}
+
+.page-hero,
+.page-content,
+.contact-wrap,
+.cta-band {
+  font-family: "Montserrat", "Effra", "Lato", sans-serif;
+}
 .page-hero {
   background: linear-gradient(120deg, rgba(22,53,85,.95), rgba(10,28,46,.95)), url('/new-assets/images/home/hero/bank-exterior.jpg') center/cover;
   color: #fff;
