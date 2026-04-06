@@ -1,5 +1,5 @@
 <header>
-    <div class="demo-disclaimer" style="background:#f13223;color:#fff;text-align:center;padding:8px 12px;font-size:12px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;">
+    <div class="demo-disclaimer">
         Demo Website Only — Not a real bank. Do not submit real personal or financial information.
     </div>
     <div>
@@ -41,7 +41,7 @@
                 <i class="bi bi-lock"></i>
                 <span>Online Banking</span>
             </a>
-            <a href="#" id="menuToggle">
+            <a href="#" id="menuToggle" aria-label="Toggle navigation menu">
                 <i class="bi bi-list open"></i>
                 <i class="bi bi-x-lg close"></i>
             </a>
