@@ -1,8 +1,8 @@
 <header>
-    <div class="demo-disclaimer" style="background:#f13223;color:#fff;text-align:center;padding:8px 12px;font-size:12px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;">
+    <div class="demo-disclaimer">
         Demo Website Only — Not a real bank. Do not submit real personal or financial information.
     </div>
-    <div>
+    <div class="header-topbar">
         <div class="container">
             <div>
                 <a href="mailto:support@velmorabank.us">
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div>
+    <div class="header-main">
         <div class="container">
             <a href="/" id="logo" aria-label="Velmora Bank Home">
                 <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank">
@@ -41,13 +41,13 @@
                 <i class="bi bi-lock"></i>
                 <span>Online Banking</span>
             </a>
-            <a href="#" id="menuToggle">
+            <a href="#" id="menuToggle" aria-label="Toggle navigation menu">
                 <i class="bi bi-list open"></i>
                 <i class="bi bi-x-lg close"></i>
             </a>
         </div>
     </div>
-    <nav class="mobile-nav">
+    <nav id="mobileNav" class="mobile-nav">
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/personal/">Personal Banking</a></li>

@@ -7,70 +7,85 @@ body.active {
   overflow: hidden;
 }
 
-header {
-  z-index: 21;
-  position: relative;
-}
-header > div:first-child {
-  z-index: 21;
-  position: relative;
-}
-header > div:first-child .container > div:first-child {
-  align-items: start;
-  gap: 8px;
+header .header-topbar .container {
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 0;
 }
-header > div:nth-child(2) {
-  z-index: 21;
-  position: relative;
+
+header .header-topbar .container > div {
+  gap: 12px;
+  flex-wrap: wrap;
 }
-header > div:nth-child(2) .container {
-  grid-template-columns: repeat(2, auto);
-  padding: 17px 0;
-  margin: auto;
+
+header .header-main .container {
+  grid-template-columns: auto auto;
+  gap: 14px;
+  min-height: 74px;
 }
-header > div:nth-child(2) .container nav {
+
+header .header-main nav,
+header .header-main .cta {
   display: none;
 }
-header > div:nth-child(2) .container .cta {
-  display: none;
-}
-header > div:nth-child(2) .container #menuToggle {
-  display: inline-block;
-  font-size: 24px;
+
+header #menuToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   justify-self: end;
+  font-size: 24px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #d8e0ea;
+  border-radius: 10px;
 }
-header > div:nth-child(2) .container #menuToggle .open {
+
+header #menuToggle .open {
   display: inline;
 }
-header > div:nth-child(2) .container #menuToggle .close {
+
+header #menuToggle .close {
   display: none;
 }
-header > div:nth-child(2) .container #menuToggle.active .open {
+
+header #menuToggle.active .open {
   display: none;
 }
-header > div:nth-child(2) .container #menuToggle.active .close {
+
+header #menuToggle.active .close {
   display: inline;
 }
+
 header .mobile-nav {
   display: block;
-  height: 100vw;
-  width: 80%;
-  max-width: 600px;
+  height: calc(100vh - 125px);
+  width: 84%;
+  max-width: 460px;
   z-index: 20;
-  padding: 32px;
+  padding: 24px;
   background: #fff;
   position: fixed;
-  top: 0;
+  top: 125px;
   left: -100%;
   opacity: 0;
   transition: all 0.3s ease;
+  box-shadow: 8px 8px 30px rgba(0, 0, 0, 0.12);
+  overflow-y: auto;
 }
+
 header .mobile-nav ul {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
+
+header .mobile-nav ul a {
+  font-weight: 600;
+}
+
 header .mobile-nav.active {
   left: 0;
   opacity: 1;
@@ -80,7 +95,8 @@ footer .container {
   grid-template-columns: 100%;
   gap: 32px;
 }
+
 footer .container .left {
   grid-template-columns: 100%;
   gap: 32px;
-}/*# sourceMappingURL=main.css.map */
+}
