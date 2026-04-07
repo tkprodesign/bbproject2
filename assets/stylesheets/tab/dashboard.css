@@ -1,144 +1,61 @@
-.container {
-  max-width: unset;
-}
+.container { width: min(95%, 1000px); }
 
-.header-gap {
-  display: none;
-}
-
-header {
-  margin-bottom: unset;
-  border: unset;
-  position: relative;
-}
 header .container {
-  height: 100%;
   display: none;
 }
+
 header nav {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  position: absolute;
-  top: 0;
+  gap: 14px;
+  position: fixed;
   left: 0;
+  top: 0;
+  height: 100vh;
+  width: min(82vw, 380px);
   background: #fff;
-  width: 80%;
-  max-width: 600px;
-  height: 200vh;
-  padding: 2rem 1rem 1rem 1rem;
-  font-weight: 500;
-  transform: translateX(-100%);
-  opacity: 0;
-  transition: all 0.3s ease;
-  z-index: 3;
+  border-right: 1px solid #e2eaf4;
+  box-shadow: 0 14px 35px rgba(16, 36, 67, 0.14);
+  transform: translateX(-105%);
+  transition: transform .24s ease;
+  z-index: 30;
+  padding: 90px 16px 20px;
+  overflow-y: auto;
 }
-header nav > a, header nav > div {
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #001737;
-  transition: all 0.2s ease;
-}
-header nav > a.active, header nav > a:hover, header nav > div.active, header nav > div:hover {
-  color: #0056b3;
-}
-header nav > a img, header nav > div img {
-  width: 100%;
-  max-width: 300px;
-}
-header nav > a.madre, header nav > div.madre {
-  display: grid;
-  grid-template-columns: 25px auto;
-}
-header nav > a.madre:hover, header nav > div.madre:hover {
-  color: #0056b3;
-}
-header nav > a.madre:hover a, header nav > div.madre:hover a {
-  color: #001737;
-}
-header nav > a.madre .miracle, header nav > div.madre .miracle {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  grid-column: 1/3;
-}
-header nav > a.madre .miracle a, header nav > div.madre .miracle a {
-  color: #001737;
-  display: flex;
-  align-items: center;
-  font-weight: 400;
-}
-header nav > a.madre .miracle a span, header nav > div.madre .miracle a span {
-  font-size: 20px;
-}
-header nav > a.madre .miracle a:hover, header nav > div.madre .miracle a:hover {
-  color: #0056b3;
-}
-header nav.active {
-  opacity: 1;
-  left: 0;
-  transform: translateX(0);
-}
+header nav.active { transform: translateX(0); }
+header nav > a,
+header nav > div { display: flex; align-items: center; gap: 8px; color: #163555; font-weight: 600; }
+header nav > a.logo { margin-bottom: 12px; }
+header nav > a.logo img { max-width: 220px; }
+header nav .madre { display: grid; grid-template-columns: 24px 1fr; }
+header nav .madre .miracle { grid-column: 1 / 3; display: grid; gap: 8px; padding: 8px 0 0 28px; }
 header #menuToggle {
-  display: grid;
-  justify-content: right;
-  padding: 1rem 2.5vw;
-  margin-bottom: 1rem;
-  right: 1rem;
-  top: 3%;
-  color: #001737;
+  display: inline-flex;
+  color: #163555;
+  background: #fff;
+  border: 1px solid #e2eaf4;
+  border-radius: 10px;
+  padding: 10px;
+  position: fixed;
+  right: 12px;
+  top: 58px;
+  z-index: 35;
 }
-header #menuToggle span {
-  font-size: 30px;
-}
-header #menuToggle .open {
-  display: inline;
-}
-header #menuToggle .close {
-  display: none;
-}
-header #menuToggle.active .open {
-  display: none;
-}
-header #menuToggle.active .close {
-  display: inline;
-}
-header.sticky {
-  position: relative;
-  top: 0;
-  width: 100%;
-  z-index: 1;
-  box-shadow: unset;
-}
+header #menuToggle .close { display: none; }
+header #menuToggle.active .open { display: none; }
+header #menuToggle.active .close { display: inline; }
 
-section.account-info .container .not-sec {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
+section.account-info .cta-sec,
+section.account-info .bars,
+.insights-grid,
+main .container,
+section.manage-account .content {
+  grid-template-columns: 1fr;
 }
-section.account-info .container .cta-sec {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-section.account-info .container .bars {
-  grid-template-columns: 100%;
-  gap: 1rem;
-}
-section.account-info .container .bars .bar {
-  min-height: 200px;
-}
+section.account-info .cta-sec { align-items: flex-start; }
+section.account-info .cta-sec .right { width: 100%; display: flex; flex-wrap: wrap; }
 
-main .container {
-  grid-template-columns: 100%;
-}
-main .container .left img {
-  max-width: 200px;
-}
+.quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
 section.add-account .container .accounts-list {
   overflow-x: scroll;
