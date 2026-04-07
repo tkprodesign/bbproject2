@@ -20,7 +20,6 @@
 <body>
 <?php include('../common-sections/header.php'); ?>
 
-
 <section class="page-hero">
   <div class="container">
     <h1>Careers at Velmora</h1>
@@ -81,6 +80,5 @@
   </div>
 </section>
 <?php include('../common-sections/footer.php'); ?>
-
 </body>
 </html>
