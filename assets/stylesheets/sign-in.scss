@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+@import url('/assets/stylesheets/main.css');
+
+
+
+$accent-color: #f2132b;
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    list-style-type: none;
+    color: inherit;
+}
+
+body{
+    background: #f2f2f2;
+    color: #09101f;
+    font-family: $font-family-sans-serif;
+}
+.container{
+    width: 95%;
+    margin: auto;
+}
+
+
+
+
+
+.alert-info {
+    color: #057080;
+    background-color: #cef7fd;
+    border-color: #baf4fd;
+    padding: 16px 0;
+}
+
+
+
+
+
+section.sign-in, section.sign-up{
+    .container{
+        // padding: 100px;
+        margin-top: 5%;
+        .content{
+            background-color: #ffffff;
+            width: 30%;
+            max-width: 500px;
+            min-width: 400px;
+            margin: auto;
+            place-content: center;
+            overflow: hidden;
+            padding: 50px;
+            .logo{
+                margin-bottom: 15px;
+                img{
+                    width: 100%;
+                }
+            }
+            h3{
+                color: #6c7293;
+                font-weight: 400;
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            p{
+                color: grey;
+                margin-bottom: 20px;
+                font-weight: 300;
+                font-size: 15px;
+            }
+            .error{
+                color: #7c2f2f;
+                background-color: #fcdede;
+                border-color: #fad1d1;
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 1rem;
+                p{
+                    font-weight: 500 !important;
+                    color: #7c2f2f;
+                    margin-bottom: unset;
+                }
+            }
+            .input{
+                margin-bottom: 20px;
+                width: 100%;
+                input{
+                    border: 1px solid gray;
+                    padding: 20px 40px 20px 20px;
+                    width: 100%;
+                    &:focus{
+                        border: 2px solid #131cd4;
+                    }
+                    
+                }
+            }
+            input[type=checkbox]{
+                height: 15px;
+                width: 15px;
+            }
+            button{
+                background-color: #464dee;
+                color: #ffffff;
+                font-size: 0.875rem;
+                padding: 20px;
+                width: 100%;
+                border-radius: 5px;    
+                margin-bottom: 20px;
+                font-weight: 500;
+                transition: all .2s ease;
+                &:hover{
+                    background: #232beb;
+                }
+            }
+            .checkbox{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 15px;
+                label{
+                    color: #a7afb7;
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+                a:hover{
+                    text-decoration: underline;
+                }
+            }
+            .footer{
+                display: grid;
+                place-content: center;
+                span{
+                    font-weight: 300;
+                    color: #a7afb7;
+                    a{
+                        color: #131cd4;
+                        &:hover{
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}
