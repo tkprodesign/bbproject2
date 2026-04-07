@@ -1,10 +1,10 @@
-<header>
-    <div class="demo-disclaimer" style="background:#f13223;color:#fff;text-align:center;padding:8px 12px;font-size:12px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;">
+<header class="site-header">
+    <div class="demo-disclaimer">
         Demo Website Only — Not a real bank. Do not submit real personal or financial information.
     </div>
-    <div>
+    <div class="header-meta-bar">
         <div class="container">
-            <div>
+            <div class="meta-links">
                 <a href="mailto:support@velmorabank.us">
                     <i class="bi bi-envelope-fill"></i>
                     <span>support@velmorabank.us</span>
@@ -14,20 +14,24 @@
                     <span>+1 790 844 9103</span>
                 </a>
             </div>
-            <div>
+            <div class="meta-links right">
                 <a href="/atm-and-bank-locations/">
                     <i class="bi bi-geo-alt-fill"></i>
                     <span>ATM &amp; Branch Locations</span>
                 </a>
+                <a href="/contact/">
+                    <i class="bi bi-headset"></i>
+                    <span>24/7 Support</span>
+                </a>
             </div>
         </div>
     </div>
-    <div>
+    <div class="header-nav-bar">
         <div class="container">
             <a href="/" id="logo" aria-label="Velmora Bank Home">
                 <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank">
             </a>
-            <nav>
+            <nav class="desktop-nav">
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/personal/">Personal Banking</a></li>
@@ -37,17 +41,20 @@
                     <li><a href="/contact/">Contact</a></li>
                 </ul>
             </nav>
-            <a href="/online-banking/" class="cta">
-                <i class="bi bi-lock"></i>
-                <span>Online Banking</span>
-            </a>
-            <a href="#" id="menuToggle">
+            <div class="header-actions">
+                <a href="/login/" class="login-link">Login</a>
+                <a href="/online-banking/" class="cta">
+                    <i class="bi bi-lock"></i>
+                    <span>Online Banking</span>
+                </a>
+            </div>
+            <a href="#" id="menuToggle" aria-label="Toggle navigation menu">
                 <i class="bi bi-list open"></i>
                 <i class="bi bi-x-lg close"></i>
             </a>
         </div>
     </div>
-    <nav class="mobile-nav">
+    <nav class="mobile-nav" id="mobileNav">
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/personal/">Personal Banking</a></li>
@@ -57,6 +64,22 @@
             <li><a href="/contact/">Contact</a></li>
             <li><a href="/atm-and-bank-locations/">ATM &amp; Branch Locations</a></li>
             <li><a href="/online-banking/">Online Banking</a></li>
+            <li><a href="/login/">Login</a></li>
+            <li><a href="/signup/">Create Account</a></li>
         </ul>
     </nav>
 </header>
+<script>
+    (function () {
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        if (!menuToggle || !mobileNav) return;
+
+        menuToggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            menuToggle.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+            document.body.classList.toggle('active');
+        });
+    })();
+</script>
