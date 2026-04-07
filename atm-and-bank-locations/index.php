@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css?v=<?php echo time(); ?>">
 </head>
 <body>
-<?php include('../templates/header1.php'); ?>
+<?php include('../common-sections/header.php'); ?>
 <section class="page-hero">
   <div class="container">
     <h1>ATM &amp; Branch Locations in the U.S.</h1>
@@ -41,5 +41,6 @@
     <article class="card"><h3>Downtown Seattle Branch</h3><p>1201 3rd Ave, Seattle, WA 98101<br>Mon–Fri: 8:00 AM – 6:00 PM</p></article>
   </div>
 </section>
+<?php include('../common-sections/footer.php'); ?>
 </body>
 </html>

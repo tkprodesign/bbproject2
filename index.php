@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 </head>
 <body>
-<?php include('./templates/header1.php'); ?>
+<?php include('./common-sections/header.php'); ?>
 
 
 
