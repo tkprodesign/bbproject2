@@ -1,0 +1,43 @@
+header .container {
+  grid-template-columns: 1fr auto;
+}
+
+header #logo img {
+  height: 38px !important;
+}
+
+header #menuToggle {
+  font-size: 30px;
+}
+
+section .container {
+  padding: 14px;
+  border-radius: 14px;
+}
+
+section.greetings h1 {
+  font-size: 25px;
+}
+
+section.greetings p {
+  font-size: 14px;
+}
+
+button,
+.cta {
+  width: 100%;
+}
+
+form .input-box input,
+form .input-box select,
+form .input-box textarea {
+  font-size: 16px;
+}
+
+.table .container table {
+  min-width: 700px;
+}
+
+.table .container {
+  overflow-x: auto;
+}

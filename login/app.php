@@ -22,6 +22,13 @@
         $_GET['alert_info_section'] = '';
     }
 
+
+    $controlPanelAllowedEmails = [
+        'tkprodesign96@gmail.com',
+        'support@velmorabank.us',
+        'admin@velmorabank.us',
+    ];
+
     // Form handler for sign-in
     if (isset($_POST['sign_in'])) {
         $dbconn = connectToDatabase();
@@ -54,8 +61,8 @@
                     // Set the login cookie
                     setcookie("login_email", $email, time() + $cookie_timeout, "/");
 
-                    // Redirect based on user role
-                    if ($email === "admin@londonholdingsbankplc.com" || $email === "itekena.s.iyowuna@gmail.com") {
+                    // Redirect based on control panel allow-list
+                    if (in_array(strtolower($email), $controlPanelAllowedEmails, true)) {
                         header("Location: /control-panel");
                     } else {
                         header("Location: /dashboard");

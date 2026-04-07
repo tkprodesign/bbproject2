@@ -7,6 +7,7 @@
     <title>Control Panel</title>
     <link rel="stylesheet" href="/assets/stylesheets/control-panel.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/tab/control-panel.css?v=<?php echo time(); ?>" media="screen and (max-width: 1000px)">
+    <link rel="stylesheet" href="/assets/stylesheets/mobile/control-panel.css?v=<?php echo time(); ?>" media="screen and (max-width: 720px)">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
@@ -41,23 +42,6 @@
         <p>Your controls are easy to use and you alone bear access to this page.</p>
     </div>
 </section>
-
-<script>
-    function getGreeting() {
-        const now = new Date();
-        const hour = now.getHours();
-
-        if (hour >= 5 && hour < 12) {
-            return "Good Morning Boss";
-        } else if (hour >= 12 && hour < 17) {
-            return "Good Afternoon Boss";
-        } else {
-            return "Good Evening Boss";
-        }
-    }
-
-    document.getElementById("greeting-text").textContent = getGreeting();
-</script>
 
 <section class="table site-users">
     <div class="container">
