@@ -22,6 +22,7 @@
 <body>
 <?php include('../common-sections/header.php'); ?>
 
+
 <section class="page-hero">
   <div class="container">
     <h1>About Velmora Bank</h1>
@@ -92,5 +93,6 @@
 </section>
 
 <?php include('../common-sections/footer.php'); ?>
+
 </body>
 </html>
