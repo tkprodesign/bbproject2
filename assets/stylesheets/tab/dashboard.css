@@ -57,11 +57,24 @@ section.account-info .cta-sec .right { width: 100%; display: flex; flex-wrap: wr
 
 .quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-section.add-account .container,
-section.transactions .container,
-section.manage-account .container,
-section.preferences .container,
-section.profile-kyc .container,
-section.change-password .container { padding: 16px; }
+section.add-account .container .accounts-list {
+  overflow-x: scroll;
+}
+section.add-account .container .accounts-list table {
+  min-width: 1000px;
+}/*# sourceMappingURL=dashboard.css.map */
+.insights-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 
-.accounts-list, main .right { overflow-x: auto; }
+.quick-actions {
+  gap: 8px;
+}
+
+.quick-action {
+  font-size: 14px;
+}
+
+.modern-grid {
+  grid-template-columns: 1fr;
+}

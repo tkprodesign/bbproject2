@@ -1,20 +1,37 @@
-.pre-header .container { flex-direction: column; align-items: flex-start; }
-.pre-header .right { width: 100%; justify-content: space-between; }
+header #menuToggle {
+  z-index: 10;
+}
 
-header #menuToggle { top: 52px; right: 10px; }
+section.account-info .container .cta-sec .right {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+}
 
-section.account-info .cta-sec .left .greeting { font-size: 24px; }
-section.account-info .bars .bar .figure { font-size: 27px; }
+.insights-grid {
+  grid-template-columns: 1fr;
+}
 
-.quick-actions { grid-template-columns: 1fr; }
-.quick-action { text-align: center; }
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+}
 
-table { min-width: 700px; }
+.quick-action {
+  text-align: center;
+}
 
-form .input-box label { font-size: 14px; }
+main .container .right,
+section.add-account .container .accounts-list,
+section.transactions .container .accounts-list {
+  overflow-x: auto;
+}
 
-section.manage-account .row { flex-direction: column; align-items: flex-start; }
-section.manage-account .row img { width: 100%; height: 130px; }
+table {
+  min-width: 680px;
+}
 
-section.account-success .content,
-section.kyc-ver .content { margin-top: 35px; padding: 20px; }
+.modern-grid .row {
+  flex-direction: column;
+  align-items: flex-start;
+}
