@@ -18,11 +18,8 @@
   </style>
 </head>
 <body>
-<<<<<<< HEAD
 <?php include('../common-sections/header.php'); ?>
-=======
-<?php include('../templates/header1.php'); ?>
->>>>>>> main
+
 
 <section class="page-hero">
   <div class="container">
@@ -83,9 +80,7 @@
     </div>
   </div>
 </section>
-<<<<<<< HEAD
 <?php include('../common-sections/footer.php'); ?>
-=======
->>>>>>> main
+
 </body>
 </html>
