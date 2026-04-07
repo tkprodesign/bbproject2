@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
-            
+
     <!-- Primary Meta Tags -->
     <title>Velmora Bank — Digital Financial Solutions</title>
     <meta name="title" content="Velmora Bank — Digital Financial Solutions">
     <meta name="description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://velmorabank.us/">
@@ -25,16 +25,11 @@
     <meta name="twitter:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
     <meta name="twitter:image" content="/assets/images/home/business-increase.png">
 
-    <!-- Favicon -->
-    
     <link rel="stylesheet" href="/assets/stylesheets/main.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/stylesheets/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/home.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/stylesheets/home.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/home.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" media="screen and (max-width: 1000px)" href="assets/stylesheets/tab/home.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css?v=<?php echo time(); ?>"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css?v=<?php echo time(); ?>">
 </head>
 <body>
 <?php include('./common-sections/header.php'); ?>
