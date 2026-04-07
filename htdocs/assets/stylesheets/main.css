@@ -40,61 +40,172 @@ body {
   color: #262626;
   background: #f2f4f6;
 }
+body.active {
+  overflow: hidden;
+}
 
-header {
+.site-header {
   background: #fff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.07);
+  position: sticky;
+  top: 0;
+  z-index: 120;
 }
-header > div:first-child {
+.site-header .demo-disclaimer {
+  background: #f13223;
   color: #fff;
-  background: #163555;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
-header > div:first-child .container {
+.site-header .header-meta-bar {
+  background: #163555;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+.site-header .header-meta-bar .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 17px 0;
-  font-size: 14px;
+  padding: 10px 0;
+  font-size: 13px;
 }
-header > div:first-child .container > div:first-child {
+.site-header .header-meta-bar .meta-links {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-header > div:first-child .container > div:last-child {
-  display: flex;
+.site-header .header-meta-bar .meta-links a {
+  display: inline-flex;
   align-items: center;
-  gap: 16px;
+  gap: 6px;
+  color: #eaf1ff;
+  font-weight: 500;
 }
-header > div:nth-child(2) .container {
-  width: 100%;
-  max-width: unset;
+.site-header .header-meta-bar .meta-links a:hover {
+  color: #fff;
+}
+.site-header .header-nav-bar .container {
+  width: min(95%, 1280px);
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  align-items: center;
-}
-header > div:nth-child(2) .container #logo {
-  margin-left: 2.5vw;
-}
-header > div:nth-child(2) .container #logo img {
-  height: 64px;
-  width: auto;
-}
-header > div:nth-child(2) .container nav ul {
-  display: flex;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 20px;
+  min-height: 82px;
 }
-header > div:nth-child(2) .container nav ul li a {
+.site-header .header-nav-bar .container #logo {
+  margin-left: 0;
+}
+.site-header .header-nav-bar .container #logo img {
+  height: 56px;
+  width: auto;
+}
+.site-header .desktop-nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+.site-header .desktop-nav ul li a {
   font-size: 14px;
+  font-weight: 600;
+  color: #27334d;
 }
-header > div:nth-child(2) .container .cta {
-  justify-self: right;
+.site-header .desktop-nav ul li a:hover {
+  color: #f13223;
+}
+.site-header .header-actions {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.site-header .header-actions .login-link {
+  color: #27334d;
+  font-weight: 600;
+}
+.site-header .header-actions .login-link:hover {
+  color: #f13223;
+}
+.site-header .header-nav-bar .cta {
   background: #f13223;
   color: #fff;
-  padding: 24px 32px;
+  padding: 15px 20px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
-header .mobile-nav, header #menuToggle {
+.site-header .mobile-nav, .site-header #menuToggle {
   display: none;
+}
+.site-header #menuToggle {
+  font-size: 26px;
+  color: #27334d;
+}
+.site-header #menuToggle .close {
+  display: none;
+}
+.site-header #menuToggle.active .open {
+  display: none;
+}
+.site-header #menuToggle.active .close {
+  display: inline;
+}
+
+@media (max-width: 1000px) {
+  .site-header .header-meta-bar .container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 0;
+  }
+  .site-header .header-nav-bar .container {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    min-height: 72px;
+  }
+  .site-header .desktop-nav,
+  .site-header .header-actions {
+    display: none;
+  }
+  .site-header #menuToggle {
+    display: inline-flex;
+  }
+  .site-header .mobile-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: min(86vw, 380px);
+    background: #fff;
+    z-index: 99;
+    padding: 128px 24px 24px;
+    transform: translateX(-105%);
+    transition: transform 0.25s ease;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+    display: block;
+  }
+  .site-header .mobile-nav.active {
+    transform: translateX(0);
+    overflow-y: auto;
+  }
+  .site-header .mobile-nav ul {
+    display: grid;
+    gap: 16px;
+  }
+  .site-header .mobile-nav ul li a {
+    color: #27334d;
+    font-weight: 600;
+  }
+  .site-header .mobile-nav ul li a:hover {
+    color: #f13223;
+  }
 }
 
 footer {

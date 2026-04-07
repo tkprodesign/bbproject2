@@ -19,9 +19,9 @@
                     <i class="bi bi-geo-alt-fill"></i>
                     <span>ATM &amp; Branch Locations</span>
                 </a>
-                <a href="/online-banking/">
-                    <i class="bi bi-lock-fill"></i>
-                    <span>Secure Online Banking</span>
+                <a href="/contact/">
+                    <i class="bi bi-headset"></i>
+                    <span>24/7 Support</span>
                 </a>
             </div>
         </div>
@@ -42,10 +42,13 @@
                     <li><a href="/login/">Login</a></li>
                 </ul>
             </nav>
-            <a href="/online-banking/" class="cta">
-                <i class="bi bi-lock"></i>
-                <span>Online Banking</span>
-            </a>
+            <div class="header-actions">
+                <a href="/login/" class="login-link">Login</a>
+                <a href="/online-banking/" class="cta">
+                    <i class="bi bi-lock"></i>
+                    <span>Online Banking</span>
+                </a>
+            </div>
             <a href="#" id="menuToggle" aria-label="Toggle navigation menu">
                 <i class="bi bi-list open"></i>
                 <i class="bi bi-x-lg close"></i>
