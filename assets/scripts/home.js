@@ -1,184 +1,306 @@
-document.addEventListener("DOMContentLoaded", function() {
-// Function to set equal height for all p elements in the same section
-function setEqualHeightForParagraphs() {
-    let pElements = document.querySelectorAll('section.services .row-1 p');
-    let maxHeight = 0;
-
-    // First, reset the height to auto to calculate the natural height
-    pElements.forEach(p => {
-        p.style.height = 'auto';
-    });
-
-    // Calculate the maximum height
-    pElements.forEach(p => {
-        let height = p.offsetHeight;
-        if (height > maxHeight) {
-            maxHeight = height;
-        }
-    });
-
-    // Set all p elements to the maximum height
-    pElements.forEach(p => {
-        p.style.height = maxHeight + 'px';
-    });
-}
-
-// Call the function to set equal height for p elements in row-1
-setEqualHeightForParagraphs();
-});
-
-
-
-
-document.addEventListener("DOMContentLoaded", function() {
-// Function to set equal height for all p elements in the same section
-function setEqualHeightForParagraphs2() {
-    let p2Elements = document.querySelectorAll('section.services .row-2 p');
-    let maxHeight = 0;
-
-    // First, reset the height to auto to calculate the natural height
-    p2Elements.forEach(p => {
-        p.style.height = 'auto';
-    });
-
-    // Calculate the maximum height
-    p2Elements.forEach(p => {
-        let height = p.offsetHeight;
-        if (height > maxHeight) {
-            maxHeight = height;
-        }
-    });
-
-    // Set all p elements to the maximum height
-    p2Elements.forEach(p => {
-        p.style.height = maxHeight + 'px';
-    });
-}
-
-// Call the function to set equal height for p elements in row-1
-setEqualHeightForParagraphs2();
-});
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    let isDarkCard = true;
-    const darkCard = document.querySelector('.credit-card .dark-card');
-    const lightCard = document.querySelector('.credit-card .light-card');
-    const placeholderCard = document.querySelector('.credit-card .placeholder');
-    const slideInterval = 2000; // 2 seconds
-    let intervalId;
-
-    function slideIn() {
-        if (isDarkCard) {
-            darkCard.style.transform = 'translateX(0)'; // Slide in dark card
-            darkCard.style.zIndex = 1;
-            darkCard.style.opacity = 1;
-            lightCard.style.transform = 'translateX(100%)'; // Hide light card
-            lightCard.style.zIndex = 0;
-            lightCard.style.opacity = 0;
-            placeholderCard.src = "/assets/images/home/credit-card-white.png";
-        } else {
-            lightCard.style.transform = 'translateX(0)'; // Slide in light card
-            lightCard.style.zIndex = 1;
-            lightCard.style.opacity = 1;
-            darkCard.style.transform = 'translateX(100%)'; // Hide dark card
-            darkCard.style.zIndex = 0;
-            darkCard.style.opacity = 0;
-            placeholderCard.src = "/assets/images/home/credit-card-black.png";
-        }
-        isDarkCard = !isDarkCard; // Toggle the card to be shown next
-    }
-
-    function startSliding() {
-        intervalId = setInterval(slideIn, slideInterval);
-    }
-
-    function resetInterval() {
-        clearInterval(intervalId); // Clear the existing interval
-        startSliding(); // Start a new interval
-    }
-
-    // Start sliding on button click and reset the interval
-    document.getElementById('startButton').addEventListener('click', function() {
-        slideIn(); // Perform the slide immediately
-        resetInterval(); // Reset the interval
-    });
-    document.getElementById('startButton2').addEventListener('click', function() {
-        slideIn(); // Perform the slide immediately
-        resetInterval(); // Reset the interval
-    });
-    
-    // Initial slide in
-    slideIn();
-    startSliding();
-});
-
-
-
-
-
-
+// Setting Hero Height and Mobile Nav height
+const heroSection = document.querySelector('.hero');
+const header = document.querySelector('header');
+const mobileNav = document.querySelector('.mobile-nav')
+const mobileNavList = mobileNav.querySelector('ul')
+const documentBody = document.querySelector('body')
 document.addEventListener('DOMContentLoaded', function() {
-    var statsSection = document.querySelector('.stats');
-    var statsSectionInView = false;
+    // Select the section.hero and header elements
+    // Function to set the height of .hero section
+    function adjustHeroHeight() {
+      if (header && heroSection) {
+          // Get the height of the header
+          const headerHeight = header.offsetHeight;
+  
+          // Check if the screen width is 100px or below
+          if (window.innerWidth <= 1000) {
+              // Set the height of the .hero section to 500px
+                heroSection.style.height = '600px';
+          } else {
+              // Set the height of the .hero section as originally intended
+              heroSection.style.height = `calc(100vh - ${headerHeight}px)`;
+          }
+  
+          // Set padding-top of the mobile navigation list
+          mobileNavList.style.paddingTop = `calc(64px + ${headerHeight}px)`;
+      }
+  }
+  
 
-    function checkStatsSectionInView() {
-        if (!statsSectionInView && isElementInViewport(statsSection)) {
-            // Perform your action here
-            console.log('Stats section is in viewport!');
-            
-            // Mark section as viewed
-            statsSectionInView = true;
-            
-            // Animate the numbers
-            animateNumbers();
-        }
-    }
+    // Adjust the hero section height on page load
+    adjustHeroHeight();
 
-    function isElementInViewport(el) {
-        var rect = el.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-
-    function animateNumbers() {
-        var figures = document.querySelectorAll('.fig');
-        figures.forEach(function(fig) {
-            var endValue = parseInt(fig.innerText.replace(',', ''));
-            var duration = 2000; // Adjust as needed
-            var start = 0;
-            var step = Math.ceil(endValue / (duration / 60)); // Calculate step based on duration
-
-            var counter = setInterval(function() {
-                start += step;
-                if (start >= endValue) {
-                    clearInterval(counter);
-                    start = endValue;
-                }
-                fig.textContent = numberWithCommas(start);
-            }, 1000 / 60); // 60fps
-        });
-    }
-
-    function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    // Initial check on load
-    checkStatsSectionInView();
-
-    // Check on scroll
-    window.addEventListener('scroll', checkStatsSectionInView);
+    // Optional: Adjust height on window resize
+    window.addEventListener('resize', adjustHeroHeight);
 });
 
 
 
 
+//Menu toggle functions
+const menuToggle = document.querySelector('#menuToggle')
+menuToggle.addEventListener('click', ()=>{
+  menuToggle.classList.toggle('active')
+  mobileNav.classList.toggle('active')
+  documentBody.classList.toggle('active')
+})
 
+
+
+const swiper1 = new Swiper('.swiper-1', {
+  direction: 'horizontal',
+  loop: true,
+  speed: 1000,
+  autoplay: {
+      delay: 5000
+  },
+  pagination: {
+      el: '.swiper-pagination-1',
+  },
+  navigation: {
+      nextEl: '.swiper-button-next-1',
+      prevEl: '.swiper-button-prev-1',
+  },
+  scrollbar: {
+      el: '.swiper-scrollbar-1',
+  },
+});
+
+const swiper2 = new Swiper('.swiper-2', {
+  direction: 'horizontal',
+  loop: true,
+  speed: 1000,
+  slidesPerView: 1,
+  spaceBetween: 36,
+  autoplay: {
+      delay: 5000
+  },
+  breakpoints: {
+    // when window width is <= 750px
+    // when window width is <= 1000px
+    750: {
+        slidesPerView: 1,
+    },
+    1000: {
+      slidesPerView: 2,
+    },
+    // when window width is <= 1200px
+    1200: {
+      slidesPerView: 3,
+    },
+  },
+  pagination: {
+      el: '.swiper-pagination-2',
+  },
+  navigation: {
+      nextEl: '.swiper-button-next-2',
+      prevEl: '.swiper-button-prev-2',
+  },
+  scrollbar: {
+      el: '.swiper-scrollbar-2',
+  },
+});
+
+
+  function fetchFinancialNews(apiKey) {
+    const url = 'https://finnhub.io/api/v1/news';
+    const params = {
+      token: apiKey,
+      category: 'general' // Adjust category as needed
+    };
+    const queryString = new URLSearchParams(params).toString();
+  
+    return fetch(`${url}?${queryString}`)
+      .then(response => response.json())
+      .then(data => {
+        // Extract the first 10 news articles
+        return data.slice(0, 10);
+      })
+      .catch(error => {
+        console.error('Error fetching news:', error);
+        return [];
+      });
+  }
+  
+  // Example usage
+  const apiKey = 'cqta661r01qvdch30k6gcqta661r01qvdch30k70';
+  fetchFinancialNews(apiKey)
+    .then(newsData => {
+        console.log(newsData);
+        const tickerWrapper = document.querySelector('.latest-news .ticker-wrapper');
+        newsData.forEach(article => {
+            const span = document.createElement('span');
+            span.textContent = article.headline;
+            tickerWrapper.appendChild(span);
+        });
+        const clone = tickerWrapper.cloneNode(true);
+        tickerWrapper.appendChild(clone);
+        
+        tickerWrapper.style.whiteSpace = 'nowrap';
+        tickerWrapper.style.overflow = 'hidden';
+        
+        let tickerWidth = tickerWrapper.scrollWidth;
+        tickerWrapper.style.width = `${tickerWidth * 2}px`; // Double the width for continuous loop
+        
+        let scrollPosition = 0;
+        const scrollSpeed = 1; // Adjust scroll speed as needed
+        
+        function scrollTicker() {
+            scrollPosition -= scrollSpeed;
+            tickerWrapper.style.transform = `translateX(${scrollPosition}px)`;
+        
+            if (Math.abs(scrollPosition) >= tickerWidth) {
+            scrollPosition = 0;
+            tickerWrapper.style.transform = `translateX(${scrollPosition}px)`;
+            }
+        
+            requestAnimationFrame(scrollTicker);
+        }
+        
+        scrollTicker();
+    });
+
+    const toggleBox = document.querySelector('.toggle-box');
+    const toggle = toggleBox.querySelector('.toggle');
+    const salaryInput = document.getElementById('salaryInput');
+    const loanAmount = document.getElementById('loanAmount');
+    
+    const center = {
+        x: toggleBox.offsetWidth / 2,
+        y: toggleBox.offsetHeight / 2
+    };
+    
+    function getAngleBetweenPoints(cx, cy, ex, ey) {
+        const radians = Math.atan2(ey - cy, ex - cx);
+        const degrees = radians * (180 / Math.PI);
+        return degrees;
+    }
+    
+    function angleToSalary(angle) {
+        // Normalize angle to a 0-360 range
+        const normalizedAngle = (angle % 360 + 360) % 360;
+        // Map angle to salary (0 to 15000 range)
+        return Math.round((normalizedAngle / 360) * 15000);
+    }
+    
+    function onPointerMove(event) {
+        let x, y;
+        if (event.type === 'mousemove') {
+            x = event.clientX;
+            y = event.clientY;
+        } else if (event.type === 'touchmove') {
+            const touch = event.touches[0];
+            x = touch.clientX;
+            y = touch.clientY;
+        }
+    
+        const boxRect = toggleBox.getBoundingClientRect();
+        const pointerX = x - boxRect.left;
+        const pointerY = y - boxRect.top;
+    
+        const angle = getAngleBetweenPoints(center.x, center.y, pointerX, pointerY);
+    
+        const calcAngle = angle + 90;
+        // Rotate the toggle element based on the angle
+        toggle.style.transform = `rotate(${calcAngle}deg)`;
+    
+        // Update the salary figure
+        const salary = angleToSalary(calcAngle);
+        salaryInput.textContent = salary;
+    
+        // Update the loan amount (70% of salary)
+        const loan = (salary * 0.7).toFixed(2);
+        loanAmount.textContent = `${loan}`;
+    }
+    
+    function onPointerEnter(event) {
+        if (event.type === 'touchstart') {
+            event.preventDefault(); // Prevent default touch behavior
+        }
+        toggleBox.addEventListener('mousemove', onPointerMove);
+        toggleBox.addEventListener('touchmove', onPointerMove);
+    }
+    
+    function onPointerLeave(event) {
+        toggleBox.removeEventListener('mousemove', onPointerMove);
+        toggleBox.removeEventListener('touchmove', onPointerMove);
+    }
+    
+    toggleBox.addEventListener('mouseenter', onPointerEnter);
+    toggleBox.addEventListener('mouseleave', onPointerLeave);
+    toggleBox.addEventListener('touchstart', onPointerEnter);
+    toggleBox.addEventListener('touchend', onPointerLeave);
+   
+
+
+
+// Benefits Section JS Functions
+const benefitsBlock = document.querySelector('section.benefits');
+const benefitsImages = benefitsBlock.querySelectorAll('.left img');
+const benefitsTextBlocks = benefitsBlock.querySelectorAll('.right .benefit');
+const benefitsLeftToggle = benefitsBlock.querySelector('.center .left');
+const benefitsRightToggle = benefitsBlock.querySelector('.center .right');
+
+const benefitsImageProperties = [
+  {
+    number: 0,
+    left: '0',
+    zIndex: '2',
+  },
+  {
+    number: 1,
+    left: '100%',
+    zIndex: '1',
+  },
+  {
+    number: 2,
+    left: '200%',
+    zIndex: '0',
+  }
+];
+
+let benefitsState = 0;
+let autoSlideInterval;
+
+// Function to set the state of the benefits section
+function setBenefitsState() {
+  benefitsImages.forEach((img, index) => {
+    const stateIndex = (benefitsState + index) % 3;
+    img.style.left = benefitsImageProperties[stateIndex].left;
+    img.style.zIndex = benefitsImageProperties[stateIndex].zIndex;
+    img.style.transition = 'all 0.5s ease';
+  });
+
+  benefitsTextBlocks.forEach((textBlock, index) => {
+    textBlock.style.display = index === benefitsState ? 'block' : 'none';
+  });
+}
+
+// Function to move to the next slide (simulates right toggle click)
+function nextSlide() {
+  benefitsState = (benefitsState + 1) % 3;
+  setBenefitsState();
+}
+
+// Function to reset the auto-slide interval
+function resetInterval() {
+  clearInterval(autoSlideInterval);
+  autoSlideInterval = setInterval(nextSlide, 5000);
+}
+
+// Event listeners for manual toggles
+benefitsLeftToggle.addEventListener('click', () => {
+  benefitsState = (benefitsState - 1 + 3) % 3;
+  setBenefitsState();
+  resetInterval();  // Reset the interval when manually toggling
+});
+
+benefitsRightToggle.addEventListener('click', () => {
+  benefitsState = (benefitsState + 1) % 3;
+  setBenefitsState();
+  resetInterval();  // Reset the interval when manually toggling
+});
+
+// Initialize the benefits state and start the auto-slide interval
+setBenefitsState();
+autoSlideInterval = setInterval(nextSlide, 5000);
