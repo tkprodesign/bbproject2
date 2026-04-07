@@ -12,16 +12,18 @@ date_default_timezone_set('America/New_York');
 
 // Database connection function
 function connectToDatabase() {
-    $servername = "127.0.0.1";
-    $dbusername = "bzvgbkjtlx_user";
-    $dbpassword = "Wateva06@";
-    $dbname = "bzvgbkjtlx_db";
+    $servername = getenv('DB_HOST') ?: '127.0.0.1';
+    $dbusername = getenv('DB_USER') ?: 'bzvgbkjtlx_user';
+    $dbpassword = getenv('DB_PASS') ?: 'Wateva06@';
+    $dbname = getenv('DB_NAME') ?: 'bzvgbkjtlx_db';
     
     $dbconn = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);
     
     if (!$dbconn) {
-        die("Connection failed: " . mysqli_connect_error());
+        die("Database connection failed. Please verify database configuration.");
     }
+
+    mysqli_set_charset($dbconn, 'utf8mb4');
     
     return $dbconn;
 }

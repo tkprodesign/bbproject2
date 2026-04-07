@@ -1,35 +1,24 @@
 // Setting Hero Height and Mobile Nav height
 const heroSection = document.querySelector('.hero');
 const header = document.querySelector('header');
-const mobileNav = document.querySelector('.mobile-nav')
-const mobileNavList = mobileNav.querySelector('ul')
+const mobileNav = document.querySelector('.mobile-nav');
+const mobileNavList = mobileNav ? mobileNav.querySelector('ul') : null;
 document.addEventListener('DOMContentLoaded', function() {
-    // Select the section.hero and header elements
-    // Function to set the height of .hero section
     function adjustHeroHeight() {
       if (header && heroSection) {
-          // Get the height of the header
           const headerHeight = header.offsetHeight;
-  
-          // Check if the screen width is 100px or below
-          if (window.innerWidth <= 1000) {
-              // Set the height of the .hero section to 500px
-                heroSection.style.height = '600px';
-          } else {
-              // Set the height of the .hero section as originally intended
-              heroSection.style.height = `calc(100vh - ${headerHeight}px)`;
-          }
-  
-          // Set padding-top of the mobile navigation list
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          const computedHeight = Math.max(560, viewportHeight - headerHeight);
+          heroSection.style.height = `${computedHeight}px`;
+      }
+
+      if (header && mobileNavList) {
+          const headerHeight = header.offsetHeight;
           mobileNavList.style.paddingTop = `calc(64px + ${headerHeight}px)`;
       }
   }
-  
 
-    // Adjust the hero section height on page load
     adjustHeroHeight();
-
-    // Optional: Adjust height on window resize
     window.addEventListener('resize', adjustHeroHeight);
 });
 
@@ -149,11 +138,12 @@ const swiper2 = new Swiper('.swiper-2', {
         scrollTicker();
     });
 
-    const toggleBox = document.querySelector('.toggle-box');
-    const toggle = toggleBox.querySelector('.toggle');
-    const salaryInput = document.getElementById('salaryInput');
-    const loanAmount = document.getElementById('loanAmount');
+const toggleBox = document.querySelector('.toggle-box');
+const toggle = toggleBox ? toggleBox.querySelector('.toggle') : null;
+const salaryInput = document.getElementById('salaryInput');
+const loanAmount = document.getElementById('loanAmount');
     
+if (toggleBox && toggle && salaryInput && loanAmount) {
     const center = {
         x: toggleBox.offsetWidth / 2,
         y: toggleBox.offsetHeight / 2
@@ -219,16 +209,17 @@ const swiper2 = new Swiper('.swiper-2', {
     toggleBox.addEventListener('mouseleave', onPointerLeave);
     toggleBox.addEventListener('touchstart', onPointerEnter);
     toggleBox.addEventListener('touchend', onPointerLeave);
+}
    
 
 
 
 // Benefits Section JS Functions
 const benefitsBlock = document.querySelector('section.benefits');
-const benefitsImages = benefitsBlock.querySelectorAll('.left img');
-const benefitsTextBlocks = benefitsBlock.querySelectorAll('.right .benefit');
-const benefitsLeftToggle = benefitsBlock.querySelector('.center .left');
-const benefitsRightToggle = benefitsBlock.querySelector('.center .right');
+const benefitsImages = benefitsBlock ? benefitsBlock.querySelectorAll('.left img') : [];
+const benefitsTextBlocks = benefitsBlock ? benefitsBlock.querySelectorAll('.right .benefit') : [];
+const benefitsLeftToggle = benefitsBlock ? benefitsBlock.querySelector('.center .left') : null;
+const benefitsRightToggle = benefitsBlock ? benefitsBlock.querySelector('.center .right') : null;
 
 const benefitsImageProperties = [
   {
@@ -277,19 +268,19 @@ function resetInterval() {
   autoSlideInterval = setInterval(nextSlide, 5000);
 }
 
-// Event listeners for manual toggles
-benefitsLeftToggle.addEventListener('click', () => {
-  benefitsState = (benefitsState - 1 + 3) % 3;
-  setBenefitsState();
-  resetInterval();  // Reset the interval when manually toggling
-});
+if (benefitsImages.length && benefitsTextBlocks.length && benefitsLeftToggle && benefitsRightToggle) {
+  benefitsLeftToggle.addEventListener('click', () => {
+    benefitsState = (benefitsState - 1 + 3) % 3;
+    setBenefitsState();
+    resetInterval();
+  });
 
-benefitsRightToggle.addEventListener('click', () => {
-  benefitsState = (benefitsState + 1) % 3;
-  setBenefitsState();
-  resetInterval();  // Reset the interval when manually toggling
-});
+  benefitsRightToggle.addEventListener('click', () => {
+    benefitsState = (benefitsState + 1) % 3;
+    setBenefitsState();
+    resetInterval();
+  });
 
-// Initialize the benefits state and start the auto-slide interval
-setBenefitsState();
-autoSlideInterval = setInterval(nextSlide, 5000);
+  setBenefitsState();
+  autoSlideInterval = setInterval(nextSlide, 5000);
+}
