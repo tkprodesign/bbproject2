@@ -3,7 +3,6 @@ const heroSection = document.querySelector('.hero');
 const header = document.querySelector('header');
 const mobileNav = document.querySelector('.mobile-nav')
 const mobileNavList = mobileNav.querySelector('ul')
-const documentBody = document.querySelector('body')
 document.addEventListener('DOMContentLoaded', function() {
     // Select the section.hero and header elements
     // Function to set the height of .hero section
@@ -34,16 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', adjustHeroHeight);
 });
 
-
-
-
-//Menu toggle functions
-const menuToggle = document.querySelector('#menuToggle')
-menuToggle.addEventListener('click', ()=>{
-  menuToggle.classList.toggle('active')
-  mobileNav.classList.toggle('active')
-  documentBody.classList.toggle('active')
-})
 
 
 
