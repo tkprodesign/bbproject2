@@ -42,23 +42,6 @@
     </div>
 </section>
 
-<script>
-    function getGreeting() {
-        const now = new Date();
-        const hour = now.getHours();
-
-        if (hour >= 5 && hour < 12) {
-            return "Good Morning Boss";
-        } else if (hour >= 12 && hour < 17) {
-            return "Good Afternoon Boss";
-        } else {
-            return "Good Evening Boss";
-        }
-    }
-
-    document.getElementById("greeting-text").textContent = getGreeting();
-</script>
-
 <section class="table site-users">
     <div class="container">
         <h2>Site Users Short List (Max 10 Users)</h2>
