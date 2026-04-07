@@ -1,37 +1,20 @@
-header #menuToggle {
-  z-index: 10;
-}
+.pre-header .container { flex-direction: column; align-items: flex-start; }
+.pre-header .right { width: 100%; justify-content: space-between; }
 
-section.account-info .container .cta-sec .right {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-}
+header #menuToggle { top: 52px; right: 10px; }
 
-.insights-grid {
-  grid-template-columns: 1fr;
-}
+section.account-info .cta-sec .left .greeting { font-size: 24px; }
+section.account-info .bars .bar .figure { font-size: 27px; }
 
-.quick-actions {
-  display: grid;
-  grid-template-columns: 1fr;
-}
+.quick-actions { grid-template-columns: 1fr; }
+.quick-action { text-align: center; }
 
-.quick-action {
-  text-align: center;
-}
+table { min-width: 700px; }
 
-main .container .right,
-section.add-account .container .accounts-list,
-section.transactions .container .accounts-list {
-  overflow-x: auto;
-}
+form .input-box label { font-size: 14px; }
 
-table {
-  min-width: 680px;
-}
+section.manage-account .row { flex-direction: column; align-items: flex-start; }
+section.manage-account .row img { width: 100%; height: 130px; }
 
-.modern-grid .row {
-  flex-direction: column;
-  align-items: flex-start;
-}
+section.account-success .content,
+section.kyc-ver .content { margin-top: 35px; padding: 20px; }
