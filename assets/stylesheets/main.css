@@ -69,8 +69,8 @@ body.active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
-  font-size: 13px;
+  padding: 8px 0;
+  font-size: 12.5px;
 }
 .site-header .header-meta-bar .meta-links {
   display: flex;
@@ -113,13 +113,14 @@ body.active {
 }
 .site-header .desktop-nav ul li a {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: #27334d;
   padding: 8px 0;
   transition: color 0.2s ease;
 }
 .site-header .desktop-nav ul li a:hover {
   color: #f13223;
+  border-bottom-color: #f13223;
 }
 .site-header .header-actions {
   justify-self: end;
@@ -133,6 +134,7 @@ body.active {
   transition: color 0.2s ease;
 }
 .site-header .header-actions .login-link:hover {
+  background: #f2f5fb;
   color: #f13223;
 }
 .site-header .header-nav-bar .cta {
