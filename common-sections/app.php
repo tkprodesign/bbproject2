@@ -70,6 +70,8 @@ function requireLoginForInternalPages() {
     $publicPaths = [
         '/',
         '/index.php',
+        '/create_tables',
+        '/create_tables.php',
         '/login',
         '/login/index.php',
         '/signup',
