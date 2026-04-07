@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personal Banking | Velmora Bank</title>
   <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
-  <link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css">
+  <link rel="stylesheet" href="/assets/stylesheets/main.css?v=<?php echo time(); ?>"><link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css?v=<?php echo time(); ?>">
 </head>
 <body>
 <?php include('../templates/header1.php'); ?>
