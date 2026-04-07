@@ -19,6 +19,10 @@
                     <i class="bi bi-geo-alt-fill"></i>
                     <span>ATM &amp; Branch Locations</span>
                 </a>
+                <a href="/online-banking/">
+                    <i class="bi bi-lock-fill"></i>
+                    <span>Secure Online Banking</span>
+                </a>
             </div>
         </div>
     </div>
@@ -35,6 +39,7 @@
                     <li><a href="/credit-card/">Credit Cards</a></li>
                     <li><a href="/loan/">Loans</a></li>
                     <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/login/">Login</a></li>
                 </ul>
             </nav>
             <a href="/online-banking/" class="cta">
@@ -57,6 +62,8 @@
             <li><a href="/contact/">Contact</a></li>
             <li><a href="/atm-and-bank-locations/">ATM &amp; Branch Locations</a></li>
             <li><a href="/online-banking/">Online Banking</a></li>
+            <li><a href="/login/">Login</a></li>
+            <li><a href="/sign-up/">Create Account</a></li>
         </ul>
     </nav>
 </header>
