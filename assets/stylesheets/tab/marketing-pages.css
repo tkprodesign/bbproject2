@@ -1,0 +1,6 @@
+@media (max-width: 900px) {
+  .page-content .grid { grid-template-columns: 1fr; }
+  .page-hero h1 { font-size: 34px; }
+  .cta-band { flex-direction: column; align-items: flex-start; }
+  .contact-wrap { grid-template-columns: 1fr; }
+}
