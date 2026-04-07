@@ -66,7 +66,7 @@
             <li><a href="/atm-and-bank-locations/">ATM &amp; Branch Locations</a></li>
             <li><a href="/online-banking/">Online Banking</a></li>
             <li><a href="/login/">Login</a></li>
-            <li><a href="/sign-up/">Create Account</a></li>
+            <li><a href="/signup/">Create Account</a></li>
         </ul>
     </nav>
 </header>

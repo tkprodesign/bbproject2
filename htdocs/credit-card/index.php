@@ -7,5 +7,5 @@
 <article class="card"><h3>Cashback Plus</h3><p>Get steady cashback on groceries, fuel, and utilities every billing cycle.</p></article>
 <article class="card"><h3>Business Expense Card</h3><p>Track spending by department and set custom card controls for your team.</p></article>
 </div></section>
-<section class="cta-band"><div><h2>Apply today</h2><p>Get a decision quickly and start using your card with virtual access.</p></div><a class="cta-btn" href="/sign-up/">Start Application</a></section>
+<section class="cta-band"><div><h2>Apply today</h2><p>Get a decision quickly and start using your card with virtual access.</p></div><a class="cta-btn" href="/signup/">Start Application</a></section>
 </body></html>

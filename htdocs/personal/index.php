@@ -15,6 +15,6 @@
   <article class="card"><h3>High-Yield Savings</h3><p>Grow your savings faster with competitive rates and automatic transfer options.</p></article>
   <article class="card"><h3>Digital Wallet Access</h3><p>Add your cards to Apple Pay and Google Pay for secure, contactless transactions.</p></article>
 </div></section>
-<section class="cta-band"><div><h2>Ready to get started?</h2><p>Open your Velmora account in minutes and start banking with confidence.</p></div><a class="cta-btn" href="/sign-up/">Open an Account</a></section>
+<section class="cta-band"><div><h2>Ready to get started?</h2><p>Open your Velmora account in minutes and start banking with confidence.</p></div><a class="cta-btn" href="/signup/">Open an Account</a></section>
 </body>
 </html>

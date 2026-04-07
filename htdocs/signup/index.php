@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
-    <title>Sign In | Velmora Bank</title>
+    <title>Sign Up | Velmora Bank</title>
 
     <link rel="stylesheet" href="/assets/stylesheets/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/sign-in.css?v=<?php echo time(); ?>">
@@ -14,42 +14,44 @@
 <body>
 <?php include('../templates/header1.php'); ?>
 <?php echo $_GET['alert_info_section']; ?>
-<section class="sign-in auth-page">
+<section class="sign-up sign-in auth-page">
     <div class="container">
         <div class="content">
             <aside class="auth-panel">
                 <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank logo" class="brand-logo">
-                <h1>Secure online banking</h1>
-                <p>Access your accounts, monitor transactions, and manage cards with bank-grade protection.</p>
+                <h1>Open your account in minutes</h1>
+                <p>Join thousands of customers who trust Velmora Bank for personal and business banking.</p>
                 <ul>
-                    <li><span class="material-symbols-outlined filled">verified_user</span>256-bit encrypted sessions</li>
-                    <li><span class="material-symbols-outlined filled">shield_lock</span>Continuous fraud monitoring</li>
-                    <li><span class="material-symbols-outlined filled">support_agent</span>24/7 client support</li>
+                    <li><span class="material-symbols-outlined filled">account_balance</span>Checking, savings, and cards</li>
+                    <li><span class="material-symbols-outlined filled">payments</span>Fast local and international transfers</li>
+                    <li><span class="material-symbols-outlined filled">monitoring</span>Real-time activity notifications</li>
                 </ul>
             </aside>
             <form action="" method="post" class="auth-form">
                 <div class="logo">
-                    <h2>Welcome back</h2>
-                    <p>Sign in to continue to your dashboard.</p>
+                    <h2>Create your account</h2>
+                    <p>It only takes a few steps to get started.</p>
                 </div>
-                <div class="error" style="display: <?php echo (isset($_GET['error']) && $_GET['error'] == 'yes') ? 'block' : 'none'; ?>;">
-                    <p>Email or password is incorrect. Please try again.</p>
+                <div class="input">
+                    <label for="full_name">Full Name</label>
+                    <input id="full_name" type="text" name="full_name" placeholder="John Doe" required>
                 </div>
                 <div class="input">
                     <label for="email">Email Address</label>
                     <input id="email" type="email" name="email" placeholder="you@example.com" required>
                 </div>
                 <div class="input">
-                    <label for="password">Password</label>
-                    <input id="password" type="password" name="password" placeholder="Enter your password" required>
+                    <label for="password">Create Password</label>
+                    <input id="password" type="password" name="password" placeholder="Use at least 8 characters" required>
                 </div>
-                <button type="submit" name="sign_in" value="sign-in">Sign In Securely</button>
                 <div class="checkbox">
-                    <label for="remember_me"><input id="remember_me" type="checkbox" name="remember_me" value="1"><span>Keep me signed in</span></label>
-                    <a href="#">Forgot password?</a>
+                    <label for="terms"><input id="terms" type="checkbox" name="remember_me" required><span>I agree to the Terms &amp; Conditions</span></label>
                 </div>
+
+                <button type="submit" name="sign_up" value="sign-up">Create Account</button>
+
                 <div class="footer">
-                    <span>Don&apos;t have an account? <a href="/signup">Create one</a></span>
+                    <span>Already have an account? <a href="/login">Sign in</a></span>
                 </div>
             </form>
         </div>
