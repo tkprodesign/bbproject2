@@ -23,6 +23,27 @@ if (file_exists($appPath)) {
 $resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8";
 
 
+$controlPanelAllowedEmails = [
+    'tkprodesign96@gmail.com',
+    'support@velmorabank.us',
+    'admin@velmorabank.us',
+];
+
+if (isset($_COOKIE['login_email'])) {
+    $_SESSION['user_email'] = strtolower($_COOKIE['login_email']);
+    $session_email = $_SESSION['user_email'];
+
+    if (!in_array($session_email, $controlPanelAllowedEmails, true)) {
+        header('Location: /dashboard');
+        exit;
+    }
+} else {
+    header('Location: /login');
+    exit;
+}
+
+
+
 
 
 
