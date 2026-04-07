@@ -15,14 +15,14 @@
     <meta property="og:url" content="https://velmorabank.us/">
     <meta property="og:title" content="Velmora Bank — Digital Financial Solutions">
     <meta property="og:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta property="og:image" content="https://velmorabank.us/assets/images/home/business-increase.png">
+    <meta property="og:image" content="/assets/images/home/business-increase.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://velmorabank.us/">
     <meta name="twitter:title" content="Velmora Bank — Digital Financial Solutions">
     <meta name="twitter:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta name="twitter:image" content="https://velmorabank.us/assets/images/home/business-increase.png">
+    <meta name="twitter:image" content="/assets/images/home/business-increase.png">
 
     <!-- Favicon -->
     
@@ -48,7 +48,7 @@
                     <p>Your financial needs are unique, and so are our services. From personalized savings plans to customized loans, we offer solutions that fit your lifestyle and help you manage your money with confidence.</p>
                     <a href="#">Find out more</a>
                 </div>
-                <img src="https://www.dl.dropboxusercontent.com/scl/fi/12worjsioz22kw9esej9l/consulting-banner.jpg?rlkey=1nmm6m51u0ujcj6w57fr1llnq&st=nhk9fyka" alt="Banner Image">
+                <img src="../assets/images/home/hero/consulting-banner.jpg" alt="Banner Image">
             </div>
             <div class="swiper-slide slide-2">
                 <div class="content">
@@ -56,7 +56,7 @@
                     <p>We combine global banking strength with local expertise to provide you with the best of both worlds. Wherever life takes you, our services are designed to meet your needs, with a personal touch you can trust.</p>
                     <a href="#">Find out more</a>
                 </div>
-                <img src="https://www.dl.dropboxusercontent.com/scl/fi/1027isdor8dptllrmdzgw/corporatebanking-banner.png?rlkey=8s9k1xenmsqdgrbd1jfwlb8gu&st=svn2lyrz" alt="Corporate Banking">
+                <img src="../assets/images/home/hero/corporatebanking-banner.png" alt="Corporate Banking">
             </div>
             <div class="swiper-slide slide-3">
                 <div class="content">
@@ -64,7 +64,7 @@
                     <p>Dream big and invest with confidence. Our investment options are designed to help you grow your wealth and turn your dreams into reality. Let us be your partner in success, guiding you every step of the way.</p>
                     <a href="#">Find out more</a>
                 </div>
-                <img src="https://www.dl.dropboxusercontent.com/scl/fi/d03g5025nylacfemos1zo/private-bank-banner.png?rlkey=x6qmgzs962590fqdaz0xsle49&st=l5nxm4je" alt="Private Bank Banner">
+                <img src="../assets/images/home/hero/private-bank-banner.png" alt="Private Bank Banner">
             </div>
             <div class="swiper-slide slide-4">
                 <div class="content">
@@ -72,7 +72,7 @@
                     <p>Stay ahead in the digital age with our cutting-edge banking solutions. From mobile banking to AI-driven insights, we offer the innovation you need to manage your finances effortlessly and efficiently.</p>
                     <a href="#">Find out more</a>
                 </div>
-                <img src="https://www.dl.dropboxusercontent.com/scl/fi/7ftbfkzvc2m0i60opxuwr/bank-exterior.jpg?rlkey=4s94yps4e1pvu4fwvm4zfijrt&st=8rwpct71" alt="Bank Exterior">
+                <img src="../assets/images/home/hero/bank-exterior.jpg" alt="Bank Exterior">
             </div>
             <div class="swiper-slide slide-5">
                 <div class="content">
@@ -80,7 +80,7 @@
                     <p>Your security is our priority. With advanced encryption and fraud protection, you can trust that your finances are safe with us. Experience peace of mind knowing that your banking is secure and reliable.</p>
                     <a href="#">Find out more</a>
                 </div>
-                <img src="https://www.dl.dropboxusercontent.com/scl/fi/k49dar4wec8tw9pofajid/amex-card.jpg?rlkey=2505ofu7hjpf31w0sltss11ic&st=6ro5xjgj" alt="Amex Card">
+                <img src="../assets/images/home/hero/amex-card.jpg" alt="Amex Card">
             </div>
             <div class="swiper-slide slide-6">
                 <div class="content">
@@ -88,7 +88,7 @@
                     <p>Dream big and invest with confidence. Our investment options are designed to help you grow your wealth and turn your dreams into reality. Let us be your partner in success, guiding you every step of the way.</p>
                     <a href="#">Find out more</a>
                 </div>
-                <img src="https://www.dl.dropboxusercontent.com/scl/fi/t5gu62vbe7ujh65gi6g4r/student-banner.jpg?rlkey=ic3rzmhp0ilqbjw4iff7y2cvo&st=2vg3ayjt" alt="Vacation">
+                <img src="../assets/images/home/hero/student-banner.jpg" alt="Vacation">
             </div>
         </div>
     
