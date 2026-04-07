@@ -100,10 +100,8 @@ body.active {
   margin-left: 0;
 }
 .site-header .header-nav-bar .container #logo img {
-  height: 64px;
+  height: 56px;
   width: auto;
-  max-width: 260px;
-  object-fit: contain;
 }
 .site-header .desktop-nav ul {
   display: flex;
