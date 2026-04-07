@@ -29,7 +29,7 @@
     <div class="header-nav-bar">
         <div class="container">
             <a href="/" id="logo" aria-label="Velmora Bank Home">
-                <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank">
+                <img src="/new-assets/images/branding/Logo.png" alt="Velmora Bank">
             </a>
             <nav class="desktop-nav">
                 <ul>
@@ -39,6 +39,7 @@
                     <li><a href="/credit-card/">Credit Cards</a></li>
                     <li><a href="/loan/">Loans</a></li>
                     <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/login/">Login</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
