@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Careers | Velmora Bank</title>
   <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
-  <link rel="stylesheet" href="/assets/stylesheets/main.css?v=<?php echo time(); ?>">
-  <link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" href="/assets/stylesheets/desktop/marketing-pages.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/marketing-pages.css?v=<?php echo time(); ?>">
   <style>
     .section-block{padding:56px 0;border-bottom:1px solid #e6edf5}
     .pill{display:inline-block;background:#e9f2ff;color:#0b3d91;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;margin-bottom:10px}
