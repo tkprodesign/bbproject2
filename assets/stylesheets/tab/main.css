@@ -23,6 +23,26 @@
     display: inline-flex;
   }
 
+  .site-header #menuToggle {
+    position: relative;
+    z-index: 130;
+  }
+
+  .site-header .mobile-nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 16, 31, 0.45);
+    z-index: 98;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+  }
+
+  .site-header .mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
   .site-header .mobile-nav {
     position: fixed;
     left: 0;

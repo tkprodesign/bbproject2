@@ -67,5 +67,6 @@
             <li><a href="/signup/">Create Account</a></li>
         </ul>
     </nav>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
 </header>
 <script src="/assets/scripts/header.js?v=<?php echo time(); ?>"></script>

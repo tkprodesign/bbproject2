@@ -819,3 +819,131 @@ section.transactions .container .accounts-list table tbody tr td:nth-child(3).pe
 section.transactions .container .accounts-list table tbody tr td:nth-child(3).failed {
   color: #ee5b5b;
 }/*# sourceMappingURL=dashboard.css.map */
+/* Modern dashboard refresh */
+body {
+  background: linear-gradient(180deg, #f4f7fc 0%, #eef3fb 100%);
+  color: #12233d;
+}
+
+header {
+  border: 0;
+  box-shadow: 0 8px 25px rgba(15, 35, 72, 0.08);
+  margin-bottom: 28px;
+}
+
+header .container > a,
+header .container > div {
+  border-radius: 12px;
+  margin: 8px 4px;
+}
+
+section.account-info .container .bars .bar,
+main .container .left,
+main .container .right,
+section.add-account .container form,
+section.add-account .container .accounts-list,
+section.transactions .container .accounts-list,
+section.profile-kyc .container,
+section.change-password .container,
+section.preferences .container,
+section.manage-account .container {
+  background: #fff;
+  border: 1px solid #e4ebf5;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(8, 31, 73, 0.06);
+}
+
+section.account-info .container .bars .bar.balance,
+section.account-info .container .bars .bar.accounts-counter {
+  border-bottom: 0;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.insight-card {
+  background: #fff;
+  border: 1px solid #e4ebf5;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.insight-card .kicker {
+  color: #5f6f8a;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.insight-card h3 {
+  margin: 8px 0;
+  font-size: 28px;
+  color: #102a56;
+}
+
+.insight-card a,
+.quick-action {
+  color: #0f4fd8;
+  font-weight: 600;
+}
+
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.quick-action {
+  background: #eaf1ff;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.dashboard-card {
+  padding: 22px;
+}
+
+.modern-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.modern-grid .row {
+  border: 1px solid #e7edf7;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.modern-grid .row img {
+  width: 58px;
+  height: 58px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+section.add-account .container .accounts-list table,
+section.transactions .container .accounts-list table,
+main .container .right table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  background: #f6f9ff;
+  color: #35507b;
+}
+
+table th,
+table td {
+  padding: 12px;
+  border-bottom: 1px solid #edf2f9;
+}
