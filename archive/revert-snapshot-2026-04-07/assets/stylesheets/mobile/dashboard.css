@@ -1,0 +1,37 @@
+header #menuToggle {
+  z-index: 10;
+}
+
+section.account-info .container .cta-sec .right {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.insights-grid {
+  grid-template-columns: 1fr;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.quick-action {
+  text-align: center;
+}
+
+main .container .right,
+section.add-account .container .accounts-list,
+section.transactions .container .accounts-list {
+  overflow-x: auto;
+}
+
+table {
+  min-width: 680px;
+}
+
+.modern-grid .row {
+  flex-direction: column;
+  align-items: flex-start;
+}
