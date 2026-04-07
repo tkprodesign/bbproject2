@@ -12,10 +12,10 @@ date_default_timezone_set('America/New_York');
 
 // Database connection function
 function connectToDatabase() {
-    $servername = "localhost";
-    $dbusername = "firstcit_dev";
-    $dbpassword = "e3QEKMJ2w8kLa7yZSfgj";
-    $dbname = "firstcit_db";
+    $servername = "127.0.0.1";
+    $dbusername = "bzvgbkjtlx_user";
+    $dbpassword = "Wateva06@";
+    $dbname = "bzvgbkjtlx_db";
     
     $dbconn = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);
     
