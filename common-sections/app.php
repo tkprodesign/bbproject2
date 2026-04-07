@@ -70,6 +70,12 @@ function requireLoginForInternalPages() {
         '/index.php',
         '/login',
         '/login/index.php',
+        '/signup',
+        '/signup/',
+        '/signup/index.php',
+        '/sign-up',
+        '/sign-up/',
+        '/sign-up/index.php',
     ];
 
     if (!in_array($normalizedPath, $publicPaths, true) && !isset($_COOKIE['login_email'])) {
