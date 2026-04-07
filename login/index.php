@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 </head>
 <body>
-<?php include('../templates/header1.php'); ?>
+<?php include('../common-sections/header.php'); ?>
 <?php echo $_GET['alert_info_section']; ?>
 <section class="sign-in auth-page">
     <div class="container">
@@ -55,6 +55,7 @@
         </div>
     </div>
 </section>
+<?php include('../common-sections/footer.php'); ?>
 <?php include('../common-sections/smartsupp-live-chat.html'); ?>
 </body>
 </html>

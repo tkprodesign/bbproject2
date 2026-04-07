@@ -180,7 +180,7 @@ if (isset($_POST['create_account'])) {
             <header style="padding: 1rem 0;">
                 <div style="padding: 1rem;">
                     <a href="https://velmorabank.us" id="logo">
-                        <img src="https://velmorabank.us/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
+                        <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
                     </a>
                 </div>
             </header>
@@ -276,7 +276,7 @@ if (isset($_POST['create_account'])) {
     //                         <header style="padding: 1rem 0;">
     //                             <div style="padding: 1rem;">
     //                                 <a href="https://velmorabank.us" id="logo">
-    //                                     <img src="https://velmorabank.us/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
+    //                                     <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
     //                                 </a>
     //                             </div>
     //                         </header>
@@ -302,13 +302,13 @@ if (isset($_POST['create_account'])) {
     //                             <!-- Uncomment if needed
     //                             <div class="social-media-links" style="margin: 10px 0;">
     //                                 <a href="https://facebook.com/#" style="margin: 0 5px;">
-    //                                     <img src="https://velmorabank.us/assets/images/social/facebook.png" alt="Facebook" style="width: 24px; height: 24px;">
+    //                                     <img src="/assets/images/social/facebook.png" alt="Facebook" style="width: 24px; height: 24px;">
     //                                 </a>
     //                                 <a href="https://twitter.com/#" style="margin: 0 5px;">
-    //                                     <img src="https://velmorabank.us/assets/images/social/twitter.png" alt="Twitter" style="width: 24px; height: 24px;">
+    //                                     <img src="/assets/images/social/twitter.png" alt="Twitter" style="width: 24px; height: 24px;">
     //                                 </a>
     //                                 <a href="https://linkedin.com/#" style="margin: 0 5px;">
-    //                                     <img src="https://velmorabank.us/assets/images/social/linkedin.png" alt="LinkedIn" style="width: 24px; height: 24px;">
+    //                                     <img src="/assets/images/social/linkedin.png" alt="LinkedIn" style="width: 24px; height: 24px;">
     //                                 </a>
     //                             </div>
     //                             -->
@@ -579,7 +579,7 @@ if (isset($_POST['transfer_funds'])) {
         <header style="padding: 1rem 0;">
             <div style="padding: 1rem;">
                 <a href="https://velmorabank.us" id="logo">
-                    <img src="https://velmorabank.us/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
+                    <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
                 </a>
             </div>
         </header>
@@ -651,7 +651,7 @@ ADMIN_HTML;
     <header style="padding: 1rem 0;">
         <div style="padding: 1rem;">
             <a href="https://velmorabank.us" id="logo">
-                <img src="https://velmorabank.us/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
+                <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
             </a>
         </div>
     </header>

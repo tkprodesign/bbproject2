@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css?v=<?php echo time(); ?>">
 </head>
 <body>
-<?php include('../templates/header1.php'); ?>
+<?php include('../common-sections/header.php'); ?>
 <section class="page-hero"><div class="container"><h1>Online Banking Access</h1><p>Bank securely from anywhere: monitor balances, transfer funds, manage cards, and receive real-time alerts.</p></div></section>
 
 <section class="page-content">
@@ -25,5 +25,6 @@
 
 <section class="cta-band"><div><h2>Already a customer?</h2><p>Sign in to view balances, transfer funds, and track account activity.</p></div><a class="cta-btn" href="/login/">Sign In</a></section>
 <section class="cta-band"><div><h2>New to Velmora Bank?</h2><p>Create your profile in minutes and start banking online right away.</p></div><a class="cta-btn" href="/signup/">Create Account</a></section>
+<?php include('../common-sections/footer.php'); ?>
 </body>
 </html>
