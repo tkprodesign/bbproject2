@@ -222,7 +222,7 @@
                 <span>American Express Cards</span>
             </div>
             <div class="feature">
-                <img src="/new-assets/images/home/business-increase.png">
+                <img src="../assets/images/home/business-increase.png">
                 <span>Business Opportunities</span>
             </div>
             <div class="feature">
@@ -349,9 +349,9 @@
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="/new-assets/images/home/benefits/financial-growth.jpg" alt="Convenience and Accessibility">
-                <img src="/new-assets/images/home/benefits/mobile-banking.jpg" alt="Financial Growth and Opportunities">
-                <img src="/new-assets/images/home/benefits/financial-security.jpg" alt="Security and Protection">
+                <img src="../assets/images/home/benefits/financial-growth.jpg" alt="Convenience and Accessibility">
+                <img src="../assets/images/home/benefits/mobile-banking.jpg" alt="Financial Growth and Opportunities">
+                <img src="../assets/images/home/benefits/financial-security.jpg" alt="Security and Protection">
             </div>
             <div class="center buttons">
                 <div class="left">
@@ -398,37 +398,37 @@
             <div class="swiper-wrapper">
                 <!-- Slides -->
                 <div class="swiper-slide slide-1">
-                    <img src="/new-assets/images/home/features/online-banking.jpg">
+                    <img src="../assets/images/home/features/online-banking.jpg">
                     <div class="content">
                         <h3>Online Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-2">
-                    <img src="/new-assets/images/home/features/mobile-banking.jpg">
+                    <img src="../assets/images/home/features/mobile-banking.jpg">
                     <div class="content">
                         <h3>Mobile Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-3">
-                    <img src="/new-assets/images/home/features/online-banking.jpg">
+                    <img src="../assets/images/home/features/online-banking.jpg">
                     <div class="content">
                         <h3>Loan and Mortgage Services</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-4">
-                    <img src="/new-assets/images/home/features/mobile-banking.jpg">
+                    <img src="../assets/images/home/features/mobile-banking.jpg">
                     <div class="content">
                         <h3>Investment and Wealth Management</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-5">
-                    <img src="/new-assets/images/home/features/online-banking.jpg">
+                    <img src="../assets/images/home/features/online-banking.jpg">
                     <div class="content">
                         <h3>Customer Support and Financial Advisory</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-6">
-                    <img src="/new-assets/images/home/features/mobile-banking.jpg">
+                    <img src="../assets/images/home/features/mobile-banking.jpg">
                     <div class="content">
                         <h3>Standby 24/7 ATMs</h3>
                     </div>
@@ -546,7 +546,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/new-assets/scripts/home.js"></script>
+<script src="../assets/scripts/home.js"></script>
 <?php include('./common-sections/smartsupp-live-chat.html'); ?>
 </body>
 </html>
