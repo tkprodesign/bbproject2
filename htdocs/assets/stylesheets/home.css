@@ -117,7 +117,7 @@ section.hero .swiper .content a {
 section.features-1 {
   position: relative;
   top: -36px;
-  z-index: 999;
+  z-index: 20;
 }
 section.features-1 .container {
   display: grid;
