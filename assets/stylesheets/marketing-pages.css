@@ -1,7 +1,7 @@
 
 body { background: #f6f8fb; }
 .page-hero {
-  background: linear-gradient(120deg, rgba(22,53,85,.95), rgba(10,28,46,.95)), url('/assets/images/home/hero/bank-exterior.jpg') center/cover;
+  background: linear-gradient(120deg, rgba(22,53,85,.95), rgba(10,28,46,.95)), url('../images/home/hero/bank-exterior.jpg') center/cover;
   color: #fff;
   padding: 90px 0;
 }
