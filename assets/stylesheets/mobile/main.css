@@ -44,3 +44,34 @@
     gap: 32px;
   }
 }
+
+@media (max-width: 720px) {
+  .site-header .header-nav-bar .container { min-height: 62px; padding: 8px 12px; }
+  .site-header .header-nav-bar .container #logo img { height: 34px; max-width: 158px; }
+  .site-header #menuToggle { width: 42px; height: 42px; }
+  .site-header #menuToggle.active { top: 10px; left: calc(100vw - 54px); }
+
+  .site-header .mobile-nav { padding: 74px 14px 20px; }
+  .site-header .mobile-nav ul li a { min-height: 46px; padding: 12px; }
+
+  .cookie-consent {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+  }
+  .cookie-consent .cookie-actions { justify-content: space-between; }
+  .cookie-consent button { width: auto; min-width: 112px; }
+
+  footer { padding: 40px 0; }
+  footer .container { gap: 24px; }
+  footer .container .left { gap: 24px; }
+  footer .container .right form { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  footer .container .right form input,
+  footer .container .right form button { width: 100%; height: 42px; }
+  footer .container .right .contacts a { margin-bottom: 10px !important; line-height: 1.55; }
+  footer .container .right .social-links { gap: 10px; justify-content: space-between; }
+}

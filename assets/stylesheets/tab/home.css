@@ -109,3 +109,20 @@ footer .container .left { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 section.features-3 .container .swiper-2 { overflow: hidden; }
 section.features-3 .container .swiper-2 .swiper-slide { height: auto; }
 section.features-3 .container .swiper-2 .swiper-slide img { height: 210px; object-fit: cover; }
+
+@media (max-width: 1000px) {
+  .hero-actions { margin-bottom: 28px; }
+  section.trust-strip { margin-top: 0; }
+  section.features-2 .container .features .feature { padding: 18px 14px; min-height: 146px; }
+  section.features-2 .container .features .feature svg { margin-inline: auto; }
+
+  section.benefits .container .benefits { grid-template-columns: 1fr; gap: 16px; }
+  section.benefits .container .benefits .left { min-height: 280px; }
+  section.benefits .container .benefits .right { min-height: auto; padding: 0 4px 6px; }
+  section.benefits .container .benefits .right .benefit { padding-right: 0; }
+
+  section.loan-calculator .container .left,
+  section.loan-calculator .container .left .calculator { padding: 18px; }
+  section.loan-calculator .container .left .calculator .toggle-box { margin: 14px auto 0; }
+  section.loan-calculator .container .right { padding: 18px; min-height: auto; }
+}

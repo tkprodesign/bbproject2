@@ -894,3 +894,10 @@ section.benefits .container .benefits .center > div {
 section.features-3 { margin-top: 34px; }
 section.features-3 .container { padding-top: 34px; padding-bottom: 34px; }
 section.faq { margin-top: 34px; padding-top: 0; }
+
+/* Feature card icon visibility fix (hero features grid only) */
+section.features-1 .container .feature svg,
+section.features-1 .container .feature svg * {
+  fill: #163555 !important;
+  stroke: #163555 !important;
+}
