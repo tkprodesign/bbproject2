@@ -6,6 +6,14 @@ $latest_transaction_time = null;
 $active_accounts = 0;
 $kyc_status_label = 'Not Submitted';
 
+$dashboardRows = [];
+$dashboardMeta = [
+    'account_holder' => $user_name,
+    'date_of_birth' => 'Not available',
+    'account_number' => 'Not available',
+    'account_type' => 'Primary',
+];
+
 $dbMetrics = connectToDatabase();
 
 $stmt = $dbMetrics->prepare("SELECT COUNT(*) FROM transactions WHERE user_email = ? AND status = 'Pending'");
@@ -36,15 +44,72 @@ $stmt->bind_result($active_accounts);
 $stmt->fetch();
 $stmt->close();
 
-$stmt = $dbMetrics->prepare("SELECT status FROM kyc_data WHERE email = ? ORDER BY id DESC LIMIT 1");
+$stmt = $dbMetrics->prepare("SELECT status, date_of_birth, first_name, middle_name, last_name FROM kyc_data WHERE email = ? ORDER BY id DESC LIMIT 1");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
-$stmt->bind_result($latest_kyc_status);
-if ($stmt->fetch() && !empty($latest_kyc_status)) {
-    $kyc_status_label = $latest_kyc_status;
+$stmt->bind_result($latest_kyc_status, $kyc_dob, $kyc_first_name, $kyc_middle_name, $kyc_last_name);
+if ($stmt->fetch()) {
+    if (!empty($latest_kyc_status)) {
+        $kyc_status_label = $latest_kyc_status;
+    }
+    if (!empty($kyc_dob)) {
+        $dashboardMeta['date_of_birth'] = $kyc_dob;
+    }
+
+    $kycFullName = trim(implode(' ', array_filter([$kyc_first_name, $kyc_middle_name, $kyc_last_name])));
+    if (!empty($kycFullName)) {
+        $dashboardMeta['account_holder'] = $kycFullName;
+    }
+}
+$stmt->close();
+
+$stmt = $dbMetrics->prepare("SELECT account_number, account_type FROM accounts WHERE user_email = ? ORDER BY id DESC LIMIT 1");
+$stmt->bind_param('s', $user_email);
+$stmt->execute();
+$stmt->bind_result($meta_account_number, $meta_account_type);
+if ($stmt->fetch()) {
+    $dashboardMeta['account_number'] = '****' . substr((string)$meta_account_number, -4);
+    $dashboardMeta['account_type'] = $meta_account_type;
+}
+$stmt->close();
+
+$stmt = $dbMetrics->prepare("SELECT type, description, amount, `time` FROM transactions WHERE user_email = ? ORDER BY `time` DESC LIMIT 10");
+$stmt->bind_param('s', $user_email);
+$stmt->execute();
+$stmt->bind_result($tx_type, $tx_description, $tx_amount, $tx_time);
+while ($stmt->fetch()) {
+    $dashboardRows[] = [
+        'date' => date('M d, Y', (int)$tx_time),
+        'description' => $tx_description,
+        'category' => $tx_type ?: 'General',
+        'amount' => (float)$tx_amount,
+    ];
 }
 $stmt->close();
 $dbMetrics->close();
+
+$totalCredits = 0.00;
+$totalDebits = 0.00;
+$creditCount = 0;
+$debitCount = 0;
+
+foreach ($dashboardRows as $row) {
+    $amount = (float)$row['amount'];
+    if ($amount >= 0) {
+        $totalCredits += $amount;
+        $creditCount++;
+    } else {
+        $totalDebits += abs($amount);
+        $debitCount++;
+    }
+}
+
+$runningBalance = (float)str_replace(',', '', $user_balance);
+foreach ($dashboardRows as &$row) {
+    $row['balance'] = $runningBalance;
+    $runningBalance -= (float)$row['amount'];
+}
+unset($row);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,7 +119,7 @@ $dbMetrics->close();
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
     <title>Dashboard</title>
-    
+
     <link rel="stylesheet" href="/assets/stylesheets/dashboard.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/tab/dashboard.css?v=<?php echo time(); ?>" media="screen and (max-width: 1000px)">
     <link rel="stylesheet" href="/assets/stylesheets/mobile/dashboard.css?v=<?php echo time(); ?>" media="screen and (max-width: 720px)">
@@ -63,160 +128,92 @@ $dbMetrics->close();
 </head>
 <body>
 <?php include('../common-sections/dashboard-header.html')?>
-<section class="account-info">
+<section class="account-info reference-dashboard">
     <div class="container">
-        <?php if($accounts_count == 0):?>
-            <div class="not-sec">
-                <p>You have not created any currency accounts, you must have at least 1 account to receive funds and send funds.</p>
-                <a href="/dashboard/accounts/create">Create Fund Account</a>
-            </div>
-        <?php endif;?>
         <div class="cta-sec">
             <div class="left">
-                <h2 class="greeting">Hi, <?php echo $user_name; ?></h2>
-                <p class="last-login">Last login was <?php echo date('d, F Y', $user_last_active); ?></p>
-            </div>
-            <div class="right">
-                <a href="/dashboard/accounts" class="sec-cta">View account</a>
-                <a href="/dashboard/accounts/create" class="pri-cta">
-                    <span>Add account</span>
-                    <span class="material-symbols-outlined icon">
-                        add
-                        </span>
-                </a>
+                <h2 class="greeting">Welcome back, <?php echo htmlspecialchars(explode(' ', $dashboardMeta['account_holder'])[0]); ?></h2>
+                <p class="last-login">Here's what's happening with your account today.</p>
             </div>
         </div>
+
         <div class="bars">
-            <div class="bar account">
-                <p class="name"><?php echo $user_name; ?></p>
-                <p class="account-type">Account type: 
-                    <?php
-                        if($accounts_count == 0){
-                            echo 'Single';
-                        } else {
-                            echo 'Multiple';
-                        }
-                    ?>
-                </p>
+            <div class="bar account hero-balance">
+                <p class="title">Available Balance</p>
+                <h1 class="figure">$<?php echo htmlspecialchars($user_balance); ?></h1>
+                <span class="month">+12.5% this year</span>
             </div>
-            <div class="bar balance">
-                <h1 class="figure">$<?php echo $user_balance; ?></h1>
-                <p class="title">Current Balance</p>
-                <span class="month">
-                <?php
-                    $current_time = date('F, Y');
-                    echo '<span class="month">As of ' . $current_time . '</span>';
-                ?>
-                </span>
+            <div class="bar">
+                <p class="title">Total Credits</p>
+                <h1 class="figure text-green">$<?php echo number_format($totalCredits, 2); ?></h1>
+                <span class="month"><?php echo $creditCount; ?> transactions</span>
             </div>
-            <div class="bar accounts-counter">
-                <h1 class="figure"><?php echo $accounts_count; ?></h1>
-                <p class="title">Total Accounts</p>
+            <div class="bar">
+                <p class="title">Total Debits</p>
+                <h1 class="figure text-red">$<?php echo number_format($totalDebits, 2); ?></h1>
+                <span class="month"><?php echo $debitCount; ?> transactions</span>
             </div>
         </div>
 
-        <div class="insights-grid">
-            <article class="insight-card">
-                <p class="kicker">Transactions</p>
-                <h3><?php echo (int)$successful_transactions; ?></h3>
-                <p>Successful transactions completed.</p>
-                <a href="/dashboard/accounts/transactions">View history</a>
-            </article>
-            <article class="insight-card">
-                <p class="kicker">Pending</p>
-                <h3><?php echo (int)$pending_transactions; ?></h3>
-                <p>Transactions currently being processed.</p>
-                <a href="/dashboard/fund/transfer">Make transfer</a>
-            </article>
-            <article class="insight-card">
-                <p class="kicker">Active accounts</p>
-                <h3><?php echo (int)$active_accounts; ?></h3>
-                <p>Active wallets available for use.</p>
-                <a href="/dashboard/accounts">Manage accounts</a>
-            </article>
-            <article class="insight-card">
-                <p class="kicker">KYC status</p>
-                <h3><?php echo htmlspecialchars($kyc_status_label); ?></h3>
-                <p>
-                    <?php if ($latest_transaction_time): ?>
-                        Last transaction: <?php echo date('d M Y H:i', $latest_transaction_time); ?>
-                    <?php else: ?>
-                        No transaction record yet.
-                    <?php endif; ?>
-                </p>
-                <a href="/dashboard/security/complete-kyc">Update identity info</a>
-            </article>
-        </div>
-
-        <div class="quick-actions">
-            <a href="/dashboard/fund/transfer" class="quick-action">Transfer funds</a>
-            <a href="/dashboard/accounts/create" class="quick-action">Create account wallet</a>
-            <a href="/dashboard/security/change-password" class="quick-action">Change password</a>
-            <a href="/dashboard/security/preferences" class="quick-action">Security preferences</a>
+        <div class="account-summary-panel">
+            <h3>Account Information</h3>
+            <div class="summary-grid">
+                <div><span>Account Holder</span><strong><?php echo htmlspecialchars($dashboardMeta['account_holder']); ?></strong></div>
+                <div><span>Date of Birth</span><strong><?php echo htmlspecialchars($dashboardMeta['date_of_birth']); ?></strong></div>
+                <div><span>Account Number</span><strong><?php echo htmlspecialchars($dashboardMeta['account_number']); ?></strong></div>
+                <div><span>Account Type</span><strong><?php echo htmlspecialchars($dashboardMeta['account_type']); ?></strong></div>
+            </div>
         </div>
     </div>
 </section>
-<main>
-    <div class="container">
-        <div class="left">
-            <h1>Picture Identification</h1>
-            <?php if($user_profile_picture == 'nil'): ?>
-                <img src="/assets/images/placeholder-image.png" alt="Pofile Picture" class="profile-picture">
-            <?php else: ?>
-                <img src="/dashboard/security/complete-kyc/uploads/<?php echo $user_profile_picture;?>" alt="Pofile Picture" class="profile-picture">
-            <?php endif; ?>
-            <a href="security/complete-kyc" class="upload">Upload Identification</a>
-            <p class="notification">Note:<br>
-                Identification image must meet the banking system standard of KYC image policy.
-                All identification image will undergo the strong human verification act.</p>
-        </div>
-        <div class="right">
-            <h2>Recent Transactions</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th>Desc</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php
-                    $dbconn = connectToDatabase();
-                    $sql = "SELECT type, amount, status, description, `time` FROM transactions WHERE user_email = ? ORDER BY `time` DESC LIMIT 10";
-                    $stmt = $dbconn->prepare($sql);
-                    $stmt->bind_param('s', $user_email);
-                    $stmt->execute();
-                    $stmt->bind_result($type, $amount, $status, $description, $transaction_time);
 
-                    while ($stmt->fetch()) {
-                        $transaction_date = $transaction_time;
-                        $formatted_date = date("d, F Y", $transaction_date);
-                        $formatted_time = date("H:i \E\T", $transaction_time);
+<main class="reference-transactions">
+    <div class="container">
+        <div class="right full-width">
+            <div class="transactions-toolbar">
+                <h2>Recent Transactions</h2>
+                <a href="accounts/transactions" class="sec-cta">View all</a>
+            </div>
+            <div class="accounts-list">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($dashboardRows as $row):
+                        $amount = (float)$row['amount'];
+                        $isCredit = $amount >= 0;
                         ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($type); ?></td>
-                            <td>$<?php echo htmlspecialchars(number_format(abs($amount), 2)); ?></td>
-                            <td class="<?php echo strtolower(htmlspecialchars($status)); ?>"><?php echo htmlspecialchars($status); ?></td>
-                            <td><?php echo htmlspecialchars($description); ?></td>
-                            <td><?php echo htmlspecialchars($formatted_date); ?></td>
-                            <td><?php echo htmlspecialchars($formatted_time); ?></td>
+                            <td><?php echo htmlspecialchars($row['date']); ?></td>
+                            <td><?php echo htmlspecialchars($row['description']); ?></td>
+                            <td><span class="tx-category"><?php echo htmlspecialchars($row['category']); ?></span></td>
+                            <td class="<?php echo $isCredit ? 'amount-credit' : 'amount-debit'; ?>">
+                                <?php echo $isCredit ? '+' : '-'; ?>$<?php echo number_format(abs($amount), 2); ?>
+                            </td>
+                            <td>
+                                <?php
+                                if (isset($row['balance'])) {
+                                    echo '$' . number_format((float)$row['balance'], 2);
+                                } else {
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
                         </tr>
-                    <?php
-                        }
-                    $stmt->close();
-                    $dbconn->close();
-                    ?>
-                </tbody>
-            </table>
-            <a href="accounts/transactions">View all transactions</a>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </main>
-</div>
 <script src="/assets/scripts/dashboard.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
