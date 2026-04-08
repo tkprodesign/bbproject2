@@ -1,7 +1,4 @@
 <header class="site-header">
-    <div class="demo-disclaimer">
-        Demo Website Only — Not a real bank. Do not submit real personal or financial information.
-    </div>
     <div class="header-meta-bar">
         <div class="container">
             <div class="meta-links">
