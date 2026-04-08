@@ -43,7 +43,16 @@ $controlPanelAllowedEmails = [
 ];
 
 if (isset($_COOKIE['login_email'])) {
-    $_SESSION['user_email'] = strtolower($_COOKIE['login_email']);
+    $cookieEmail = strtolower(trim((string)$_COOKIE['login_email']));
+    if (!filter_var($cookieEmail, FILTER_VALIDATE_EMAIL)) {
+        setcookie('login_email', '', time() - 3600, '/');
+        session_unset();
+        session_destroy();
+        header('Location: /login');
+        exit;
+    }
+
+    $_SESSION['user_email'] = $cookieEmail;
     $session_email = $_SESSION['user_email'];
 
     if (in_array($session_email, $controlPanelAllowedEmails, true)) {
@@ -54,6 +63,8 @@ if (isset($_COOKIE['login_email'])) {
     header('Location: /login');
     exit;
 }
+
+normalizeLegacyTransactionStatuses();
 
 
 
@@ -83,16 +94,25 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
 $dbconn = connectToDatabase();
 $sql = "SELECT `name`, email, kyc_level, profile_picture, last_active FROM users WHERE email = ?";
 $stmt = $dbconn->prepare($sql);
+$hasUser = false;
 
 
 if ($stmt) {
     $stmt->bind_param('s', $session_email);
     $stmt->execute();
     $stmt->bind_result($user_name, $user_email, $user_kyc_level, $user_profile_picture, $user_last_active);
-    $stmt->fetch();
+    $hasUser = $stmt->fetch();
     $stmt->close();
-} 
+}
 $dbconn->close();
+
+if (empty($hasUser) || empty($user_email)) {
+    setcookie('login_email', '', time() - 3600, '/');
+    session_unset();
+    session_destroy();
+    header('Location: /login');
+    exit;
+}
 
 
 
@@ -184,7 +204,7 @@ $dbconn->close();
 
 //Sum up user's balance from transaction table
 $dbconn = connectToDatabase();
-$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Completed')";
+$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending')";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -201,7 +221,7 @@ $user_balance = $user_balance > 0 ? number_format($user_balance, 2) : '0.00';
 
 //Count how many transactions have been made
 $dbconn = connectToDatabase();
-$sql = "SELECT COUNT(*) FROM transactions WHERE user_email = ?";
+$sql = "SELECT COUNT(*) FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending')";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();

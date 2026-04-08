@@ -47,6 +47,8 @@ if (isset($_COOKIE['login_email'])) {
     exit;
 }
 
+normalizeLegacyTransactionStatuses();
+
 
 
 
@@ -220,7 +222,7 @@ if (isset($_POST['debit_user'])) {
     $currency = htmlspecialchars($_POST['currency']);
     $description = htmlspecialchars($_POST['description']);
     $transaction_type = 'Withdrawal';
-    $status = 'Completed';
+    $status = 'Successful';
     $time = time(); // Current timestamp
 
     // Basic validation for critical fields

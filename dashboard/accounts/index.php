@@ -47,7 +47,7 @@
                 $stmt->close();
 
                 function getAccountBalance($dbconn, $account_number) {
-                    $sql = "SELECT SUM(amount) FROM transactions WHERE account_number = ? AND status IN ('Successful', 'Completed')";
+                    $sql = "SELECT SUM(amount) FROM transactions WHERE account_number = ? AND status IN ('Successful', 'Pending')";
                     $stmt = $dbconn->prepare($sql);
                     if ($stmt === false) {
                         die("Error preparing statement: " . $dbconn->error);

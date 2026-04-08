@@ -39,6 +39,10 @@
 require_once('./common-sections/app.php');
 $supportPhoneNumber = getSupportPhoneNumber();
 $supportWhatsappLink = getSupportWhatsappLink();
+$loanFlowMessage = '';
+if (isset($_GET['loan_flow']) && $_GET['loan_flow'] === 'invalid') {
+    $loanFlowMessage = 'Please calculate a valid loan estimate before submitting an application.';
+}
 include('./common-sections/header.php');
 ?>
 
@@ -47,14 +51,14 @@ include('./common-sections/header.php');
 
 
 <!-- Hero Section -->
-<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.82), rgba(10,28,52,.52)), url('/assets/images/home/hero/consulting-banner.jpg');">
+<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.72), rgba(10,28,52,.38)), url('/assets/images/home/hero/consulting-banner.jpg');">
     <div class="hero-static-inner">
         <div class="content">
             <h1>Secure Everyday Banking for Individuals, Families, and Businesses</h1>
             <p>Manage accounts, transfer funds, access lending, and get expert support from one trusted banking partner built for your daily and long-term financial goals.</p>
             <div class="hero-actions">
-                <a href="/login/" class="primary">Access Online Banking</a>
-                <a href="/contact/" class="secondary">Speak to a Banking Advisor</a>
+                <a href="/login/" class="primary"><span class="material-symbols-outlined">lock</span>Access Online Banking</a>
+                <a href="/contact/" class="secondary"><span class="material-symbols-outlined">support_agent</span>Speak to a Banking Advisor</a>
             </div>
         </div>
     </div>
@@ -217,6 +221,11 @@ include('./common-sections/header.php');
 <!-- Loan Calculator Section -->
 <section class="loan-calculator">
     <div class="container">
+        <?php if ($loanFlowMessage !== ''): ?>
+            <div class="loan-flow-alert" role="status">
+                <?php echo htmlspecialchars($loanFlowMessage, ENT_QUOTES, 'UTF-8'); ?>
+            </div>
+        <?php endif; ?>
         <div class="left">
             <div class="details">
                 <h1>Payday Loan<br>Calculator</h1>
@@ -318,13 +327,13 @@ include('./common-sections/header.php');
 <section class="benefits">
     <div class="container">
         <div class="heading">
-            <h2>Benefits of Banking With <i>LHB</i></h2>
+            <h2>Benefits of Banking With <i>Velmora Bank</i></h2>
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
-                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
-                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility">
+                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities">
+                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection">
             </div>
             <div class="center buttons">
                 <div class="left">

@@ -42,7 +42,7 @@
                             <td><?php echo htmlspecialchars($row['account_number']); ?></td>
                             <?php 
                                 $select_user_account = $row['account_number'];
-                                $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account' AND status IN ('Successful', 'Completed')";
+                                $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account' AND status IN ('Successful', 'Pending')";
                                 $su_result = $db->query($su_query);
                                 $account_balance = $su_result->fetch_assoc()['account_balance'] ?? 0;
                                 ?>
