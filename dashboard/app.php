@@ -64,6 +64,8 @@ if (isset($_COOKIE['login_email'])) {
     exit;
 }
 
+normalizeLegacyTransactionStatuses();
+
 
 
 
@@ -202,7 +204,7 @@ $dbconn->close();
 
 //Sum up user's balance from transaction table
 $dbconn = connectToDatabase();
-$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Completed')";
+$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending')";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -219,7 +221,7 @@ $user_balance = $user_balance > 0 ? number_format($user_balance, 2) : '0.00';
 
 //Count how many transactions have been made
 $dbconn = connectToDatabase();
-$sql = "SELECT COUNT(*) FROM transactions WHERE user_email = ?";
+$sql = "SELECT COUNT(*) FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending')";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();

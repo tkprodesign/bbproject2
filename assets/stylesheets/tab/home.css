@@ -13,6 +13,11 @@ section.features-2 .container .features {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+}
+section.features-2 .container .features .feature {
+  width: 100%;
+  min-height: 140px;
 }
 
 section.loan-calculator .container {
@@ -62,10 +67,14 @@ section.benefits .container .benefits .left {
   height: 350px;
 }
 section.benefits .container .benefits .center {
-  top: 318px;
+  position: static;
+  transform: none;
+  margin-top: 14px;
+  justify-content: center;
 }
 section.benefits .container .benefits .right {
-  height: 318px;
+  height: auto;
+  min-height: 320px;
 }
 
 section.faq .container .questions {

@@ -59,3 +59,7 @@ footer .container .left { grid-template-columns: 1fr; }
 section.features-3 .container .swiper-2 { overflow: hidden; }
 section.features-3 .container .swiper-2 .swiper-slide { height: auto; }
 section.features-3 .container .swiper-2 .swiper-slide img { height: 170px; object-fit: cover; }
+section.features-2 .container .features .feature { width: 100%; min-height: 128px; }
+section.benefits .container .benefits .center { position: static; transform: none; margin-top: 12px; justify-content: center; }
+section.benefits .container .benefits .center > div { width: 46px; height: 46px; }
+section.benefits .container .benefits .right { min-height: 320px; height: auto; }

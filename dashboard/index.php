@@ -23,7 +23,7 @@ $stmt->bind_result($pending_transactions);
 $stmt->fetch();
 $stmt->close();
 
-$stmt = $dbMetrics->prepare("SELECT COUNT(*) FROM transactions WHERE user_email = ? AND status = 'Successful'");
+$stmt = $dbMetrics->prepare("SELECT COUNT(*) FROM transactions WHERE user_email = ? AND status IN ('Successful')");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
 $stmt->bind_result($successful_transactions);
@@ -73,7 +73,7 @@ if ($stmt->fetch()) {
 }
 $stmt->close();
 
-$stmt = $dbMetrics->prepare("SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? ORDER BY `time` DESC LIMIT 10");
+$stmt = $dbMetrics->prepare("SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending') ORDER BY `time` DESC LIMIT 10");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
 $stmt->bind_result($tx_type, $tx_description, $tx_amount, $tx_status, $tx_time);
@@ -83,11 +83,18 @@ while ($stmt->fetch()) {
         $normalizedType = ((float)$tx_amount < 0) ? 'withdrawal' : 'deposit';
     }
     $normalizedType = ucwords(str_replace(['_', '-'], ' ', $normalizedType));
+    $normalizedStatus = strtolower(trim((string)$tx_status));
+    if ($normalizedStatus === 'completed') {
+        $normalizedStatus = 'successful';
+    }
+    if ($normalizedStatus === '' || $normalizedStatus === 'current') {
+        $normalizedStatus = 'posted';
+    }
     $dashboardRows[] = [
         'date' => date('M d, Y', (int)$tx_time),
         'description' => $tx_description,
         'category' => $normalizedType,
-        'status' => $tx_status ?: 'Posted',
+        'status' => ucwords(str_replace(['_', '-'], ' ', $normalizedStatus)),
         'amount' => (float)$tx_amount,
     ];
 }
@@ -103,6 +110,7 @@ $summaryStmt = $summaryDb->prepare("
         COALESCE(SUM(CASE WHEN amount < 0 THEN 1 ELSE 0 END), 0) AS debit_count
     FROM transactions
     WHERE user_email = ?
+      AND status IN ('Successful', 'Pending')
 ");
 $summaryStmt->bind_param('s', $user_email);
 $summaryStmt->execute();
