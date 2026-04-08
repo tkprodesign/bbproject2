@@ -69,13 +69,22 @@ section.benefits .container .benefits .left {
 section.benefits .container .benefits .center {
   position: static;
   transform: none;
-  margin-top: 14px;
+  margin-top: 10px;
   justify-content: center;
 }
 section.benefits .container .benefits .right {
   height: auto;
-  min-height: 320px;
+  min-height: 280px;
 }
+
+section.trust-strip { margin-top: -18px; }
+section.features-2,
+section.loan-calculator,
+section.about-us,
+section.benefits,
+section.features-3,
+section.faq { margin-top: 26px; }
+section.benefits .container .benefits { gap: 20px; padding: 16px; }
 
 section.faq .container .questions {
   grid-template-columns: 100%;
