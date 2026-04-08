@@ -73,7 +73,7 @@ if ($stmt->fetch()) {
 }
 $stmt->close();
 
-$stmt = $dbMetrics->prepare("SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending') ORDER BY `time` DESC LIMIT 10");
+$stmt = $dbMetrics->prepare("SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? AND (status IS NULL OR LOWER(status) <> 'failed') ORDER BY `time` DESC LIMIT 10");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
 $stmt->bind_result($tx_type, $tx_description, $tx_amount, $tx_status, $tx_time);
@@ -110,7 +110,7 @@ $summaryStmt = $summaryDb->prepare("
         COALESCE(SUM(CASE WHEN amount < 0 THEN 1 ELSE 0 END), 0) AS debit_count
     FROM transactions
     WHERE user_email = ?
-      AND status IN ('Successful', 'Pending')
+      AND (status IS NULL OR LOWER(status) <> 'failed')
 ");
 $summaryStmt->bind_param('s', $user_email);
 $summaryStmt->execute();
@@ -134,9 +134,9 @@ unset($row);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
     <title>Dashboard</title>
 
     <link rel="stylesheet" href="/assets/stylesheets/dashboard.css?v=<?php echo time(); ?>">

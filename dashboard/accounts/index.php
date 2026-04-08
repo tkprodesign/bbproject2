@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
     <title>Dashboard</title>
     <link rel="stylesheet" href="/assets/stylesheets/dashboard.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/tab/dashboard.css?v=<?php echo time(); ?>" media="screen and (max-width: 1000px)">
@@ -49,7 +49,7 @@
                 $stmt->close();
 
                 function getAccountBalance($dbconn, $account_number) {
-                    $sql = "SELECT SUM(amount) FROM transactions WHERE account_number = ? AND status IN ('Successful', 'Pending')";
+                    $sql = "SELECT SUM(amount) FROM transactions WHERE account_number = ? AND (status IS NULL OR LOWER(status) <> 'failed')";
                     $stmt = $dbconn->prepare($sql);
                     if ($stmt === false) {
                         die("Error preparing statement: " . $dbconn->error);

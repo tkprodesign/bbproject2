@@ -50,7 +50,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
                     <span>Online Banking</span>
                 </a>
             </div>
-            <a href="#" id="menuToggle" aria-label="Toggle navigation menu">
+            <a href="#" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
                 <i class="bi bi-list open"></i>
                 <i class="bi bi-x-lg close"></i>
             </a>
@@ -70,5 +70,12 @@ $supportWhatsappLink = getSupportWhatsappLink();
         </ul>
     </nav>
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <div class="cookie-consent" id="cookieConsent" role="region" aria-label="Cookie consent" hidden>
+        <p>We use cookies to improve your experience.</p>
+        <div class="cookie-actions">
+            <a href="/cookie-policy" class="learn-more">Learn More</a>
+            <button type="button" id="cookieAcceptBtn">Accept</button>
+        </div>
+    </div>
 </header>
 <script src="/assets/scripts/header.js?v=<?php echo time(); ?>"></script>

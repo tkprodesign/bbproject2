@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
   <title>Quick Links & Customer Resources | Velmora Bank</title>
-  <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+  <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
   <link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>">
