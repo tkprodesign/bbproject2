@@ -322,9 +322,9 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility">
-                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities">
-                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection">
+                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
             </div>
             <div class="center buttons">
                 <div class="left">
@@ -371,37 +371,37 @@ include('./common-sections/header.php');
             <div class="swiper-wrapper">
                 <!-- Slides -->
                 <div class="swiper-slide slide-1">
-                    <img src="/assets/images/home/features/mobile-banking.jpg" alt="Customer using mobile banking app">
+                    <img src="/assets/images/home/features/online-banking.jpg" alt="Customer using secure online banking" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Online Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-2">
-                    <img src="/assets/images/home/features/wealth-management.jpg" alt="Advisor discussing wealth management">
+                    <img src="/assets/images/home/features/mobile-banking.jpg" alt="Customer using mobile banking app" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Mobile Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-3">
-                    <img src="/assets/images/home/features/mobile-banking.jpg" alt="Customer using mobile banking app">
+                    <img src="/assets/images/home/features/mortgage-and-loans.jpg" alt="Client reviewing mortgage and loan options" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Loan and Mortgage Services</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-4">
-                    <img src="/assets/images/home/features/wealth-management.jpg" alt="Advisor discussing wealth management">
+                    <img src="/assets/images/home/features/wealth-management.jpg" alt="Advisor discussing investment and wealth planning" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Investment and Wealth Management</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-5">
-                    <img src="/assets/images/home/features/mobile-banking.jpg" alt="Customer using mobile banking app">
+                    <img src="/assets/images/home/features/customer-support.jpg" alt="Customer support and financial advisory meeting" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Customer Support and Financial Advisory</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-6">
-                    <img src="/assets/images/home/features/wealth-management.jpg" alt="Advisor discussing wealth management">
+                    <img src="/assets/images/home/features/atms.jpg" alt="24/7 ATM and card self-service banking" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Standby 24/7 ATMs</h3>
                     </div>

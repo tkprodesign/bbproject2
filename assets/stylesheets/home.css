@@ -452,7 +452,7 @@ section.about-us .container .container-wrapper {
   padding: 64px;
 }
 section.about-us .container .left {
-  background: url("https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1600&q=80");
+  background: url("/assets/images/home/contact.jpg");
   -o-object-fit: cover;
      object-fit: cover;
   -o-object-position: center bottom;
@@ -750,3 +750,10 @@ footer .container .right form { background: rgba(255,255,255,.08); padding: 14px
 footer .container .right form input { border-radius: 10px; }
 footer .container .right form button { border-radius: 10px; }
 footer .container .right .social-links a { border: 1px solid rgba(255,255,255,.28); border-radius: 50%; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; }
+
+section.features-3 .container .swiper-2 { width: 100%; overflow: hidden; }
+section.features-3 .container .swiper-2 .swiper-wrapper { align-items: stretch; }
+section.features-3 .container .swiper-2 .swiper-slide { height: auto; display: flex; flex-direction: column; }
+section.features-3 .container .swiper-2 .swiper-slide img { flex-shrink: 0; height: 230px; width: 100%; object-fit: cover; }
+section.features-3 .container .swiper-2 .swiper-slide .content { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+section.benefits .container .benefits .left img { object-fit: cover; }

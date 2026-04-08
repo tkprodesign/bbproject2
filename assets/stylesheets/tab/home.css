@@ -83,3 +83,6 @@ section.features-3 .container,
 section.faq .container { padding: 24px; }
 section.loan-calculator .container .right { min-height: 470px; }
 footer .container .left { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+section.features-3 .container .swiper-2 { overflow: hidden; }
+section.features-3 .container .swiper-2 .swiper-slide { height: auto; }
+section.features-3 .container .swiper-2 .swiper-slide img { height: 210px; object-fit: cover; }

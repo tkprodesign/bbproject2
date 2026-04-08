@@ -55,3 +55,6 @@ section.loan-calculator .container .left { padding-bottom: 510px; }
 section.features-3 .swiper-slide img { height: 180px; }
 section.faq .container { padding: 18px; }
 footer .container .left { grid-template-columns: 1fr; }
+section.features-3 .container .swiper-2 { overflow: hidden; }
+section.features-3 .container .swiper-2 .swiper-slide { height: auto; }
+section.features-3 .container .swiper-2 .swiper-slide img { height: 170px; object-fit: cover; }
