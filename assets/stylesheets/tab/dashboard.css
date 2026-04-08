@@ -65,3 +65,8 @@ section.profile-kyc .container,
 section.change-password .container { padding: 16px; }
 
 .accounts-list, main .right { overflow-x: auto; }
+
+.reference-dashboard .bars .bar .figure { font-size: 34px; }
+.summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.summary-grid div strong { font-size: 20px; }
+.transactions-toolbar { flex-direction: column; align-items: flex-start; }
