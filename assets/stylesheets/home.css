@@ -753,7 +753,12 @@ section.benefits .container .heading h2 { margin-bottom: 18px; }
 section.benefits { padding-top: 56px; }
 section.benefits .container .benefits { background: #fff; border-radius: 16px; box-shadow: 0 12px 30px rgba(15,39,66,.08); padding: 20px; }
 section.benefits .container .benefits { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
-section.benefits .container .benefits .left { border-radius: 12px; overflow: hidden; min-height: 360px; }
+section.benefits .container .benefits .left {
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 360px;
+  background: url("/assets/images/home/benefits/mobile-banking.jpg") center/cover no-repeat;
+}
 section.benefits .container .benefits .left img { object-position: center; display: block; }
 section.benefits .container .benefits .right { padding: 12px 6px 6px; min-height: 360px; }
 section.benefits .container .benefits .right .benefit h2 { margin-bottom: 10px; }
@@ -764,7 +769,7 @@ section.benefits .container .benefits .center {
   grid-column: 1 / -1;
   justify-self: center;
   transform: none;
-  margin-top: 6px;
+  margin-top: 12px;
 }
 section.benefits .container .benefits .center > div { border-radius: 10px; width: 52px; height: 52px; }
 

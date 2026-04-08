@@ -53,7 +53,7 @@ include('./common-sections/header.php');
 
 
 <!-- Hero Section -->
-<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.72), rgba(10,28,52,.38)), url('/assets/images/home/hero/consulting-banner.jpg');">
+<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.64), rgba(10,28,52,.28)), url('/assets/images/home/hero/consulting-banner.jpg');">
     <div class="hero-static-inner">
         <div class="content">
             <h1>Secure Everyday Banking for Individuals, Families, and Businesses</h1>
