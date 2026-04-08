@@ -69,12 +69,12 @@ section.benefits .container .benefits .left {
 section.benefits .container .benefits .center {
   position: static;
   transform: none;
-  margin-top: 10px;
+  margin-top: 14px;
   justify-content: center;
 }
 section.benefits .container .benefits .right {
   height: auto;
-  min-height: 280px;
+  min-height: 320px;
 }
 
 section.trust-strip { margin-top: -18px; }

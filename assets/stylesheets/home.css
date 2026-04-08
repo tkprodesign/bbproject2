@@ -668,6 +668,13 @@ section.faq .container .questions p {
 .hero.hero-static .content { max-width: 720px; }
 .hero.hero-static .content h1 { font-size: clamp(38px, 5vw, 60px); line-height: 1.1; margin-bottom: 18px; }
 .hero.hero-static .content p { font-size: 18px; line-height: 1.7; max-width: 640px; }
+.hero.hero-static::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 78% 32%, rgba(255,255,255,.08), rgba(255,255,255,0) 40%);
+}
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
 .hero-actions a { padding: 13px 20px; border-radius: 10px; font-weight: 600; transition: .2s ease; display: inline-flex; align-items: center; gap: 8px; }
 .hero-actions a .material-symbols-outlined { font-size: 20px; color: currentColor; }
@@ -679,9 +686,9 @@ section.faq .container .questions p {
 section.trust-strip { margin-top: -38px; position: relative; z-index: 5; }
 section.trust-strip .container {
   background: #fff; border: 1px solid #e4ebf3; border-radius: 14px; box-shadow: 0 10px 30px rgba(16,38,67,.09);
-  display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; padding: 18px;
+  display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; padding: 18px;
 }
-section.trust-strip .trust-item { display: flex; align-items: center; gap: 10px; padding: 10px; }
+section.trust-strip .trust-item { display: flex; align-items: center; gap: 10px; padding: 10px; min-height: 64px; }
 section.trust-strip .trust-item span { color: #163555; font-size: 24px; }
 section.trust-strip .trust-item svg,
 section.trust-strip .trust-item svg path { fill: #163555 !important; stroke: #163555 !important; }
@@ -704,13 +711,13 @@ section.features-2 .container { background: #fff; border-radius: 16px; padding: 
 section.features-2 .container .heading { margin-bottom: 24px; }
 section.features-2 .container .heading h2 { font-size: clamp(30px, 4vw, 44px); line-height: 1.2; margin-bottom: 12px; }
 section.features-2 .container .heading p { color: #465d77; max-width: 880px; line-height: 1.7; }
-section.features-2 .container .features { gap: 18px; }
+section.features-2 .container .features { gap: 18px; align-items: stretch; }
 section.features-2 .container .features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-section.features-2 .container .features .feature { background: #f8fbff; border: 1px solid #e4edf7; padding: 20px 16px; border-radius: 12px; min-height: 150px; justify-content: center; width: 100%; }
+section.features-2 .container .features .feature { background: #f8fbff; border: 1px solid #e4edf7; padding: 20px 16px; border-radius: 12px; min-height: 150px; justify-content: center; width: 100%; height: 100%; }
 section.features-2 .container .features .feature svg { width: 58px; height: 58px; }
 section.features-2 .container .features .feature span { font-weight: 600; color: #163555; text-align: center; }
 
-section.loan-calculator { margin: 70px 0 20px; }
+section.loan-calculator { margin: 62px 0 20px; }
 section.loan-calculator .container { top: 0; }
 section.loan-calculator .container .loan-flow-alert {
   grid-column: 1 / -1;
@@ -741,11 +748,13 @@ section.about-us .container .right .content > div:last-child { border-bottom: 0;
 section.about-us .container .right .content > div h2 { margin-bottom: 6px; font-size: 22px; }
 section.about-us .container .right .content > div p { color: #526882; line-height: 1.65; }
 
+section.about-us { margin-top: 34px; }
 section.benefits .container .heading h2 { margin-bottom: 18px; }
-section.benefits .container .benefits { background: #fff; border-radius: 16px; box-shadow: 0 12px 30px rgba(15,39,66,.08); padding: 18px; }
+section.benefits { padding-top: 56px; }
+section.benefits .container .benefits { background: #fff; border-radius: 16px; box-shadow: 0 12px 30px rgba(15,39,66,.08); padding: 20px; }
 section.benefits .container .benefits { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
 section.benefits .container .benefits .left { border-radius: 12px; overflow: hidden; min-height: 360px; }
-section.benefits .container .benefits .left img { object-position: center; }
+section.benefits .container .benefits .left img { object-position: center; display: block; }
 section.benefits .container .benefits .right { padding: 12px 6px 6px; min-height: 360px; }
 section.benefits .container .benefits .right .benefit h2 { margin-bottom: 10px; }
 section.benefits .container .benefits .right .benefit p { color: #4f6680; line-height: 1.7; }
@@ -760,6 +769,7 @@ section.benefits .container .benefits .center {
 section.benefits .container .benefits .center > div { border-radius: 10px; width: 52px; height: 52px; }
 
 section.features-3 .container { background: #fff; border-radius: 16px; padding: 40px; box-shadow: 0 12px 26px rgba(15,39,66,.08); }
+section.features-3 { margin-top: 34px; }
 section.features-3 .container .heading { margin-bottom: 20px; }
 section.features-3 .container .heading p { color: #506983; line-height: 1.7; }
 section.features-3 .swiper-slide { border: 1px solid #e7eef6; border-radius: 14px; overflow: hidden; background: #fff; }
@@ -769,6 +779,7 @@ section.features-3 .swiper-slide .content h3 { margin: 0; font-size: 22px; color
 section.features-3 .swiper-slide .content::after { content: 'Learn More'; display: inline-block; margin-top: 8px; color: #f13223; font-weight: 600; }
 
 section.faq .container { background: #fff; border-radius: 16px; padding: 38px; box-shadow: 0 12px 26px rgba(15,39,66,.08); }
+section.faq { margin-top: 34px; }
 section.faq .container .questions { display: grid; grid-template-columns: 1fr; gap: 12px; }
 section.faq .container .faq-item { border: 1px solid #e7eef7; border-radius: 12px; overflow: hidden; }
 section.faq .container .faq-question {
