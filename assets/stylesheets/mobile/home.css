@@ -98,3 +98,8 @@ section.benefits .container .benefits .right { min-height: 320px; height: auto; 
   section.loan-calculator .container .right div { margin: 14px 0; }
   section.loan-calculator .container .right a { width: 100%; }
 }
+
+@media (max-width: 720px) {
+  section.loan-calculator .container .left .calculator .salary-live-input { display: none !important; }
+}
+

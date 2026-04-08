@@ -58,40 +58,40 @@ if (heroSwiperEl && typeof Swiper !== 'undefined') {
   });
 }
 
-const swiper2 = new Swiper('.swiper-2', {
-  direction: 'horizontal',
-  loop: true,
-  speed: 1000,
-  slidesPerView: 1,
-  spaceBetween: 36,
-  autoplay: {
-      delay: 5000
-  },
-  breakpoints: {
-    // when window width is <= 750px
-    // when window width is <= 1000px
-    750: {
-        slidesPerView: 1,
+const swiper2El = document.querySelector('.swiper-2');
+if (swiper2El && typeof Swiper !== 'undefined') {
+  const swiper2 = new Swiper('.swiper-2', {
+    direction: 'horizontal',
+    loop: true,
+    speed: 1000,
+    slidesPerView: 1,
+    spaceBetween: 36,
+    autoplay: {
+        delay: 5000
     },
-    1000: {
-      slidesPerView: 2,
+    breakpoints: {
+      750: {
+          slidesPerView: 1,
+      },
+      1000: {
+        slidesPerView: 2,
+      },
+      1200: {
+        slidesPerView: 3,
+      },
     },
-    // when window width is <= 1200px
-    1200: {
-      slidesPerView: 3,
+    pagination: {
+        el: '.swiper-pagination-2',
     },
-  },
-  pagination: {
-      el: '.swiper-pagination-2',
-  },
-  navigation: {
-      nextEl: '.swiper-button-next-2',
-      prevEl: '.swiper-button-prev-2',
-  },
-  scrollbar: {
-      el: '.swiper-scrollbar-2',
-  },
-});
+    navigation: {
+        nextEl: '.swiper-button-next-2',
+        prevEl: '.swiper-button-prev-2',
+    },
+    scrollbar: {
+        el: '.swiper-scrollbar-2',
+    },
+  });
+}
 
 
   function fetchFinancialNews(apiKey) {
@@ -120,11 +120,20 @@ const swiper2 = new Swiper('.swiper-2', {
     .then(newsData => {
         console.log(newsData);
         const tickerWrapper = document.querySelector('.latest-news .ticker-wrapper');
+        if (!tickerWrapper) {
+          return;
+        }
+
         newsData.forEach(article => {
             const span = document.createElement('span');
             span.textContent = article.headline;
             tickerWrapper.appendChild(span);
         });
+
+        if (!tickerWrapper.children.length) {
+          return;
+        }
+
         const clone = tickerWrapper.cloneNode(true);
         tickerWrapper.appendChild(clone);
         
@@ -132,10 +141,10 @@ const swiper2 = new Swiper('.swiper-2', {
         tickerWrapper.style.overflow = 'hidden';
         
         let tickerWidth = tickerWrapper.scrollWidth;
-        tickerWrapper.style.width = `${tickerWidth * 2}px`; // Double the width for continuous loop
+        tickerWrapper.style.width = `${tickerWidth * 2}px`;
         
         let scrollPosition = 0;
-        const scrollSpeed = 1; // Adjust scroll speed as needed
+        const scrollSpeed = 1;
         
         function scrollTicker() {
             scrollPosition -= scrollSpeed;
