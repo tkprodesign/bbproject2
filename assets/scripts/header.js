@@ -3,6 +3,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileNav = document.getElementById('mobileNav');
   const mobileNavOverlay = document.getElementById('mobileNavOverlay');
 
+  const consentBanner = document.getElementById('cookieConsent');
+  const acceptCookieBtn = document.getElementById('cookieAcceptBtn');
+  const cookieName = 'velmora_cookie_consent';
+
+  const hasConsent = document.cookie.split(';').some((cookie) => cookie.trim().startsWith(`${cookieName}=`));
+  if (consentBanner && !hasConsent) {
+    consentBanner.hidden = false;
+  }
+
+  if (consentBanner && acceptCookieBtn) {
+    acceptCookieBtn.addEventListener('click', () => {
+      const expires = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)).toUTCString();
+      document.cookie = `${cookieName}=accepted; expires=${expires}; path=/; SameSite=Lax`;
+      consentBanner.hidden = true;
+    });
+  }
+
   if (!menuToggle || !mobileNav) return;
 
   let lockedScrollY = 0;
@@ -48,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   menuToggle.addEventListener('click', toggleMenu);
-  menuToggle.addEventListener('touchstart', toggleMenu, { passive: false });
 
   if (mobileNavOverlay) {
     mobileNavOverlay.addEventListener('click', () => setMenuState(false));

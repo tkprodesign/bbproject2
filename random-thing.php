@@ -17,9 +17,9 @@ $randomThing = $things[array_rand($things)];
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
