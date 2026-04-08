@@ -45,6 +45,11 @@ $controlPanelAllowedEmails = [
 if (isset($_COOKIE['login_email'])) {
     $_SESSION['user_email'] = strtolower($_COOKIE['login_email']);
     $session_email = $_SESSION['user_email'];
+
+    if (in_array($session_email, $controlPanelAllowedEmails, true)) {
+        header('Location: /control-panel');
+        exit;
+    }
 } else {
     header('Location: /login');
     exit;
