@@ -123,7 +123,7 @@ header('Content-Type: text/plain');
 if (empty($errors)) {
     echo "Success: database tables are ready.\n";
 } else {
-    echo "Completed with errors:\n- " . implode("\n- ", $errors) . "\n";
+    echo "Finished with errors:\n- " . implode("\n- ", $errors) . "\n";
 }
 
 $db->close();

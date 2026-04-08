@@ -94,15 +94,16 @@ body.active {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 20px;
-  min-height: 78px;
+  min-height: 82px;
+  padding: 12px 0;
 }
 .site-header .header-nav-bar .container #logo {
   margin-left: 0;
 }
 .site-header .header-nav-bar .container #logo img {
-  height: 64px;
+  height: 48px;
   width: auto;
-  max-width: 280px;
+  max-width: 230px;
   object-fit: contain;
 }
 .site-header .desktop-nav ul {
@@ -127,6 +128,7 @@ body.active {
   display: inline-flex;
   align-items: center;
   gap: 14px;
+  min-height: 48px;
 }
 .site-header .header-actions .login-link {
   color: #27334d;
@@ -157,6 +159,15 @@ body.active {
 .site-header #menuToggle {
   font-size: 26px;
   color: #27334d;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+.site-header #menuToggle:hover {
+  background: #f4f7fb;
 }
 .site-header #menuToggle .close {
   display: none;

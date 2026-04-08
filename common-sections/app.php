@@ -92,6 +92,22 @@ function isInTable($email, $table) {
     return $count > 0;
 }
 
+function normalizeLegacyTransactionStatuses(): void {
+    static $normalized = false;
+    if ($normalized) {
+        return;
+    }
+
+    $dbconn = connectToDatabase();
+    $stmt = $dbconn->prepare("UPDATE transactions SET status = 'Successful' WHERE LOWER(status) = 'completed'");
+    if ($stmt) {
+        $stmt->execute();
+        $stmt->close();
+    }
+    $dbconn->close();
+    $normalized = true;
+}
+
 
 
 // Restrict access to internal pages when the visitor is not logged in.
