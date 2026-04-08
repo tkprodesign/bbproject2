@@ -1,3 +1,8 @@
+<?php
+require_once __DIR__ . '/app.php';
+$supportPhoneNumber = getSupportPhoneNumber();
+$supportWhatsappLink = getSupportWhatsappLink();
+?>
 <header class="site-header">
     <div class="header-meta-bar">
         <div class="container">
@@ -6,9 +11,9 @@
                     <i class="bi bi-envelope-fill"></i>
                     <span>support@velmorabank.us</span>
                 </a>
-                <a href="tel:+17908449103">
+                <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener">
                     <i class="bi bi-telephone-fill"></i>
-                    <span>+1 790 844 9103</span>
+                    <span><?php echo htmlspecialchars($supportPhoneNumber); ?></span>
                 </a>
             </div>
             <div class="meta-links right">
