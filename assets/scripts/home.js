@@ -304,6 +304,20 @@ const benefitsImages = benefitsBlock ? benefitsBlock.querySelectorAll('.left img
 const benefitsTextBlocks = benefitsBlock ? benefitsBlock.querySelectorAll('.right .benefit') : [];
 const benefitsLeftToggle = benefitsBlock ? benefitsBlock.querySelector('.center .left') : null;
 const benefitsRightToggle = benefitsBlock ? benefitsBlock.querySelector('.center .right') : null;
+const benefitFallbackImage = '/assets/images/placeholder-image.png';
+benefitsImages.forEach((img) => {
+  img.addEventListener('error', () => {
+    img.onerror = null;
+    img.src = benefitFallbackImage;
+    if (benefitsBlock) {
+      const leftPanel = benefitsBlock.querySelector('.benefits .left');
+      if (leftPanel) {
+        leftPanel.style.background = '#e9eff6';
+      }
+    }
+  });
+});
+
 
 const benefitsImageProperties = [
   {
@@ -377,9 +391,16 @@ if (faqItems.length) {
     const answer = item.querySelector('.faq-answer');
     if (!question || !answer) return;
 
+    const answerId = `faqAnswer${idx + 1}`;
+    question.setAttribute('aria-controls', answerId);
+    answer.setAttribute('id', answerId);
+    answer.setAttribute('role', 'region');
+    answer.setAttribute('aria-hidden', 'true');
+
     if (idx === 0) {
       item.classList.add('active');
       question.setAttribute('aria-expanded', 'true');
+      answer.setAttribute('aria-hidden', 'false');
       answer.style.maxHeight = `${answer.scrollHeight}px`;
     }
 
@@ -391,13 +412,17 @@ if (faqItems.length) {
         const otherQ = other.querySelector('.faq-question');
         const otherA = other.querySelector('.faq-answer');
         if (otherQ) otherQ.setAttribute('aria-expanded', 'false');
-        if (otherA) otherA.style.maxHeight = '0px';
+        if (otherA) {
+          otherA.style.maxHeight = '0px';
+          otherA.setAttribute('aria-hidden', 'true');
+        }
       });
 
       if (!isOpen) {
         item.classList.add('active');
         question.setAttribute('aria-expanded', 'true');
         answer.style.maxHeight = `${answer.scrollHeight}px`;
+        answer.setAttribute('aria-hidden', 'false');
       }
     });
   });
