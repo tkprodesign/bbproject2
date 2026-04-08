@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
 
     <!-- Primary Meta Tags -->
     <title>Velmora Bank — Digital Financial Solutions</title>
@@ -333,9 +333,9 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility">
-                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities">
-                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection">
+                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
             </div>
             <div class="center buttons">
                 <div class="left">
@@ -445,28 +445,28 @@ include('./common-sections/header.php');
         </div>
         <div class="questions" id="faqAccordion">
             <div class="faq-item">
-                <button class="faq-question" type="button" aria-expanded="false">What types of accounts can I open with your bank?</button>
-                <div class="faq-answer"><p>We offer savings, checking, fixed deposit, and business accounts. Each option is built for a different financial goal and transaction need.</p></div>
+                <button class="faq-question" type="button" aria-expanded="false" aria-controls="faqAnswer1" id="faqQuestion1">What types of accounts can I open with your bank?</button>
+                <div class="faq-answer" id="faqAnswer1" role="region" aria-labelledby="faqQuestion1" aria-hidden="true"><p>We offer savings, checking, fixed deposit, and business accounts. Each option is built for a different financial goal and transaction need.</p></div>
             </div>
             <div class="faq-item">
-                <button class="faq-question" type="button" aria-expanded="false">How can I access my account online?</button>
-                <div class="faq-answer"><p>You can access your account through our secure online banking portal and mobile channels using your registered credentials.</p></div>
+                <button class="faq-question" type="button" aria-expanded="false" aria-controls="faqAnswer2" id="faqQuestion2">How can I access my account online?</button>
+                <div class="faq-answer" id="faqAnswer2" role="region" aria-labelledby="faqQuestion2" aria-hidden="true"><p>You can access your account through our secure online banking portal and mobile channels using your registered credentials.</p></div>
             </div>
             <div class="faq-item">
-                <button class="faq-question" type="button" aria-expanded="false">What are the international transaction fees?</button>
-                <div class="faq-answer"><p>International transfer and card charges vary by product and transaction route. Please review the latest fee schedule before initiating cross-border transactions.</p></div>
+                <button class="faq-question" type="button" aria-expanded="false" aria-controls="faqAnswer3" id="faqQuestion3">What are the international transaction fees?</button>
+                <div class="faq-answer" id="faqAnswer3" role="region" aria-labelledby="faqQuestion3" aria-hidden="true"><p>International transfer and card charges vary by product and transaction route. Please review the latest fee schedule before initiating cross-border transactions.</p></div>
             </div>
             <div class="faq-item">
-                <button class="faq-question" type="button" aria-expanded="false">How can I apply for a loan?</button>
-                <div class="faq-answer"><p>You can start from our loan calculator and continue to the application page. Our team will review eligibility, affordability, and supporting documents.</p></div>
+                <button class="faq-question" type="button" aria-expanded="false" aria-controls="faqAnswer4" id="faqQuestion4">How can I apply for a loan?</button>
+                <div class="faq-answer" id="faqAnswer4" role="region" aria-labelledby="faqQuestion4" aria-hidden="true"><p>You can start from our loan calculator and continue to the application page. Our team will review eligibility, affordability, and supporting documents.</p></div>
             </div>
             <div class="faq-item">
-                <button class="faq-question" type="button" aria-expanded="false">How is my account protected?</button>
-                <div class="faq-answer"><p>We apply layered security controls including encrypted sessions, authentication checks, and continuous transaction monitoring.</p></div>
+                <button class="faq-question" type="button" aria-expanded="false" aria-controls="faqAnswer5" id="faqQuestion5">How is my account protected?</button>
+                <div class="faq-answer" id="faqAnswer5" role="region" aria-labelledby="faqQuestion5" aria-hidden="true"><p>We apply layered security controls including encrypted sessions, authentication checks, and continuous transaction monitoring.</p></div>
             </div>
             <div class="faq-item">
-                <button class="faq-question" type="button" aria-expanded="false">How do I report a lost or stolen card?</button>
-                <div class="faq-answer"><p>Contact support immediately via phone, WhatsApp, or the support center so your card can be blocked and replaced promptly.</p></div>
+                <button class="faq-question" type="button" aria-expanded="false" aria-controls="faqAnswer6" id="faqQuestion6">How do I report a lost or stolen card?</button>
+                <div class="faq-answer" id="faqAnswer6" role="region" aria-labelledby="faqQuestion6" aria-hidden="true"><p>Contact support immediately via phone, WhatsApp, or the support center so your card can be blocked and replaced promptly.</p></div>
             </div>
         </div>
     </div>
@@ -504,7 +504,7 @@ include('./common-sections/header.php');
                 <li><h3>Legal</h3></li>
                 <li><a href="/quick-links/#terms-and-conditions">Terms & Conditions</a></li>
                 <li><a href="/quick-links/#privacy-policy">Privacy Policy</a></li>
-                <li><a href="/quick-links/#cookie-policy">Cookie Policy</a></li>
+                <li><a href="/cookie-policy/">Cookie Policy</a></li>
                 <li><a href="/quick-links/#complaints-procedure">Complaints Procedure</a></li>
             </ul>
         </div>

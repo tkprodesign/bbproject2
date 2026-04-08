@@ -133,3 +133,19 @@ body.menu-open {
     gap: 64px;
   }
 }
+
+@media (max-width: 1000px) {
+  .site-header .header-nav-bar .container { min-height: 68px; padding: 10px 12px; }
+  .site-header .header-nav-bar .container #logo img { height: 36px; max-width: 170px; }
+  .site-header #menuToggle { width: 44px; height: 44px; }
+  .site-header .mobile-nav ul { gap: 8px; }
+  .site-header .mobile-nav ul li a { padding: 13px 12px; min-height: 44px; }
+
+  footer .container { gap: 34px; }
+  footer .container .right form { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  footer .container .right form input,
+  footer .container .right form button { width: 100%; }
+  footer .container .right .social-links { justify-content: flex-start; gap: 12px; }
+
+  .cookie-consent { left: 12px; right: 12px; bottom: 12px; align-items: flex-start; }
+}

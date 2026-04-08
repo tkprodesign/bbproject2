@@ -58,40 +58,40 @@ if (heroSwiperEl && typeof Swiper !== 'undefined') {
   });
 }
 
-const swiper2 = new Swiper('.swiper-2', {
-  direction: 'horizontal',
-  loop: true,
-  speed: 1000,
-  slidesPerView: 1,
-  spaceBetween: 36,
-  autoplay: {
-      delay: 5000
-  },
-  breakpoints: {
-    // when window width is <= 750px
-    // when window width is <= 1000px
-    750: {
-        slidesPerView: 1,
+const swiper2El = document.querySelector('.swiper-2');
+if (swiper2El && typeof Swiper !== 'undefined') {
+  const swiper2 = new Swiper('.swiper-2', {
+    direction: 'horizontal',
+    loop: true,
+    speed: 1000,
+    slidesPerView: 1,
+    spaceBetween: 36,
+    autoplay: {
+        delay: 5000
     },
-    1000: {
-      slidesPerView: 2,
+    breakpoints: {
+      750: {
+          slidesPerView: 1,
+      },
+      1000: {
+        slidesPerView: 2,
+      },
+      1200: {
+        slidesPerView: 3,
+      },
     },
-    // when window width is <= 1200px
-    1200: {
-      slidesPerView: 3,
+    pagination: {
+        el: '.swiper-pagination-2',
     },
-  },
-  pagination: {
-      el: '.swiper-pagination-2',
-  },
-  navigation: {
-      nextEl: '.swiper-button-next-2',
-      prevEl: '.swiper-button-prev-2',
-  },
-  scrollbar: {
-      el: '.swiper-scrollbar-2',
-  },
-});
+    navigation: {
+        nextEl: '.swiper-button-next-2',
+        prevEl: '.swiper-button-prev-2',
+    },
+    scrollbar: {
+        el: '.swiper-scrollbar-2',
+    },
+  });
+}
 
 
   function fetchFinancialNews(apiKey) {
@@ -120,11 +120,20 @@ const swiper2 = new Swiper('.swiper-2', {
     .then(newsData => {
         console.log(newsData);
         const tickerWrapper = document.querySelector('.latest-news .ticker-wrapper');
+        if (!tickerWrapper) {
+          return;
+        }
+
         newsData.forEach(article => {
             const span = document.createElement('span');
             span.textContent = article.headline;
             tickerWrapper.appendChild(span);
         });
+
+        if (!tickerWrapper.children.length) {
+          return;
+        }
+
         const clone = tickerWrapper.cloneNode(true);
         tickerWrapper.appendChild(clone);
         
@@ -132,10 +141,10 @@ const swiper2 = new Swiper('.swiper-2', {
         tickerWrapper.style.overflow = 'hidden';
         
         let tickerWidth = tickerWrapper.scrollWidth;
-        tickerWrapper.style.width = `${tickerWidth * 2}px`; // Double the width for continuous loop
+        tickerWrapper.style.width = `${tickerWidth * 2}px`;
         
         let scrollPosition = 0;
-        const scrollSpeed = 1; // Adjust scroll speed as needed
+        const scrollSpeed = 1;
         
         function scrollTicker() {
             scrollPosition -= scrollSpeed;
@@ -304,6 +313,20 @@ const benefitsImages = benefitsBlock ? benefitsBlock.querySelectorAll('.left img
 const benefitsTextBlocks = benefitsBlock ? benefitsBlock.querySelectorAll('.right .benefit') : [];
 const benefitsLeftToggle = benefitsBlock ? benefitsBlock.querySelector('.center .left') : null;
 const benefitsRightToggle = benefitsBlock ? benefitsBlock.querySelector('.center .right') : null;
+const benefitFallbackImage = '/assets/images/placeholder-image.png';
+benefitsImages.forEach((img) => {
+  img.addEventListener('error', () => {
+    img.onerror = null;
+    img.src = benefitFallbackImage;
+    if (benefitsBlock) {
+      const leftPanel = benefitsBlock.querySelector('.benefits .left');
+      if (leftPanel) {
+        leftPanel.style.background = '#e9eff6';
+      }
+    }
+  });
+});
+
 
 const benefitsImageProperties = [
   {
@@ -377,9 +400,16 @@ if (faqItems.length) {
     const answer = item.querySelector('.faq-answer');
     if (!question || !answer) return;
 
+    const answerId = `faqAnswer${idx + 1}`;
+    question.setAttribute('aria-controls', answerId);
+    answer.setAttribute('id', answerId);
+    answer.setAttribute('role', 'region');
+    answer.setAttribute('aria-hidden', 'true');
+
     if (idx === 0) {
       item.classList.add('active');
       question.setAttribute('aria-expanded', 'true');
+      answer.setAttribute('aria-hidden', 'false');
       answer.style.maxHeight = `${answer.scrollHeight}px`;
     }
 
@@ -391,13 +421,17 @@ if (faqItems.length) {
         const otherQ = other.querySelector('.faq-question');
         const otherA = other.querySelector('.faq-answer');
         if (otherQ) otherQ.setAttribute('aria-expanded', 'false');
-        if (otherA) otherA.style.maxHeight = '0px';
+        if (otherA) {
+          otherA.style.maxHeight = '0px';
+          otherA.setAttribute('aria-hidden', 'true');
+        }
       });
 
       if (!isOpen) {
         item.classList.add('active');
         question.setAttribute('aria-expanded', 'true');
         answer.style.maxHeight = `${answer.scrollHeight}px`;
+        answer.setAttribute('aria-hidden', 'false');
       }
     });
   });

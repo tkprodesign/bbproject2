@@ -63,3 +63,43 @@ section.features-2 .container .features .feature { width: 100%; min-height: 128p
 section.benefits .container .benefits .center { position: static; transform: none; margin-top: 12px; justify-content: center; }
 section.benefits .container .benefits .center > div { width: 46px; height: 46px; }
 section.benefits .container .benefits .right { min-height: 320px; height: auto; }
+
+@media (max-width: 720px) {
+  .hero.hero-static .hero-static-inner { padding: 64px 0 78px; }
+  .hero-actions { gap: 10px; margin-bottom: 26px; }
+  section.trust-strip { margin-top: 0; z-index: 2; }
+  section.trust-strip .container { gap: 8px; padding: 12px; }
+
+  section.features-2 .container .features { gap: 10px; }
+  section.features-2 .container .features .feature {
+    min-height: 136px;
+    padding: 16px 14px;
+    overflow: hidden;
+  }
+  section.features-2 .container .features .feature svg,
+  section.features-2 .container .features .feature img { margin: 0 auto; }
+  section.features-2 .container .features .feature span { text-align: center; line-height: 1.35; }
+
+  section.benefits { padding-top: 34px; }
+  section.benefits .container .benefits { padding: 14px; gap: 14px; }
+  section.benefits .container .benefits .left { min-height: 220px; background-color: #e9eff6; }
+  section.benefits .container .benefits .left img { width: 100%; height: 100%; object-fit: cover; }
+  section.benefits .container .benefits .right { min-height: auto; padding: 0; }
+  section.benefits .container .benefits .right .benefit h2 { font-size: 22px; }
+
+  section.loan-calculator .container { gap: 16px; }
+  section.loan-calculator .container .left .details,
+  section.loan-calculator .container .left .calculator { padding: 16px; }
+  section.loan-calculator .container .left .calculator p { margin-bottom: 12px; }
+  section.loan-calculator .container .left .calculator .salary-live-input,
+  section.loan-calculator .container .left .calculator .loan-tenor-select { width: 100%; margin-bottom: 14px; }
+  section.loan-calculator .container .left .calculator .toggle-box { margin: 8px auto 0; }
+  section.loan-calculator .container .right { padding: 16px; min-height: auto; }
+  section.loan-calculator .container .right div { margin: 14px 0; }
+  section.loan-calculator .container .right a { width: 100%; }
+}
+
+@media (max-width: 720px) {
+  section.loan-calculator .container .left .calculator .salary-live-input { display: none !important; }
+}
+

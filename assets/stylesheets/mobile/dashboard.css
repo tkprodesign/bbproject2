@@ -1,33 +1,77 @@
+html.menu-open,
+body.menu-open {
+  overflow: hidden;
+  height: 100%;
+}
+
 .pre-header .container { flex-direction: column; align-items: flex-start; }
 .pre-header .right { width: 100%; justify-content: space-between; }
 
-.dashboard-header #menuToggle { top: 14px; right: 10px; }
-section.add-account { margin-top: 72px; }
+.dashboard-header { min-height: 64px; }
+.dashboard-header #menuToggle {
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+}
+.dashboard-header .mobile-drawer {
+  width: min(90vw, 340px);
+  max-width: calc(100vw - 12px);
+  padding: 74px 12px 18px;
+}
+
+section.add-account,
+section.transactions,
+section.manage-account,
+section.preferences,
+section.profile-kyc,
+section.change-password,
+section.account-success,
+section.kyc-ver,
+section.account-info { margin-top: 12px; }
+section.add-account .container { margin-top: 12px; }
+section.add-account .container,
+section.transactions .container,
+section.manage-account .container,
+section.preferences .container,
+section.profile-kyc .container,
+section.change-password .container { padding: 14px; }
 section.add-account .container form { padding: 14px; }
 
+section.account-info .cta-sec { margin-bottom: 14px; }
 section.account-info .cta-sec .left .greeting { font-size: 24px; }
+section.account-info .cta-sec .right { justify-content: flex-start; }
+section.account-info .bars { gap: 12px; }
 section.account-info .bars .bar .figure { font-size: 27px; }
 
-.quick-actions { grid-template-columns: 1fr; }
+.quick-actions { grid-template-columns: 1fr; gap: 8px; }
 .quick-action { text-align: center; }
 
 table { min-width: 700px; }
 
-form .input-box label { font-size: 14px; }
+form { gap: 14px; }
+form .input-box { margin-bottom: 2px; }
+form .input-box label { font-size: 14px; margin-bottom: 7px; }
+form .input-box input,
+form .input-box select,
+form .input-box textarea,
+form .input-box button,
+form .input-box a { min-height: 46px; }
 form.kyc-form .input-box.full-width { flex-direction: column; }
 form.kyc-form .input-box.full-width button,
 form.kyc-form .input-box.full-width a { width: 100%; }
 
-section.manage-account .row { flex-direction: column; align-items: flex-start; }
+section.manage-account .row { flex-direction: column; align-items: flex-start; gap: 10px; }
 section.manage-account .row img { width: 100%; height: 130px; }
 
 section.account-success .content,
-section.kyc-ver .content { margin-top: 35px; padding: 20px; }
+section.kyc-ver .content { margin-top: 14px; padding: 18px; }
 
 .reference-dashboard .bars .bar .figure { font-size: 30px; }
-.account-summary-panel { padding: 18px; }
+.account-summary-panel { padding: 16px; }
 .account-summary-panel h3 { font-size: 24px; }
-.summary-grid { grid-template-columns: 1fr; }
+.summary-grid { grid-template-columns: 1fr; gap: 10px; }
 .summary-grid div strong { font-size: 18px; }
 .reference-transactions .right.full-width,
 .reference-transactions-page .accounts-list { padding: 14px; }
@@ -36,10 +80,18 @@ section.kyc-ver .content { margin-top: 35px; padding: 20px; }
 .dashboard-header .mobile-drawer p,
 .dashboard-header .mobile-drawer span { color: #153455; }
 
-.tx-actions { display: grid; grid-template-columns: 1fr 1fr; }
+.tx-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 #txSearchInput,
 #txExportBtn { grid-column: 1 / -1; width: 100%; }
 
 .profile-picture-preview { width: 150px; height: 150px; border-radius: 16px; }
 .profile-avatar-wrap { width: 100%; justify-content: flex-start; }
 .dashboard-avatar { width: 58px; height: 58px; }
+
+/* mobile-safe chat offset */
+#smartsupp-widget-container,
+iframe[id*="smartsupp"],
+div[id*="smartsupp"] {
+  right: 10px !important;
+  bottom: 86px !important;
+}
