@@ -157,6 +157,12 @@ const toggle = toggleBox ? toggleBox.querySelector('.toggle') : null;
 const salaryInput = document.getElementById('salaryInput');
 const salaryLiveInput = document.getElementById('salaryLiveInput');
 const loanAmount = document.getElementById('loanAmount');
+const loanFee = document.getElementById('loanFee');
+const loanTotalRepayment = document.getElementById('loanTotalRepayment');
+const loanInstallment = document.getElementById('loanInstallment');
+const loanTenorDays = document.getElementById('loanTenorDays');
+const loanTenorDisplay = document.getElementById('loanTenorDisplay');
+const applyLoanLink = document.getElementById('applyLoanLink');
 
 if (toggleBox && toggle && salaryInput && loanAmount) {
     function getCenter() {
@@ -173,25 +179,58 @@ if (toggleBox && toggle && salaryInput && loanAmount) {
 
     function angleToSalary(angle) {
         const normalizedAngle = (angle % 360 + 360) % 360;
-        return Math.round((normalizedAngle / 360) * 15000);
+        return Math.round((normalizedAngle / 360) * 50000);
     }
 
     function salaryToAngle(salary) {
-        const safeSalary = Math.max(0, Math.min(15000, salary));
-        return (safeSalary / 15000) * 360;
+        const safeSalary = Math.max(0, Math.min(50000, salary));
+        return (safeSalary / 50000) * 360;
+    }
+
+    function formatCurrency(value) {
+        return Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function getFeeRateByTenor(tenorDays) {
+        if (tenorDays <= 14) return 0.08;
+        if (tenorDays <= 30) return 0.12;
+        return 0.18;
     }
 
     function updateCalculator(salary) {
-        const safeSalary = Math.max(0, Math.min(15000, Math.round(salary)));
-        salaryInput.textContent = safeSalary;
+        const safeSalary = Math.max(0, Math.min(50000, Math.round(salary)));
+        const tenor = Number(loanTenorDays?.value || 30);
+
+        salaryInput.textContent = safeSalary.toLocaleString('en-US');
         if (salaryLiveInput && document.activeElement !== salaryLiveInput) {
             salaryLiveInput.value = safeSalary;
         }
 
-        const loan = (safeSalary * 0.7).toFixed(2);
-        loanAmount.textContent = loan;
+        const principal = Math.max(0, Math.min(safeSalary * 0.4, 12000));
+        const feeRate = getFeeRateByTenor(tenor);
+        const fee = principal * feeRate;
+        const totalRepayment = principal + fee;
+        const monthlyEquivalent = tenor > 0 ? (totalRepayment / tenor) * 30 : totalRepayment;
 
-        const angle = salaryToAngle(safeSalary);
+        loanAmount.textContent = formatCurrency(principal);
+        if (loanFee) loanFee.textContent = formatCurrency(fee);
+        if (loanTotalRepayment) loanTotalRepayment.textContent = formatCurrency(totalRepayment);
+        if (loanInstallment) loanInstallment.textContent = formatCurrency(monthlyEquivalent);
+        if (loanTenorDisplay) loanTenorDisplay.textContent = tenor;
+
+        if (applyLoanLink) {
+            const query = new URLSearchParams({
+                salary: String(safeSalary),
+                amount: principal.toFixed(2),
+                fee: fee.toFixed(2),
+                tenor: String(tenor),
+                repayment: totalRepayment.toFixed(2),
+                installment: monthlyEquivalent.toFixed(2),
+            });
+            applyLoanLink.href = `/loan/?${query.toString()}`;
+        }
+
+        const angle = salaryToAngle(Math.min(safeSalary, 15000));
         toggle.style.transform = `rotate(${angle}deg)`;
     }
 
@@ -244,7 +283,13 @@ if (toggleBox && toggle && salaryInput && loanAmount) {
         });
     }
 
-    updateCalculator(0);
+    if (loanTenorDays) {
+        loanTenorDays.addEventListener('change', () => {
+            updateCalculator(Number(salaryLiveInput?.value || salaryInput.textContent.replace(/,/g, '')) || 0);
+        });
+    }
+
+    updateCalculator(Number(salaryLiveInput?.value) || 0);
 }
 
 
@@ -317,4 +362,38 @@ if (benefitsImages.length && benefitsTextBlocks.length && benefitsLeftToggle && 
 
   setBenefitsState();
   autoSlideInterval = setInterval(nextSlide, 5000);
+}
+
+// FAQ accordion
+const faqItems = document.querySelectorAll('#faqAccordion .faq-item');
+if (faqItems.length) {
+  faqItems.forEach((item, idx) => {
+    const question = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
+    if (!question || !answer) return;
+
+    if (idx === 0) {
+      item.classList.add('active');
+      question.setAttribute('aria-expanded', 'true');
+      answer.style.maxHeight = `${answer.scrollHeight}px`;
+    }
+
+    question.addEventListener('click', () => {
+      const isOpen = item.classList.contains('active');
+
+      faqItems.forEach((other) => {
+        other.classList.remove('active');
+        const otherQ = other.querySelector('.faq-question');
+        const otherA = other.querySelector('.faq-answer');
+        if (otherQ) otherQ.setAttribute('aria-expanded', 'false');
+        if (otherA) otherA.style.maxHeight = '0px';
+      });
+
+      if (!isOpen) {
+        item.classList.add('active');
+        question.setAttribute('aria-expanded', 'true');
+        answer.style.maxHeight = `${answer.scrollHeight}px`;
+      }
+    });
+  });
 }

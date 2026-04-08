@@ -41,44 +41,91 @@ body {
 .pre-header .close { color: #fff; }
 
 .header-gap { display: none; }
-header {
+.dashboard-header {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 5px 18px rgba(18, 40, 66, 0.06);
   position: sticky; top: 0; z-index: 20;
 }
-header .container {
-  display: flex; align-items: stretch; justify-content: space-between;
-  gap: 6px; padding: 6px 0;
+.desktop-menu {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 0;
 }
-header .container > a,
-header .container > div {
+.menu-item,
+.menu-trigger {
+  cursor: pointer;
   color: var(--text-strong);
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
-  min-width: 118px; padding: 10px 10px; border-radius: 12px; font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  min-width: 110px;
+  padding: 10px;
+  border-radius: 12px;
+  font-weight: 600;
   transition: all .2s ease;
+  background: transparent;
 }
-header .container > a span, header .container > div span { font-size: 22px; }
-header .container > a p, header .container > div p { font-size: 13px; }
-header .container > a:hover,
-header .container > div:hover,
-header .container > a.active { background: #edf3ff; color: var(--brand-navy); }
-header .container > a.active::after,
-header .container > div.active::after { content: ''; width: 70%; height: 2px; background: var(--brand-accent); margin-top: 6px; }
-header .container > a count { background: var(--brand-accent); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 999px; }
-
-header .container > .madre { position: relative; }
-header .container > .madre .miracle {
-  position: absolute; left: 0; top: calc(100% + 8px);
-  background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow);
-  border-radius: 12px; min-width: 220px; padding: 8px; display: none; z-index: 40;
+.menu-item span,
+.menu-trigger span { font-size: 22px; }
+.menu-item p,
+.menu-trigger p { font-size: 13px; }
+.menu-item:hover,
+.menu-group:hover > .menu-trigger,
+.menu-item.active,
+.menu-group.active > .menu-trigger { background: #edf3ff; color: var(--brand-navy); }
+.menu-item.active::after,
+.menu-group.active > .menu-trigger::after {
+  content: '';
+  width: 70%;
+  height: 2px;
+  background: var(--brand-accent);
+  margin-top: 6px;
 }
-header .container > .madre .miracle a { display: flex; align-items: center; gap: 6px; padding: 9px; border-radius: 8px; color: var(--text-strong); }
-header .container > .madre .miracle a:hover { background: #f2f6ff; }
-header .container > .madre:hover .miracle { display: block; }
+.menu-item count { background: var(--brand-accent); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 999px; }
 
-header nav, header #menuToggle { display: none; }
+.menu-group { position: relative; }
+.menu-group .menu-trigger .arrow {
+  font-size: 16px;
+  transition: transform .2s ease;
+}
+.menu-group.active .menu-trigger .arrow,
+.menu-group:hover .menu-trigger .arrow { transform: rotate(180deg); }
+
+.submenu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  min-width: 230px;
+  padding: 8px;
+  display: none;
+  z-index: 40;
+}
+.menu-group:hover .submenu,
+.menu-group.active .submenu { display: block; }
+.submenu .submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px;
+  border-radius: 8px;
+  color: var(--text-strong);
+}
+.submenu .submenu-link:hover,
+.submenu .submenu-link.active { background: #f2f6ff; }
+.submenu .submenu-link span:first-child { font-size: 18px; }
+
+.mobile-drawer,
+.dashboard-header #menuToggle { display: none; }
 
 section { margin: 28px 0; }
 section.account-info .not-sec {
@@ -156,7 +203,24 @@ section.account-success .content {
 }
 main .left, main .right { padding: 18px; }
 main .left h1, main .right h2 { margin-bottom: 14px; }
-main .left .profile-picture { width: 100%; max-width: 230px; border-radius: 14px; margin-bottom: 12px; }
+main .left .profile-picture { width: 100%; max-width: 230px; height: 230px; object-fit: cover; border-radius: 50%; margin-bottom: 12px; }
+.profile-picture-preview {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.profile-avatar-wrap { display: flex; align-items: center; }
+.dashboard-avatar {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 8px 20px rgba(15, 39, 66, 0.18);
+}
 main .left .notification { color: var(--text-muted); line-height: 1.6; margin-top: 12px; }
 
 .table-wrap, .accounts-list { overflow-x: auto; }
