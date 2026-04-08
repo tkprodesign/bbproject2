@@ -177,6 +177,10 @@ section.change-password .container {
   padding: 20px;
 }
 section.add-account .container { max-width: 1040px; margin: 28px auto; padding: 28px; }
+section.add-account .container form {
+  padding: 22px;
+  border-radius: 14px;
+}
 .manage-accounts { margin-bottom: 12px; display: inline-flex; align-items: center; gap: 6px; }
 form { display: grid; gap: 14px; }
 form .input-box label { display: block; margin-bottom: 6px; font-weight: 600; color: #2b4260; }
