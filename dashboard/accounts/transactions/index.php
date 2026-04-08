@@ -37,7 +37,9 @@ $dbconn->close();
 $runningBalance = (float)str_replace(',', '', $user_balance);
 foreach ($rows as &$row) {
     $row['balance'] = $runningBalance;
-    $runningBalance -= (float)$row['amount'];
+    if (strtolower((string)$row['status']) !== 'failed') {
+        $runningBalance -= (float)$row['amount'];
+    }
 }
 unset($row);
 ?>

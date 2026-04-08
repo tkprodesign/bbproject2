@@ -122,7 +122,9 @@ $summaryDb->close();
 $runningBalance = (float)str_replace(',', '', $user_balance);
 foreach ($dashboardRows as &$row) {
     $row['balance'] = $runningBalance;
-    $runningBalance -= (float)$row['amount'];
+    if (strtolower((string)$row['status']) !== 'failed') {
+        $runningBalance -= (float)$row['amount'];
+    }
 }
 unset($row);
 ?>
