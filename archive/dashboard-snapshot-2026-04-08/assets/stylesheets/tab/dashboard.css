@@ -1,0 +1,67 @@
+.container { width: min(95%, 1000px); }
+
+header .container {
+  display: none;
+}
+
+header nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: min(82vw, 380px);
+  background: #fff;
+  border-right: 1px solid #e2eaf4;
+  box-shadow: 0 14px 35px rgba(16, 36, 67, 0.14);
+  transform: translateX(-105%);
+  transition: transform .24s ease;
+  z-index: 30;
+  padding: 90px 16px 20px;
+  overflow-y: auto;
+}
+header nav.active { transform: translateX(0); }
+header nav > a,
+header nav > div { display: flex; align-items: center; gap: 8px; color: #163555; font-weight: 600; }
+header nav > a.logo { margin-bottom: 12px; }
+header nav > a.logo img { max-width: 220px; }
+header nav .madre { display: grid; grid-template-columns: 24px 1fr; }
+header nav .madre .miracle { grid-column: 1 / 3; display: grid; gap: 8px; padding: 8px 0 0 28px; }
+header #menuToggle {
+  display: inline-flex;
+  color: #163555;
+  background: #fff;
+  border: 1px solid #e2eaf4;
+  border-radius: 10px;
+  padding: 10px;
+  position: fixed;
+  right: 12px;
+  top: 58px;
+  z-index: 35;
+}
+header #menuToggle .close { display: none; }
+header #menuToggle.active .open { display: none; }
+header #menuToggle.active .close { display: inline; }
+
+section.account-info .cta-sec,
+section.account-info .bars,
+.insights-grid,
+main .container,
+section.manage-account .content {
+  grid-template-columns: 1fr;
+}
+section.account-info .cta-sec { align-items: flex-start; }
+section.account-info .cta-sec .right { width: 100%; display: flex; flex-wrap: wrap; }
+
+.quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+section.add-account .container,
+section.transactions .container,
+section.manage-account .container,
+section.preferences .container,
+section.profile-kyc .container,
+section.change-password .container { padding: 16px; }
+
+.accounts-list, main .right { overflow-x: auto; }
