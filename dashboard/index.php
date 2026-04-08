@@ -73,37 +73,20 @@ if ($stmt->fetch()) {
 }
 $stmt->close();
 
-$stmt = $dbMetrics->prepare("SELECT description, amount, `time`, status FROM transactions WHERE user_email = ? ORDER BY `time` DESC LIMIT 10");
+$stmt = $dbMetrics->prepare("SELECT type, description, amount, `time` FROM transactions WHERE user_email = ? ORDER BY `time` DESC LIMIT 10");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
-$stmt->bind_result($tx_description, $tx_amount, $tx_time, $tx_status);
+$stmt->bind_result($tx_type, $tx_description, $tx_amount, $tx_time);
 while ($stmt->fetch()) {
     $dashboardRows[] = [
         'date' => date('M d, Y', (int)$tx_time),
         'description' => $tx_description,
-        'category' => $tx_status ?: 'General',
+        'category' => $tx_type ?: 'General',
         'amount' => (float)$tx_amount,
     ];
 }
 $stmt->close();
 $dbMetrics->close();
-
-if (strcasecmp($user_email, 'Jenniferaniston11909@gmail.com') === 0) {
-    $dashboardMeta['account_holder'] = 'Jennifer Joanna Aniston';
-    $dashboardMeta['date_of_birth'] = '11-02-1969';
-    if ($dashboardMeta['account_number'] === 'Not available') {
-        $dashboardMeta['account_number'] = '****7845';
-    }
-    $dashboardMeta['account_type'] = 'Premium Savings';
-
-    $dashboardRows = [
-        ['date' => 'Mar 10, 2026', 'description' => 'Art Collection Purchase', 'category' => 'Luxury', 'amount' => -278500.00, 'balance' => 1524385.50],
-        ['date' => 'Dec 28, 2025', 'description' => 'Year-End Bonus', 'category' => 'Income', 'amount' => 275000.00, 'balance' => 1802885.50],
-        ['date' => 'Feb 14, 2025', 'description' => 'Property Tax Payment', 'category' => 'Bills', 'amount' => -18250.00, 'balance' => 1527885.50],
-        ['date' => 'Nov 15, 2024', 'description' => 'Charitable Donation', 'category' => 'Transfer', 'amount' => -25000.00, 'balance' => 1546135.50],
-        ['date' => 'Sep 28, 2024', 'description' => 'Investment Returns - Q3', 'category' => 'Investment', 'amount' => 165385.50, 'balance' => 1571135.50],
-    ];
-}
 
 $totalCredits = 0.00;
 $totalDebits = 0.00;
@@ -120,6 +103,13 @@ foreach ($dashboardRows as $row) {
         $debitCount++;
     }
 }
+
+$runningBalance = (float)str_replace(',', '', $user_balance);
+foreach ($dashboardRows as &$row) {
+    $row['balance'] = $runningBalance;
+    $runningBalance -= (float)$row['amount'];
+}
+unset($row);
 ?>
 <!DOCTYPE html>
 <html lang="en">

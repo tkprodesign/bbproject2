@@ -2,32 +2,29 @@
 <?php
 $rows = [];
 $dbconn = connectToDatabase();
-$sql = "SELECT description, amount, `time`, status FROM transactions WHERE user_email = ? ORDER BY time DESC";
+$sql = "SELECT type, description, amount, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
-$stmt->bind_result($description, $amount, $transaction_time, $status);
+$stmt->bind_result($type, $description, $amount, $transaction_time);
 
 while ($stmt->fetch()) {
     $rows[] = [
         'date' => date('M d, Y', (int)$transaction_time),
         'description' => $description,
-        'category' => $status ?: 'General',
+        'category' => $type ?: 'General',
         'amount' => (float)$amount,
     ];
 }
 $stmt->close();
 $dbconn->close();
 
-if (strcasecmp($user_email, 'Jenniferaniston11909@gmail.com') === 0) {
-    $rows = [
-        ['date' => 'Mar 10, 2026', 'description' => 'Art Collection Purchase', 'category' => 'Luxury', 'amount' => -278500.00, 'balance' => 1524385.50],
-        ['date' => 'Dec 28, 2025', 'description' => 'Year-End Bonus', 'category' => 'Income', 'amount' => 275000.00, 'balance' => 1802885.50],
-        ['date' => 'Feb 14, 2025', 'description' => 'Property Tax Payment', 'category' => 'Bills', 'amount' => -18250.00, 'balance' => 1527885.50],
-        ['date' => 'Nov 15, 2024', 'description' => 'Charitable Donation', 'category' => 'Transfer', 'amount' => -25000.00, 'balance' => 1546135.50],
-        ['date' => 'Sep 28, 2024', 'description' => 'Investment Returns - Q3', 'category' => 'Investment', 'amount' => 165385.50, 'balance' => 1571135.50],
-    ];
+$runningBalance = (float)str_replace(',', '', $user_balance);
+foreach ($rows as &$row) {
+    $row['balance'] = $runningBalance;
+    $runningBalance -= (float)$row['amount'];
 }
+unset($row);
 ?>
 <!DOCTYPE html>
 <html lang="en">
