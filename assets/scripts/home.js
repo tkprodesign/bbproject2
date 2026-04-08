@@ -363,3 +363,37 @@ if (benefitsImages.length && benefitsTextBlocks.length && benefitsLeftToggle && 
   setBenefitsState();
   autoSlideInterval = setInterval(nextSlide, 5000);
 }
+
+// FAQ accordion
+const faqItems = document.querySelectorAll('#faqAccordion .faq-item');
+if (faqItems.length) {
+  faqItems.forEach((item, idx) => {
+    const question = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
+    if (!question || !answer) return;
+
+    if (idx === 0) {
+      item.classList.add('active');
+      question.setAttribute('aria-expanded', 'true');
+      answer.style.maxHeight = `${answer.scrollHeight}px`;
+    }
+
+    question.addEventListener('click', () => {
+      const isOpen = item.classList.contains('active');
+
+      faqItems.forEach((other) => {
+        other.classList.remove('active');
+        const otherQ = other.querySelector('.faq-question');
+        const otherA = other.querySelector('.faq-answer');
+        if (otherQ) otherQ.setAttribute('aria-expanded', 'false');
+        if (otherA) otherA.style.maxHeight = '0px';
+      });
+
+      if (!isOpen) {
+        item.classList.add('active');
+        question.setAttribute('aria-expanded', 'true');
+        answer.style.maxHeight = `${answer.scrollHeight}px`;
+      }
+    });
+  });
+}

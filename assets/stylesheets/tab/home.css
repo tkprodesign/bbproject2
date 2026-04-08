@@ -73,3 +73,13 @@ section.loan-calculator .container .left .calculator .salary-live-input {
 }
 
 section.loan-calculator .container .right .loan-breakdown li strong { font-size: 18px; }
+
+.hero.hero-static .hero-static-inner { padding: 90px 0 105px; }
+.hero.hero-static .content h1 { font-size: 42px; }
+.hero-actions { flex-direction: column; align-items: flex-start; }
+section.trust-strip .container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+section.features-2 .container,
+section.features-3 .container,
+section.faq .container { padding: 24px; }
+section.loan-calculator .container .right { min-height: 470px; }
+footer .container .left { grid-template-columns: repeat(2, minmax(0, 1fr)); }

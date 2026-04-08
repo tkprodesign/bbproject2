@@ -50,10 +50,22 @@ include('./common-sections/header.php');
 <section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.82), rgba(10,28,52,.52)), url('/assets/images/home/hero/consulting-banner.jpg');">
     <div class="hero-static-inner">
         <div class="content">
-            <h1>Tailored Banking Solutions for You</h1>
-            <p>Your financial needs are unique, and so are our services. From personalized savings plans to customized loans, we offer solutions that fit your lifestyle and help you manage your money with confidence.</p>
-            <a href="/personal/">Find out more</a>
+            <h1>Secure Everyday Banking for Individuals, Families, and Businesses</h1>
+            <p>Manage accounts, transfer funds, access lending, and get expert support from one trusted banking partner built for your daily and long-term financial goals.</p>
+            <div class="hero-actions">
+                <a href="/login/" class="primary">Access Online Banking</a>
+                <a href="/contact/" class="secondary">Speak to a Banking Advisor</a>
+            </div>
         </div>
+    </div>
+</section>
+
+<section class="trust-strip" aria-label="Trust and security highlights">
+    <div class="container">
+        <div class="trust-item"><span class="material-symbols-outlined">encrypted</span><p>Protected sessions and encrypted transactions</p></div>
+        <div class="trust-item"><span class="material-symbols-outlined">verified_user</span><p>Compliance-first banking operations and controls</p></div>
+        <div class="trust-item"><span class="material-symbols-outlined">support_agent</span><p>Dedicated customer support when you need assistance</p></div>
+        <div class="trust-item"><span class="material-symbols-outlined">credit_card</span><p>Card and digital payment services for daily use</p></div>
     </div>
 </section>
 
@@ -71,7 +83,7 @@ include('./common-sections/header.php');
                 <path d="M37.2998 32.3667H27.4331" stroke="black" stroke-width="2" stroke-linejoin="round"/>
                 </svg>                
             <h2>Open an account.</h2>
-            <p>Open an account and open your world to more.</p>
+            <p>Open your account quickly and start banking with confidence.</p>
         </div>
         <div class="feature">
             <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +99,7 @@ include('./common-sections/header.php');
                 </svg>
                 
             <h2>Cards</h2>
-            <p>Cards you can use anywhere for all your financial transactions</p>
+            <p>Cards designed for secure everyday spending, online payments, and travel.</p>
         </div>
         <div class="feature">
             <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,7 +107,7 @@ include('./common-sections/header.php');
                 </svg>
                 
             <h2>Quick Loans</h2>
-            <p>Need Quick cash for Quick fixes? See how we can help.</p>
+            <p>Access short-term lending options with clear terms and guided support.</p>
         </div>
         <div class="feature">
             <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,7 +120,7 @@ include('./common-sections/header.php');
                 </svg>
                 
             <h2>Money Transfer</h2>
-            <p>Reliable, safe and secure ways to send and recieve money</p>
+            <p>Send and receive money securely across local and international destinations.</p>
         </div>
     </div>
 </section>
@@ -133,9 +145,8 @@ include('./common-sections/header.php');
 <section class="features-2">
     <div class="container">
         <div class="heading">
-            <h2>Banking Made Effortless: <span>Your Financial Life Simplified.</span></h2>
-            <p>Discover a world of convenience at your fingertips.
-                Enjoy the freedom to manage your finances anytime, anywhere with our secure and user-friendly online and mobile banking platforms.</p>
+            <h2>Banking Made Practical: <span>Services Built Around Real Financial Needs.</span></h2>
+            <p>From everyday payments to savings, lending, and advisory support, access core banking services through secure digital channels and responsive branch support.</p>
         </div>
         <div class="features">
             <div class="feature">
@@ -244,7 +255,7 @@ include('./common-sections/header.php');
                 <li><span>Est. Monthly Installment</span><strong>$<span id="loanInstallment">0.00</span></strong></li>
             </ul>
             <div>Tenor: <p><span id="loanTenorDisplay">30</span> days</p></div>
-            <a id="applyLoanLink" href="/loan/?salary=0&amount=0&fee=0&tenor=30&repayment=0&installment=0">Continue to Loan Application</a>
+            <a id="applyLoanLink" href="/loan/?salary=0&amount=0&fee=0&tenor=30&repayment=0&installment=0">Apply with These Estimates</a>
         </div>
     </div>
 </section>
@@ -419,38 +430,36 @@ include('./common-sections/header.php');
 <section class="faq">
     <div class="container">
         <div class="heading">
-            <h2>Frequently Ask Questions</h2>
+            <h2>Frequently Asked Questions</h2>
         </div>
-        <div class="questions">
-            <div class="faq">
-                <h2>What types of accounts can I open with your bank?</h2>
-                <p>We offer a variety of accounts to meet your financial needs, including savings accounts, checking accounts, fixed deposits, and business accounts. Each account type is designed to offer unique features and benefits, depending on your financial goals.</p>
+        <div class="questions" id="faqAccordion">
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">What types of accounts can I open with your bank?</button>
+                <div class="faq-answer"><p>We offer savings, checking, fixed deposit, and business accounts. Each option is built for a different financial goal and transaction need.</p></div>
             </div>
-            <div class="faq">
-                <h2>How can I access my account online?</h2>
-                <p>You can access your account online through our secure online banking portal or mobile app. Simply log in using your username and password to view your account balance, transfer funds, pay bills, and more. If you haven't registered yet, you can easily sign up on our website.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">How can I access my account online?</button>
+                <div class="faq-answer"><p>You can access your account through our secure online banking portal and mobile channels using your registered credentials.</p></div>
             </div>
-            <div class="faq">
-                <h2>What are the international transaction fees?</h2>
-                <p>International transaction fees vary depending on the type of account and transaction. Typically, there is a small percentage fee on the transaction amount, along with a fixed fee for currency conversion. Please check our fees and charges section for detailed information.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">What are the international transaction fees?</button>
+                <div class="faq-answer"><p>International transfer and card charges vary by product and transaction route. Please review the latest fee schedule before initiating cross-border transactions.</p></div>
             </div>
-            <div class="faq">
-                <h2>How can I apply for a loan or mortgage?</h2>
-                <p>Applying for a loan or mortgage with us is straightforward. You can start the process online, by phone, or in-person at any of our branches. Our financial advisors will guide you through the necessary steps, including the documentation required and eligibility criteria.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">How can I apply for a loan?</button>
+                <div class="faq-answer"><p>You can start from our loan calculator and continue to the application page. Our team will review eligibility, affordability, and supporting documents.</p></div>
             </div>
-            <div class="faq">
-                <h2>What security measures are in place to protect my account?</h2>
-                <p>Your security is our top priority. We employ advanced encryption technology, multi-factor authentication, and real-time fraud monitoring to protect your account. Additionally, our mobile app and online banking platforms are equipped with biometric login options for added security.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">How is my account protected?</button>
+                <div class="faq-answer"><p>We apply layered security controls including encrypted sessions, authentication checks, and continuous transaction monitoring.</p></div>
             </div>
-            <div class="faq">
-                <h2>How do I report a lost or stolen card?</h2>
-                <p>If your card is lost or stolen, please contact our customer service immediately via phone or through our mobile app. We will block the card to prevent unauthorized transactions and issue you a new one as quickly as possible. You can also freeze your card temporarily through our online banking platform.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">How do I report a lost or stolen card?</button>
+                <div class="faq-answer"><p>Contact support immediately via phone, WhatsApp, or the support center so your card can be blocked and replaced promptly.</p></div>
             </div>
-
         </div>
     </div>
 </section>
-
 
 
 
@@ -479,6 +488,13 @@ include('./common-sections/header.php');
                 <li><a href="/quick-links/#online-security-tips">Online Security Tips</a></li>
                 <li><a href="/quick-links/#scam-alert">Scam Alert</a></li>
                 <li><a href="/quick-links/#support-center">Support Center</a></li>
+            </ul>
+            <ul>
+                <li><h3>Legal</h3></li>
+                <li><a href="/quick-links/#terms-and-conditions">Terms & Conditions</a></li>
+                <li><a href="/quick-links/#privacy-policy">Privacy Policy</a></li>
+                <li><a href="/quick-links/#cookie-policy">Cookie Policy</a></li>
+                <li><a href="/quick-links/#complaints-procedure">Complaints Procedure</a></li>
             </ul>
         </div>
         <div class="right">
