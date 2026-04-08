@@ -22,6 +22,11 @@ if (file_exists($appPath)) {
 // Your Resend API Key
 $resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8";
 
+function renderControlPanelBankEmail($subject, $headline, $introHtml, $detailsHtml) {
+    $logoUrl = 'https://velmorabank.us/assets/images/branding/logo.png';
+    return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') . '</title></head><body style="margin:0;padding:0;background:#f3f6fb;font-family:Arial,Helvetica,sans-serif;color:#1a2b44;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f3f6fb;padding:24px 0;"><tr><td align="center"><table role="presentation" width="640" cellspacing="0" cellpadding="0" border="0" style="width:640px;max-width:94%;background:#ffffff;border:1px solid #e4e9f2;border-radius:12px;overflow:hidden;"><tr><td style="background:#0f2742;padding:22px 28px;"><img src="' . $logoUrl . '" alt="Velmora Bank" style="height:36px;width:auto;display:block;"></td></tr><tr><td style="padding:28px 32px 8px 32px;"><p style="margin:0 0 8px 0;font-size:12px;letter-spacing:.08em;color:#6f8199;text-transform:uppercase;">Velmora Bank Notification</p><h1 style="margin:0;font-size:24px;line-height:1.35;color:#0f2742;">' . htmlspecialchars($headline, ENT_QUOTES, 'UTF-8') . '</h1></td></tr><tr><td style="padding:0 32px 10px 32px;font-size:15px;line-height:1.7;color:#3a4a62;">' . $introHtml . '</td></tr><tr><td style="padding:6px 32px 24px 32px;">' . $detailsHtml . '</td></tr><tr><td style="padding:18px 32px;background:#f8faff;border-top:1px solid #e4e9f2;"><p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#6f8199;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p><p style="margin:0;font-size:12px;line-height:1.5;color:#6f8199;">Need help? <a href="mailto:support@velmorabank.us" style="color:#0f2742;text-decoration:none;font-weight:600;">support@velmorabank.us</a></p></td></tr></table></td></tr></table></body></html>';
+}
+
 
 $controlPanelAllowedEmails = [
     'tkprodesign96@gmail.com',
@@ -149,83 +154,9 @@ if (isset($_POST['debit_user'])) {
             $email_subject = 'Withdrawal Confirmation - Velmora Bank';
             // Use abs($amount) for display to show a positive withdrawal amount to the user
             $display_amount = number_format(abs($amount), 2);
-            $email_body = <<<HTML
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Withdrawal Confirmation</title>
-    </head>
-    <body style="font-family: 'Inter', sans-serif; font-size: 15px; margin: 0; padding: 0;">
-    <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
-        <header style="padding: 1rem 0;">
-            <div style="padding: 1rem;">
-                <a href="https://velmorabank.us" id="logo">
-                    <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
-                </a>
-            </div>
-        </header>
-        <div class="content">
-            <div style="padding: 1rem;">
-                <div>
-                    <p style="line-height: 1.7;">Dear Valued Customer,</p>
-                    <p style="line-height: 1.7; margin-bottom: 25px;">We are writing to confirm that your recent withdrawal has been successfully processed. Below are the details of your transaction:</p>
-                    <ul style="list-style-type: none; padding: 0; margin: 0;">
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">Transaction ID:</span>
-                            <b style="line-height: 1.7;">{$transaction_id}</b>
-                        </li>
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">Type:</span>
-                            <b style="line-height: 1.7;">Withdrawal</b>
-                        </li>
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">User Email:</span>
-                            <b style="line-height: 1.7;">{$user_email}</b>
-                        </li>
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">Account Number:</span>
-                            <b style="line-height: 1.7;">{$account_number}</b>
-                        </li>
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">Amount:</span>
-                            <b style="line-height: 1.7;">{$currency} {$display_amount}</b>
-                        </li>
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">Currency:</span>
-                            <b style="line-height: 1.7;">{$currency}</b>
-                        </li>
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">Description:</span>
-                            <b style="line-height: 1.7;">{$description}</b>
-                        </li>
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">Status:</span>
-                            <b style="line-height: 1.7;">{$status}</b>
-                        </li>
-                        <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                            <span style="font-weight: bold; color: #6c7293;">Time:</span>
-                            <b style="line-height: 1.7;">{$formatted_time}</b>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-            <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
-            <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
-            <p style="margin: 0;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p>
-            <p style="margin: 0;">
-                <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> |
-                <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
-            </p>
-            <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
-        </footer>
-    </section>
-    </body>
-    </html>
-    HTML;
+            $introHtml = '<p style="margin:0;">Dear Valued Customer, your withdrawal has been processed successfully. The transaction summary is below.</p>';
+            $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $display_amount, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
+            $email_body = renderControlPanelBankEmail($email_subject, 'Withdrawal Confirmation', $introHtml, $detailsHtml);
 
             $post_data = [
                 "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
@@ -341,83 +272,9 @@ if (isset($_POST['judge_withdrawal'])) {
                 $email_message = 'We regret to inform you that your recent withdrawal request has failed.';
             }
 
-            $email_body = <<<HTML
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>{$email_heading}</title>
-            </head>
-            <body style="font-family: 'Inter', sans-serif; font-size: 15px; margin: 0; padding: 0;">
-            <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
-                <header style="padding: 1rem 0;">
-                    <div style="padding: 1rem;">
-                        <a href="https://velmorabank.us" id="logo">
-                            <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
-                        </a>
-                    </div>
-                </header>
-                <div class="content">
-                    <div style="padding: 1rem;">
-                        <div>
-                            <p style="line-height: 1.7;">Dear Valued Customer,</p>
-                            <p style="line-height: 1.7; margin-bottom: 25px;">{$email_message} Below are the details of your transaction:</p>
-                            <ul style="list-style-type: none; padding: 0; margin: 0;">
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">Transaction ID:</span>
-                                    <b style="line-height: 1.7;">{$transaction_id}</b>
-                                </li>
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">Type:</span>
-                                    <b style="line-height: 1.7;">Withdrawal</b>
-                                </li>
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">User Email:</span>
-                                    <b style="line-height: 1.7;">{$user_email}</b>
-                                </li>
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">Account Number:</span>
-                                    <b style="line-height: 1.7;">{$account_number}</b>
-                                </li>
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">Amount:</span>
-                                    <b style="line-height: 1.7;">{$currency} {$amount_display}</b>
-                                </li>
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">Currency:</span>
-                                    <b style="line-height: 1.7;">{$currency}</b>
-                                </li>
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">Description:</span>
-                                    <b style="line-height: 1.7;">{$description}</b>
-                                </li>
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">Status:</span>
-                                    <b style="line-height: 1.7;">{$status}</b>
-                                </li>
-                                <li style="padding: 1.5rem 0; display: grid; grid-template-columns: 150px auto; gap: 1.2rem; align-items: baseline;">
-                                    <span style="font-weight: bold; color: #6c7293;">Time:</span>
-                                    <b style="line-height: 1.7;">{$formatted_time}</b>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-                    <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
-                    <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
-                    <p style="margin: 0;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p>
-                    <p style="margin: 0;">
-                        <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> | 
-                        <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
-                    </p>
-                    <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
-                </footer>
-            </section>
-            </body>
-            </html>
-            HTML;
+            $introHtml = '<p style="margin:0;">Dear Valued Customer, ' . htmlspecialchars($email_message, ENT_QUOTES, 'UTF-8') . '</p>';
+            $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $amount_display, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
+            $email_body = renderControlPanelBankEmail($email_subject, $email_heading, $introHtml, $detailsHtml);
 
             $post_data = [
                 "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
@@ -537,45 +394,9 @@ if (isset($_POST['judge_kyc'])) {
                                   <p style="line-height: 1.7; margin-bottom: 25px;">Reason: ' . $description . '</p>';
             }
 
-            $email_body = <<<HTML
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>{$email_heading}</title>
-            </head>
-            <body style="font-family: 'Inter', sans-serif; font-size: 15px; margin: 0; padding: 0;">
-            <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
-                <header style="padding: 1rem 0;">
-                    <div style="padding: 1rem;">
-                        <a href="https://velmorabank.us" id="logo">
-                            <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
-                        </a>
-                    </div>
-                </header>
-                <div class="content">
-                    <div style="padding: 1rem;">
-                        <div>
-                            <p style="line-height: 1.7;">Dear {$full_name},</p>
-                            {$email_message}
-                        </div>
-                    </div>
-                </div>
-                <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-                    <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
-                    <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
-                    <p style="margin: 0;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p>
-                    <p style="margin: 0;">
-                        <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> | 
-                        <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
-                    </p>
-                    <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
-                </footer>
-            </section>
-            </body>
-            </html>
-            HTML;
+            $introHtml = '<p style="margin:0;">Dear ' . htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8') . ',</p>' . $email_message;
+            $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Verification Type</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">KYC Review</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Decision</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars(ucfirst($decision), ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Reference</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($user_email, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
+            $email_body = renderControlPanelBankEmail($email_subject, $email_heading, $introHtml, $detailsHtml);
 
             $post_data = [
                 "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
