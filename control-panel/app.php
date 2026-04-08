@@ -100,6 +100,116 @@ if (isset($_POST['update_support_phone'])) {
     exit;
 }
 
+// Deposit into user account
+if (isset($_POST['credit_user'])) {
+    $user_email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+    $account_number = preg_replace('/\D+/', '', $_POST['account_number'] ?? '');
+    $amount = filter_var($_POST['amount'] ?? null, FILTER_VALIDATE_FLOAT);
+    $currency = strtoupper(trim($_POST['currency'] ?? ''));
+    $description = trim($_POST['description'] ?? '');
+    $transaction_type = 'Deposit';
+    $status = 'Successful';
+    $time = time();
+
+    if (!$user_email || !$account_number || !is_numeric($amount) || $amount <= 0 || !$currency) {
+        header('Location: /control-panel?credit_user=invalid');
+        exit;
+    }
+
+    $dbconn = connectToDatabase();
+
+    $accountStmt = $dbconn->prepare("SELECT id FROM accounts WHERE user_email = ? AND account_number = ? LIMIT 1");
+    if (!$accountStmt) {
+        error_log("Prepare failed (account validation): (" . $dbconn->errno . ") " . $dbconn->error);
+        header('Location: /control-panel?credit_user=failed');
+        exit;
+    }
+    $accountStmt->bind_param("ss", $user_email, $account_number);
+    $accountStmt->execute();
+    $accountResult = $accountStmt->get_result();
+    $accountExists = $accountResult && $accountResult->num_rows > 0;
+    $accountStmt->close();
+
+    if (!$accountExists) {
+        $dbconn->close();
+        header('Location: /control-panel?credit_user=account_mismatch');
+        exit;
+    }
+
+    $formatted_time = date('H:i | d F Y /T', $time);
+    $description = $description !== '' ? $description : 'Manual deposit by control panel';
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $transaction_id = '';
+    do {
+        $transaction_id = '';
+        for ($i = 0; $i < 15; $i++) {
+            $transaction_id .= $characters[mt_rand(0, strlen($characters) - 1)];
+        }
+        $stmtCheck = $dbconn->prepare("SELECT COUNT(*) FROM transactions WHERE transaction_id = ?");
+        if (!$stmtCheck) {
+            error_log("Prepare failed (transaction id check): (" . $dbconn->errno . ") " . $dbconn->error);
+            $dbconn->close();
+            header('Location: /control-panel?credit_user=failed');
+            exit;
+        }
+        $stmtCheck->bind_param("s", $transaction_id);
+        $stmtCheck->execute();
+        $stmtCheck->bind_result($count);
+        $stmtCheck->fetch();
+        $stmtCheck->close();
+    } while ($count > 0);
+
+    $stmt = $dbconn->prepare("INSERT INTO transactions (`type`, transaction_id, user_email, account_number, amount, currency, `description`, `status`, `time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        error_log("Prepare failed (deposit insert): (" . $dbconn->errno . ") " . $dbconn->error);
+        $dbconn->close();
+        header('Location: /control-panel?credit_user=failed');
+        exit;
+    }
+
+    $stmt->bind_param("ssssdsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
+    if ($stmt->execute()) {
+        $display_amount = number_format($amount, 2);
+        $email_subject = 'Deposit Confirmation - Velmora Bank';
+        $introHtml = '<p style="margin:0;">Dear Valued Customer, a deposit has been posted to your account successfully.</p>';
+        $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $display_amount, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
+        $email_body = renderControlPanelBankEmail($email_subject, 'Deposit Confirmation', $introHtml, $detailsHtml);
+
+        $post_data = [
+            "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
+            "to" => $user_email,
+            "subject" => $email_subject,
+            "html" => $email_body
+        ];
+
+        $ch = curl_init("https://api.resend.com/emails");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer " . $resend_api_key,
+            "Content-Type: application/json"
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if (!($httpCode === 200 || $httpCode === 202)) {
+            error_log("Failed to send deposit confirmation email. HTTP Code: $httpCode | Response: $response");
+        }
+        $stmt->close();
+        $dbconn->close();
+        header('Location: /control-panel?credit_user=success');
+        exit;
+    }
+
+    error_log("Error: Could not record deposit transaction. " . $stmt->error);
+    $stmt->close();
+    $dbconn->close();
+    header('Location: /control-panel?credit_user=failed');
+    exit;
+}
+
 // Withdraw from user account
 if (isset($_POST['debit_user'])) {
     // Collect and sanitize form data
