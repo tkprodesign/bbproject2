@@ -5,13 +5,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!menuToggle || !mobileNav) return;
 
+  let lockedScrollY = 0;
+
+  const lockPageScroll = () => {
+    lockedScrollY = window.scrollY || window.pageYOffset || 0;
+    document.documentElement.classList.add('menu-open');
+    document.body.classList.add('menu-open');
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${lockedScrollY}px`;
+    document.body.style.width = '100%';
+  };
+
+  const unlockPageScroll = () => {
+    document.documentElement.classList.remove('menu-open');
+    document.body.classList.remove('menu-open');
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, lockedScrollY);
+  };
+
   const setMenuState = (isOpen) => {
     menuToggle.classList.toggle('active', isOpen);
     menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     mobileNav.classList.toggle('active', isOpen);
-    document.body.classList.toggle('active', isOpen);
+
     if (mobileNavOverlay) {
       mobileNavOverlay.classList.toggle('active', isOpen);
+    }
+
+    if (isOpen) {
+      lockPageScroll();
+    } else {
+      unlockPageScroll();
     }
   };
 

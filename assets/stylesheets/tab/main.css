@@ -1,3 +1,9 @@
+html.menu-open,
+body.menu-open {
+  overflow: hidden;
+  height: 100%;
+}
+
 @media (max-width: 1000px) {
   .site-header .header-meta-bar .container {
     flex-direction: row;
@@ -50,10 +56,10 @@
     left: 0;
     top: 0;
     height: 100vh;
-    width: min(86vw, 380px);
+    width: min(92vw, 420px);
     background: #fff;
     z-index: 99;
-    padding: 116px 24px 24px;
+    padding: 92px 24px 24px;
     transform: translateX(-105%);
     transition: transform 0.25s ease;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);

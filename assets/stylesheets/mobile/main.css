@@ -1,4 +1,9 @@
 @media (max-width: 720px) {
+  .site-header #menuToggle {
+    top: 14px;
+    right: 14px;
+  }
+
   .site-header .header-meta-bar {
     display: none;
   }
@@ -12,8 +17,9 @@
   }
 
   .site-header .mobile-nav {
-    width: 88vw;
-    padding-top: 96px;
+    width: 100vw;
+    max-width: none;
+    padding-top: 84px;
   }
 
   footer {
