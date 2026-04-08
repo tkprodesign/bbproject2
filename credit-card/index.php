@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Credit Cards | Velmora Bank</title><link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png"><link rel="stylesheet" href="/assets/stylesheets/main.css?v=<?php echo time(); ?>"><link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css?v=<?php echo time(); ?>"></head><body>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Credit Cards | Velmora Bank</title><link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png"><link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>"><link rel="stylesheet" href="/assets/stylesheets/desktop/marketing-pages.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/marketing-pages.css?v=<?php echo time(); ?>"></head><body>
 <?php include('../common-sections/header.php'); ?>
 <section class="page-hero"><div class="container"><h1>Credit Cards That Reward Every Move</h1><p>Choose from cards crafted for travel, business spending, or everyday cashback with built-in fraud protection.</p></div></section>
 <section class="page-content"><div class="container grid">

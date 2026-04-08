@@ -1,44 +1,24 @@
-header {
-  position: relative;
-  z-index: 2;
-}
 header .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-header .container #logo {
-  position: relative;
-  z-index: 2;
-}
-header .container #menuToggle {
-  z-index: 2;
+  grid-template-columns: 1fr auto;
   position: relative;
 }
-header .container nav {
-  position: absolute;
-  left: 0;
+header #menuToggle { display: inline-flex; position: relative; z-index: 3; }
+header nav {
+  position: fixed;
   top: 0;
-  width: 80%;
-  max-width: 600px;
+  left: 0;
+  width: min(84vw, 360px);
+  height: 100vh;
   background: #fff;
-  height: 200vh;
-  z-index: 1;
-  padding: 200px 1rem 0 2.5vw;
-  opacity: 0;
-  transform: translateX(-100%);
-  transition: all 0.3s ease;
+  border-right: 1px solid #e2eaf4;
+  box-shadow: 0 14px 34px rgba(16, 36, 67, .15);
+  padding: 90px 18px 20px;
+  transform: translateX(-105%);
+  transition: transform .24s ease;
+  z-index: 2;
 }
-header .container nav ul {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 45px;
-}
-header .container nav.active {
-  opacity: 1;
-  transform: translateX(0);
-}
+header nav ul { flex-direction: column; gap: 10px; }
+header nav.active { transform: translateX(0); }
 
-.table .container table {
-  width: unset;
-}/*# sourceMappingURL=control-panel.css.map */
+section.greetings h1 { font-size: 30px; }
+.table .container table { min-width: 820px; }

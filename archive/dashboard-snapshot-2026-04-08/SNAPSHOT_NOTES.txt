@@ -1,0 +1,17 @@
+Dashboard Snapshot Created: 2026-04-08 (UTC)
+
+Saved items:
+- dashboard/ (entire current dashboard directory)
+- assets/stylesheets/dashboard.css
+- assets/stylesheets/tab/dashboard.css
+- assets/stylesheets/mobile/dashboard.css
+- assets/scripts/dashboard.js
+- common-sections/dashboard-header.html
+
+Restore steps:
+1) cp -a archive/dashboard-snapshot-2026-04-08/dashboard ./
+2) cp archive/dashboard-snapshot-2026-04-08/assets/stylesheets/dashboard.css assets/stylesheets/
+3) cp archive/dashboard-snapshot-2026-04-08/assets/stylesheets/tab/dashboard.css assets/stylesheets/tab/
+4) cp archive/dashboard-snapshot-2026-04-08/assets/stylesheets/mobile/dashboard.css assets/stylesheets/mobile/
+5) cp archive/dashboard-snapshot-2026-04-08/assets/scripts/dashboard.js assets/scripts/
+6) cp archive/dashboard-snapshot-2026-04-08/common-sections/dashboard-header.html common-sections/

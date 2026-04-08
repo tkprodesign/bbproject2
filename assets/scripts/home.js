@@ -1,3 +1,14 @@
+// hero image fallback for environments with root-path issues
+const heroImages = document.querySelectorAll('section.hero .swiper-slide img');
+heroImages.forEach((img) => {
+  img.addEventListener('error', () => {
+    const src = img.getAttribute('src') || '';
+    if (src.startsWith('/assets/')) {
+      img.setAttribute('src', src.replace('/assets/', '../assets/'));
+    }
+  });
+});
+
 // Setting Hero Height and Mobile Nav height
 const heroSection = document.querySelector('.hero');
 const header = document.querySelector('header');
@@ -141,29 +152,50 @@ const swiper2 = new Swiper('.swiper-2', {
 const toggleBox = document.querySelector('.toggle-box');
 const toggle = toggleBox ? toggleBox.querySelector('.toggle') : null;
 const salaryInput = document.getElementById('salaryInput');
+const salaryLiveInput = document.getElementById('salaryLiveInput');
 const loanAmount = document.getElementById('loanAmount');
-    
+
 if (toggleBox && toggle && salaryInput && loanAmount) {
-    const center = {
-        x: toggleBox.offsetWidth / 2,
-        y: toggleBox.offsetHeight / 2
-    };
-    
+    function getCenter() {
+        return {
+            x: toggleBox.offsetWidth / 2,
+            y: toggleBox.offsetHeight / 2,
+        };
+    }
+
     function getAngleBetweenPoints(cx, cy, ex, ey) {
         const radians = Math.atan2(ey - cy, ex - cx);
-        const degrees = radians * (180 / Math.PI);
-        return degrees;
+        return radians * (180 / Math.PI);
     }
-    
+
     function angleToSalary(angle) {
-        // Normalize angle to a 0-360 range
         const normalizedAngle = (angle % 360 + 360) % 360;
-        // Map angle to salary (0 to 15000 range)
         return Math.round((normalizedAngle / 360) * 15000);
     }
-    
+
+    function salaryToAngle(salary) {
+        const safeSalary = Math.max(0, Math.min(15000, salary));
+        return (safeSalary / 15000) * 360;
+    }
+
+    function updateCalculator(salary) {
+        const safeSalary = Math.max(0, Math.min(15000, Math.round(salary)));
+        salaryInput.textContent = safeSalary;
+        if (salaryLiveInput && document.activeElement !== salaryLiveInput) {
+            salaryLiveInput.value = safeSalary;
+        }
+
+        const loan = (safeSalary * 0.7).toFixed(2);
+        loanAmount.textContent = loan;
+
+        const angle = salaryToAngle(safeSalary);
+        toggle.style.transform = `rotate(${angle}deg)`;
+    }
+
     function onPointerMove(event) {
-        let x, y;
+        let x;
+        let y;
+
         if (event.type === 'mousemove') {
             x = event.clientX;
             y = event.clientY;
@@ -172,46 +204,45 @@ if (toggleBox && toggle && salaryInput && loanAmount) {
             x = touch.clientX;
             y = touch.clientY;
         }
-    
+
         const boxRect = toggleBox.getBoundingClientRect();
         const pointerX = x - boxRect.left;
         const pointerY = y - boxRect.top;
-    
+
+        const center = getCenter();
         const angle = getAngleBetweenPoints(center.x, center.y, pointerX, pointerY);
-    
         const calcAngle = angle + 90;
-        // Rotate the toggle element based on the angle
-        toggle.style.transform = `rotate(${calcAngle}deg)`;
-    
-        // Update the salary figure
         const salary = angleToSalary(calcAngle);
-        salaryInput.textContent = salary;
-    
-        // Update the loan amount (70% of salary)
-        const loan = (salary * 0.7).toFixed(2);
-        loanAmount.textContent = `${loan}`;
+
+        updateCalculator(salary);
     }
-    
+
     function onPointerEnter(event) {
         if (event.type === 'touchstart') {
-            event.preventDefault(); // Prevent default touch behavior
+            event.preventDefault();
         }
         toggleBox.addEventListener('mousemove', onPointerMove);
         toggleBox.addEventListener('touchmove', onPointerMove);
     }
-    
-    function onPointerLeave(event) {
+
+    function onPointerLeave() {
         toggleBox.removeEventListener('mousemove', onPointerMove);
         toggleBox.removeEventListener('touchmove', onPointerMove);
     }
-    
+
     toggleBox.addEventListener('mouseenter', onPointerEnter);
     toggleBox.addEventListener('mouseleave', onPointerLeave);
     toggleBox.addEventListener('touchstart', onPointerEnter);
     toggleBox.addEventListener('touchend', onPointerLeave);
-}
-   
 
+    if (salaryLiveInput) {
+        salaryLiveInput.addEventListener('input', () => {
+            updateCalculator(Number(salaryLiveInput.value) || 0);
+        });
+    }
+
+    updateCalculator(0);
+}
 
 
 // Benefits Section JS Functions
