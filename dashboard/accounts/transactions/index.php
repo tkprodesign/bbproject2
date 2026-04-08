@@ -2,17 +2,30 @@
 <?php
 $rows = [];
 $dbconn = connectToDatabase();
-$sql = "SELECT type, description, amount, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
+$sql = "SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
-$stmt->bind_result($type, $description, $amount, $transaction_time);
+$stmt->bind_result($type, $description, $amount, $status, $transaction_time);
 
 while ($stmt->fetch()) {
+    $normalizedStatus = strtolower(trim((string)$status));
+    if ($normalizedStatus === '' || $normalizedStatus === 'current') {
+        $normalizedStatus = 'posted';
+    }
+    $normalizedStatus = ucwords(str_replace(['_', '-'], ' ', $normalizedStatus));
+
+    $normalizedType = strtolower(trim((string)$type));
+    if ($normalizedType === '' || $normalizedType === 'current') {
+        $normalizedType = ((float)$amount < 0) ? 'withdrawal' : 'deposit';
+    }
+    $normalizedType = ucwords(str_replace(['_', '-'], ' ', $normalizedType));
+
     $rows[] = [
         'date' => date('M d, Y', (int)$transaction_time),
         'description' => $description,
-        'category' => $type ?: 'General',
+        'status' => $normalizedStatus,
+        'category' => $normalizedType,
         'amount' => (float)$amount,
     ];
 }
@@ -59,7 +72,7 @@ unset($row);
                 <tr>
                     <th>Date</th>
                     <th>Description</th>
-                    <th>Category</th>
+                    <th>Status</th>
                     <th>Amount</th>
                     <th>Balance</th>
                 </tr>
@@ -72,7 +85,7 @@ unset($row);
                     <tr data-tx-type="<?php echo $isCredit ? 'credit' : 'debit'; ?>">
                         <td><?php echo htmlspecialchars($row['date']); ?></td>
                         <td><?php echo htmlspecialchars($row['description']); ?></td>
-                        <td><span class="tx-category"><?php echo htmlspecialchars($row['category']); ?></span></td>
+                        <td><span class="tx-category"><?php echo htmlspecialchars($row['status']); ?></span></td>
                         <td class="<?php echo $isCredit ? 'amount-credit' : 'amount-debit'; ?>"><?php echo $isCredit ? '+' : '-'; ?>$<?php echo number_format(abs($amount), 2); ?></td>
                         <td><?php echo isset($row['balance']) ? '$' . number_format((float)$row['balance'], 2) : '-'; ?></td>
                     </tr>

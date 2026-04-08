@@ -15,7 +15,7 @@
     <meta property="og:url" content="https://velmorabank.us/">
     <meta property="og:title" content="Velmora Bank — Digital Financial Solutions">
     <meta property="og:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta property="og:image" content="/assets/images/home/business-increase.png">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 
     <!-- Twitter -->
@@ -23,7 +23,7 @@
     <meta name="twitter:url" content="https://velmorabank.us/">
     <meta name="twitter:title" content="Velmora Bank — Digital Financial Solutions">
     <meta name="twitter:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta name="twitter:image" content="/assets/images/home/business-increase.png">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
 
     <link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
@@ -47,68 +47,15 @@ include('./common-sections/header.php');
 
 
 <!-- Hero Section -->
-<section class="hero">
-    <div class="swiper swiper-1">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide slide-1">
-                <div class="content">
-                    <h1>Tailored Banking Solutions for You</h1>
-                    <p>Your financial needs are unique, and so are our services. From personalized savings plans to customized loans, we offer solutions that fit your lifestyle and help you manage your money with confidence.</p>
-                    <a href="/personal/">Find out more</a>
-                </div>
-                <img src="/assets/images/home/hero/consulting-banner.jpg" alt="Banner Image">
-            </div>
-            <div class="swiper-slide slide-2">
-                <div class="content">
-                    <h1>Global Reach, Local Expertise</h1>
-                    <p>We combine global banking strength with local expertise to provide you with the best of both worlds. Wherever life takes you, our services are designed to meet your needs, with a personal touch you can trust.</p>
-                    <a href="/business/">Find out more</a>
-                </div>
-                <img src="/assets/images/home/hero/corporatebanking-banner.png" alt="Corporate Banking">
-            </div>
-            <div class="swiper-slide slide-3">
-                <div class="content">
-                    <h1>Invest in Your Dreams with Us</h1>
-                    <p>Dream big and invest with confidence. Our investment options are designed to help you grow your wealth and turn your dreams into reality. Let us be your partner in success, guiding you every step of the way.</p>
-                    <a href="/loan/">Find out more</a>
-                </div>
-                <img src="/assets/images/home/hero/private-bank-banner.png" alt="Private Bank Banner">
-            </div>
-            <div class="swiper-slide slide-4">
-                <div class="content">
-                    <h1>Innovative Banking for the Modern World</h1>
-                    <p>Stay ahead in the digital age with our cutting-edge banking solutions. From mobile banking to AI-driven insights, we offer the innovation you need to manage your finances effortlessly and efficiently.</p>
-                    <a href="/online-banking/">Find out more</a>
-                </div>
-                <img src="/assets/images/home/hero/bank-exterior.jpg" alt="Bank Exterior">
-            </div>
-            <div class="swiper-slide slide-5">
-                <div class="content">
-                    <h1>Secure and Reliable Banking</h1>
-                    <p>Your security is our priority. With advanced encryption and fraud protection, you can trust that your finances are safe with us. Experience peace of mind knowing that your banking is secure and reliable.</p>
-                    <a href="/contact/">Find out more</a>
-                </div>
-                <img src="/assets/images/home/hero/amex-card.jpg" alt="Amex Card">
-            </div>
-            <div class="swiper-slide slide-6">
-                <div class="content">
-                    <h1>Invest in Your Dreams with Us</h1>
-                    <p>Dream big and invest with confidence. Our investment options are designed to help you grow your wealth and turn your dreams into reality. Let us be your partner in success, guiding you every step of the way.</p>
-                    <a href="/credit-card/">Find out more</a>
-                </div>
-                <img src="/assets/images/home/hero/student-banner.jpg" alt="Vacation">
-            </div>
+<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.82), rgba(10,28,52,.52)), url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1920&q=80');">
+    <div class="hero-static-inner">
+        <div class="content">
+            <h1>Tailored Banking Solutions for You</h1>
+            <p>Your financial needs are unique, and so are our services. From personalized savings plans to customized loans, we offer solutions that fit your lifestyle and help you manage your money with confidence.</p>
+            <a href="/personal/">Find out more</a>
         </div>
-    
-        <!-- Add Pagination -->
-        <div class="swiper-pagination swiper-pagination-1"></div>
-    
-        <!-- Add Navigation -->
-        <div class="swiper-button-next swiper-button-next-1"></div>
-        <div class="swiper-button-prev swiper-button-prev-1"></div>
     </div>
 </section>
-
 
 
 
@@ -230,7 +177,7 @@ include('./common-sections/header.php');
                 <span>American Express Cards</span>
             </div>
             <div class="feature">
-                <img src="/assets/images/home/business-increase.png">
+                <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
                 <span>Business Opportunities</span>
             </div>
             <div class="feature">
@@ -358,9 +305,9 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Convenience and Accessibility">
-                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Financial Growth and Opportunities">
-                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80" alt="Convenience and Accessibility">
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80" alt="Financial Growth and Opportunities">
+                <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1200&q=80" alt="Security and Protection">
             </div>
             <div class="center buttons">
                 <div class="left">
@@ -407,37 +354,37 @@ include('./common-sections/header.php');
             <div class="swiper-wrapper">
                 <!-- Slides -->
                 <div class="swiper-slide slide-1">
-                    <img src="/assets/images/home/features/online-banking.jpg">
+                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
                     <div class="content">
                         <h3>Online Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-2">
-                    <img src="/assets/images/home/features/mobile-banking.jpg">
+                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
                     <div class="content">
                         <h3>Mobile Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-3">
-                    <img src="/assets/images/home/features/online-banking.jpg">
+                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
                     <div class="content">
                         <h3>Loan and Mortgage Services</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-4">
-                    <img src="/assets/images/home/features/mobile-banking.jpg">
+                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
                     <div class="content">
                         <h3>Investment and Wealth Management</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-5">
-                    <img src="/assets/images/home/features/online-banking.jpg">
+                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
                     <div class="content">
                         <h3>Customer Support and Financial Advisory</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-6">
-                    <img src="/assets/images/home/features/mobile-banking.jpg">
+                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
                     <div class="content">
                         <h3>Standby 24/7 ATMs</h3>
                     </div>

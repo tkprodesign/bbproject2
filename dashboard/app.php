@@ -184,7 +184,7 @@ $dbconn->close();
 
 //Sum up user's balance from transaction table
 $dbconn = connectToDatabase();
-$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ?";
+$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Completed')";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -214,6 +214,16 @@ $dbconn->close();
 
 
 //1. accounts/create
+
+function renderBankEmailTemplate($subject, $headline, $introHtml, $detailsHtml, $ctaText = '', $ctaUrl = '') {
+    $logoUrl = 'https://velmorabank.us/assets/images/branding/logo.png';
+    $ctaBlock = '';
+    if (!empty($ctaText) && !empty($ctaUrl)) {
+        $ctaBlock = '<tr><td align="center" style="padding: 0 32px 24px 32px;"><a href="' . htmlspecialchars($ctaUrl, ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;background:#0ddbb9;color:#0f1f33;text-decoration:none;font-weight:700;font-size:14px;line-height:1;padding:14px 22px;border-radius:6px;">' . htmlspecialchars($ctaText, ENT_QUOTES, 'UTF-8') . '</a></td></tr>';
+    }
+
+    return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') . '</title></head><body style="margin:0;padding:0;background:#f3f6fb;font-family:Arial,Helvetica,sans-serif;color:#1a2b44;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f3f6fb;padding:24px 0;"><tr><td align="center"><table role="presentation" width="640" cellspacing="0" cellpadding="0" border="0" style="width:640px;max-width:94%;background:#ffffff;border:1px solid #e4e9f2;border-radius:12px;overflow:hidden;"><tr><td style="background:#0f2742;padding:22px 28px;"><img src="' . $logoUrl . '" alt="Velmora Bank" style="height:36px;width:auto;display:block;"></td></tr><tr><td style="padding:28px 32px 8px 32px;"><p style="margin:0 0 8px 0;font-size:12px;letter-spacing:.08em;color:#6f8199;text-transform:uppercase;">Velmora Bank Notification</p><h1 style="margin:0;font-size:24px;line-height:1.35;color:#0f2742;">' . htmlspecialchars($headline, ENT_QUOTES, 'UTF-8') . '</h1></td></tr><tr><td style="padding:0 32px 10px 32px;font-size:15px;line-height:1.7;color:#3a4a62;">' . $introHtml . '</td></tr><tr><td style="padding:6px 32px 24px 32px;">' . $detailsHtml . '</td></tr>' . $ctaBlock . '<tr><td style="padding:18px 32px;background:#f8faff;border-top:1px solid #e4e9f2;"><p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#6f8199;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p><p style="margin:0;font-size:12px;line-height:1.5;color:#6f8199;">Need help? <a href="mailto:support@velmorabank.us" style="color:#0f2742;text-decoration:none;font-weight:600;">support@velmorabank.us</a></p></td></tr></table></td></tr></table></body></html>';
+}
 
 
 //Create account button function
@@ -245,50 +255,9 @@ if (isset($_POST['create_account'])) {
     // Define the email subject from your PHPMailer example
     $email_subject = 'Your New Velmora Bank Account Has Been Successfully Created';
 
-    // Define the email body using HEREDOC syntax for readability,
-    // incorporating the dynamic bank_account_number.
-    $email_body = <<<HTML
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>$email_subject</title>
-    </head>
-    <body style="font-family: Inter, sans-serif; padding: 0; margin: 0; background: #fff;">
-        <section style="width: 90%; max-width: 600px; border-radius: 1rem; margin: auto;">
-            <header style="padding: 1rem 0;">
-                <div style="padding: 1rem;">
-                    <a href="https://velmorabank.us" id="logo">
-                        <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
-                    </a>
-                </div>
-            </header>
-            <div class="content">
-                <div style="padding: 1rem;">
-                    <div class="account-success">
-                        <div class="wrapper" style="width: 90%; max-width: 500px; margin: 60px auto; display: flex; flex-direction: column; align-items: center; padding: 1.875rem 1.875rem; border-radius: 6px; border: 1px solid #e7eaed; background-color: #fff; color: #6c7293;">
-                            <div style="font-size: 58px; line-height: 1; margin-bottom: 20px;" aria-hidden="true">✓</div>
-                            <p style="text-align: center; margin-bottom: 25px;">Congratulations, your new account has been created with account number <strong>{$bank_account_number}</strong>.</p>
-                            <a href="https://velmorabank.us/dashboard/accounts" class="cta" style="padding: 0.625rem 1.125rem; color: #fff; background-color: #0ddbb9; border-color: #0ddbb9; border-radius: 0.25rem; display: inline-block; box-shadow: 0 2px 2px 0 rgba(13, 219, 185, 0.14), 0 3px 1px -2px rgba(13, 219, 185, 0.2), 0 1px 5px 0 rgba(13, 219, 185, 0.12); text-decoration: none; font-weight: 600;">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-                <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
-                <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
-                <p style="margin: 0;">400 Park Ave, New York, NY 10022, United States</p>
-                <p style="margin: 0;">
-                    <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> |
-                    <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
-                </p>
-                <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
-            </footer>
-        </section>
-    </body>
-    </html>
-    HTML;
+    $introHtml = '<p style="margin:0;">Your new account has been opened successfully and is ready for use.</p>';
+    $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;"><tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars((string)$bank_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr><tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">Active</td></tr></table>';
+    $email_body = renderBankEmailTemplate($email_subject, 'Account Successfully Created', $introHtml, $detailsHtml, 'View Account', 'https://velmorabank.us/dashboard/accounts');
 
 
     // Prepare the data for the Resend API call
@@ -356,7 +325,7 @@ if (isset($_POST['create_account'])) {
     //                         <header style="padding: 1rem 0;">
     //                             <div style="padding: 1rem;">
     //                                 <a href="https://velmorabank.us" id="logo">
-    //                                     <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
+    //                                     <img src="https://velmorabank.us/assets/images/branding/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
     //                                 </a>
     //                             </div>
     //                         </header>
@@ -639,54 +608,16 @@ if (isset($_POST['transfer_funds'])) {
         $status = 'Pending';
         $type = 'Transfer';
         $description = 'Transfer to ' . $to_bank_name . ' account number ' . $to_account_number;
-        $stmt->bind_param("ssssisssisss", $transaction_id, $from_account_type, $user_email, $from_account_number, $negative_amount, $currency, $description, $status, $time, $to_bank_name, $to_account_type, $to_account_number);
+        $stmt->bind_param("sssidsssisss", $transaction_id, $from_account_type, $user_email, $from_account_number, $negative_amount, $currency, $description, $status, $time, $to_bank_name, $to_account_type, $to_account_number);
 
         if (!$stmt->execute()) {
             echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
         } else {
             // --- Send an email notification to the admin via Resend ---
             $admin_email_subject = 'New Transfer Attempt';
-            $admin_email_body = <<<ADMIN_HTML
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>New Transfer Attempt</title>
-    </head>
-    <body style="font-family: 'Inter', sans-serif; font-size: 15px; margin: 0; padding: 0;">
-    <section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
-        <header style="padding: 1rem 0;">
-            <div style="padding: 1rem;">
-                <a href="https://velmorabank.us" id="logo">
-                    <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
-                </a>
-            </div>
-        </header>
-        <div class="content">
-            <div style="padding: 1rem;">
-                <div>
-                    <p style="line-height: 1.7;">Dear Admin,</p>
-                    <p style="line-height: 1.7; margin-bottom: 25px;">A transfer attempt has been made from account number '{$from_account}' to '{$to_bank_name}' account number '{$to_account_number}'.</p>
-                    <p style="line-height: 1.7; margin-bottom: 25px;">Amount: {$amount} {$currency}</p>
-                    <p style="line-height: 1.7; margin-bottom: 25px;">Status: Pending</p>
-                </div>
-            </div>
-        </div>
-        <footer style="background: #fbfdff; display: flex; flex-direction: column; gap: .75rem; font-size: .875rem; padding: 1rem;">
-            <p style="margin: 0;">Thank you for choosing Velmora Bank!</p>
-            <p style="margin: 0;">© 2024 Velmora Bank. All rights reserved.</p>
-            <p style="margin: 0;">400 Park Ave, New York, NY 10022, United States</p>
-            <p style="margin: 0;">
-                <a href="mailto:support@velmorabank.us" style="color: inherit;">support@velmorabank.us</a> |
-                <a href="tel:+1234567890" style="color: inherit;">+1 (234) 567-890</a>
-            </p>
-            <p style="margin: 0;"><a href="#" style="color: inherit;">Unsubscribe</a> from these emails.</p>
-        </footer>
-    </section>
-    </body>
-</html>
-ADMIN_HTML;
+            $admin_intro = '<p style="margin:0;">A new outbound transfer has been initiated by a client and is currently pending compliance review.</p>';
+            $admin_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($from_account, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Destination Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Destination Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($amount . ' ' . $currency, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#a16b00;font-weight:700;text-align:right;">Pending</td></tr>            </table>';
+            $admin_email_body = renderBankEmailTemplate($admin_email_subject, 'New Transfer Attempt', $admin_intro, $admin_details);
 
             $resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8"; // Your NEW Resend API Key
 
@@ -718,48 +649,9 @@ ADMIN_HTML;
 
             // --- Send an email notification to the user via Resend ---
             $user_email_subject = 'New Transfer Initiated';
-            $user_email_body = <<<USER_HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Transfer Initiated</title>
-</head>
-<body style="font-family: 'Inter', sans-serif; font-size: 15px; margin: 0; padding: 0;">
-<section style="width: 90%; max-width: 600px; background: #ffffffda; border-radius: 1rem; margin: auto;">
-    <header style="padding: 1rem 0;">
-        <div style="padding: 1rem;">
-            <a href="https://velmorabank.us" id="logo">
-                <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 48px; width: auto;">
-            </a>
-        </div>
-    </header>
-    <div class="content">
-        <div style="padding: 1rem;">
-            <div>
-                <p style="line-height: 1.7;">Dear {$user_name},</p>
-                <p style="line-height: 1.7; margin-bottom: 25px;">Your transfer from account number '{$from_account}' to '{$to_bank_name}', Account number: '{$to_account_number}' has been initiated and is currently pending.</p>
-                <p style="line-height: 1.7; margin-bottom: 25px;">Amount: {$amount} {$currency}</p>
-                <p style="line-height: 1.7; margin-bottom: 25px;">Status: Pending</p>
-            </div>
-        </div>
-    </div>
-    <footer style="background: #fbfdff; font-size: .875rem; padding: 1rem; text-align: left;">
-        <p style="margin: 0; padding-bottom: .75rem;">Thank you for choosing Velmora Bank!</p>
-        <p style="margin: 0; padding-bottom: .75rem;">&copy; 2024 Velmora Bank. All rights reserved.</p>
-        <p style="margin: 0; padding-bottom: .75rem;">400 Park Ave, New York, NY 10022, United States</p>
-        <p style="margin: 0; padding-bottom: .75rem;">
-            <a href="mailto:support@velmorabank.us" style="color: inherit; text-decoration: none;">support@velmorabank.us</a> |
-            <a href="tel:+1234567890" style="color: inherit; text-decoration: none;">+1 (234) 567-890</a>
-        </p>
-        <p style="margin: 0;"><a href="#" style="color: inherit; text-decoration: none;">Unsubscribe</a> from these emails.</p>
-    </footer>
-
-</section>
-</body>
-</html>
-USER_HTML;
+            $user_intro = '<p style="margin:0;">Dear ' . htmlspecialchars($user_name, ENT_QUOTES, 'UTF-8') . ', your transfer request has been received and is now awaiting approval.</p>';
+            $user_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($from_account, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">To Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">To Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($amount . ' ' . $currency, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#a16b00;font-weight:700;text-align:right;">Pending</td></tr>            </table>';
+            $user_email_body = renderBankEmailTemplate($user_email_subject, 'Transfer Initiated', $user_intro, $user_details, 'View Transactions', 'https://velmorabank.us/dashboard/accounts/transactions');
 
             $user_post_data = [
                 "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",

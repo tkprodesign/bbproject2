@@ -3,6 +3,35 @@ section.hero {
   width: 100vw;
   position: relative;
 }
+section.hero.hero-static {
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+}
+section.hero.hero-static .hero-static-inner {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+section.hero.hero-static .content {
+  color: #fff;
+  max-width: 640px;
+}
+section.hero.hero-static .content h1 {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+section.hero.hero-static .content p {
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+section.hero.hero-static .content a {
+  display: inline-block;
+  padding: 16px;
+  border: 1.5px solid #fff;
+  color: #fff;
+}
 section.hero .swiper {
   height: 100%;
   width: 100%;
@@ -391,7 +420,7 @@ section.about-us .container .container-wrapper {
   padding: 64px;
 }
 section.about-us .container .left {
-  background: url("/assets/images/home/hero/bank-exterior.jpg");
+  background: url("https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1600&q=80");
   -o-object-fit: cover;
      object-fit: cover;
   -o-object-position: center bottom;
