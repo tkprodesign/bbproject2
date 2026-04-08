@@ -30,6 +30,7 @@
     <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/home.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/home.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/home.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css?v=<?php echo time(); ?>">
 </head>
@@ -268,6 +269,7 @@
             </div>
             <div class="calculator">
                 <p>What is your monthly salary?</p>
+                <input type="number" id="salaryLiveInput" class="salary-live-input" min="0" max="15000" step="1" placeholder="Enter monthly salary">
                 <div class="toggle-box">
                     <div class="toggle">
                         <span class="ball"></span>

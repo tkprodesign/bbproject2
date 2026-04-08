@@ -26,6 +26,8 @@
   .site-header #menuToggle {
     position: relative;
     z-index: 130;
+    cursor: pointer;
+    touch-action: manipulation;
   }
 
   .site-header .mobile-nav-overlay {

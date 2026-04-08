@@ -279,6 +279,17 @@ section.loan-calculator .container .left .calculator {
 section.loan-calculator .container .left .calculator p {
   margin-bottom: 32px;
 }
+section.loan-calculator .container .left .calculator .salary-live-input {
+  display: none;
+  width: min(100%, 260px);
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: #2f2f2f;
+  color: #fff;
+  font-size: 18px;
+}
 section.loan-calculator .container .left .calculator .toggle-box {
   width: 200px;
   height: 200px;

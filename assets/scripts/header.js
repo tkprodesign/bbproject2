@@ -15,10 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  menuToggle.addEventListener('click', (event) => {
+  const toggleMenu = (event) => {
     event.preventDefault();
+    event.stopPropagation();
     setMenuState(!mobileNav.classList.contains('active'));
-  });
+  };
+
+  menuToggle.addEventListener('click', toggleMenu);
+  menuToggle.addEventListener('touchstart', toggleMenu, { passive: false });
 
   if (mobileNavOverlay) {
     mobileNavOverlay.addEventListener('click', () => setMenuState(false));
@@ -26,5 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   mobileNav.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => setMenuState(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      setMenuState(false);
+    }
   });
 });
