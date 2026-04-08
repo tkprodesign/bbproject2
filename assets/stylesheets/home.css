@@ -268,13 +268,19 @@ section.loan-calculator .container {
   position: relative;
   z-index: 3;
   top: 200px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 1fr);
+  gap: 24px;
+  align-items: stretch;
 }
 section.loan-calculator .container .left {
   color: #fff;
   background: #444444;
-  width: 70%;
+  width: 100%;
   display: grid;
   grid-template-columns: 45% 55%;
+  border-radius: 16px;
+  overflow: hidden;
 }
 section.loan-calculator .container .left .details {
   padding: 48px 0 24px 48px;
@@ -303,7 +309,7 @@ section.loan-calculator .container .left .details p.no i {
   font-size: 20px;
 }
 section.loan-calculator .container .left .calculator {
-  padding: 48px 0 0 48px;
+  padding: 48px;
 }
 section.loan-calculator .container .left .calculator p {
   margin-bottom: 32px;
@@ -366,26 +372,29 @@ section.loan-calculator .container .left .calculator .toggle-box .fig {
   transform: rotate(90deg);
 }
 section.loan-calculator .container .right {
-  height: calc(100% - 64px);
-  width: 45%;
-  position: absolute;
-  right: 0;
-  top: 32px;
+  min-height: 100%;
+  width: 100%;
+  position: relative;
   background: #fff;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 48px;
-  -webkit-clip-path: polygon(22% 0, 100% 0, 100% 100%, 0% 100%);
-          clip-path: polygon(22% 0, 100% 0, 100% 100%, 0% 100%);
+  align-items: stretch;
+  justify-content: center;
+  padding: 36px 32px;
+  border-radius: 16px;
+  border: 1px solid #e4ebf3;
+  box-shadow: 0 10px 22px rgba(16, 38, 67, 0.1);
+  -webkit-clip-path: none;
+          clip-path: none;
 }
 section.loan-calculator .container .right > p:first-child {
   margin-bottom: 24px;
+  text-align: left;
 }
 section.loan-calculator .container .right h1 {
   font-size: 48px;
   color: #444444;
-  margin-bottom: 25px;
+  margin-bottom: 18px;
 }
 section.loan-calculator .container .right .loan-breakdown {
   list-style: none;
@@ -406,10 +415,11 @@ section.loan-calculator .container .right .loan-breakdown li strong {
   color: #262626;
 }
 section.loan-calculator .container .right div {
-  display: grid;
-  grid-template-columns: max-content 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   gap: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 section.loan-calculator .container .right div p {
   font-weight: 400;
@@ -419,6 +429,11 @@ section.loan-calculator .container .right a {
   padding: 16px;
   border: 2px solid #262626;
   transition: all 0.2s ease;
+  text-decoration: none;
+}
+section.loan-calculator .container .right a.is-disabled {
+  pointer-events: none;
+  opacity: 0.6;
 }
 section.loan-calculator .container .right a:hover {
   background: #262626;
@@ -653,8 +668,16 @@ section.faq .container .questions p {
 .hero.hero-static .content { max-width: 720px; }
 .hero.hero-static .content h1 { font-size: clamp(38px, 5vw, 60px); line-height: 1.1; margin-bottom: 18px; }
 .hero.hero-static .content p { font-size: 18px; line-height: 1.7; max-width: 640px; }
+.hero.hero-static::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 78% 32%, rgba(255,255,255,.08), rgba(255,255,255,0) 40%);
+}
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
-.hero-actions a { padding: 13px 20px; border-radius: 10px; font-weight: 600; transition: .2s ease; }
+.hero-actions a { padding: 13px 20px; border-radius: 10px; font-weight: 600; transition: .2s ease; display: inline-flex; align-items: center; gap: 8px; }
+.hero-actions a .material-symbols-outlined { font-size: 20px; color: currentColor; }
 .hero-actions a.primary { background: #f13223; color: #fff; }
 .hero-actions a.primary:hover { background: #d42618; }
 .hero-actions a.secondary { background: rgba(255,255,255,0.96); color: #163555; border: 1px solid #d3deea; }
@@ -663,10 +686,12 @@ section.faq .container .questions p {
 section.trust-strip { margin-top: -38px; position: relative; z-index: 5; }
 section.trust-strip .container {
   background: #fff; border: 1px solid #e4ebf3; border-radius: 14px; box-shadow: 0 10px 30px rgba(16,38,67,.09);
-  display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; padding: 18px;
+  display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; padding: 18px;
 }
-section.trust-strip .trust-item { display: flex; align-items: center; gap: 10px; padding: 10px; }
+section.trust-strip .trust-item { display: flex; align-items: center; gap: 10px; padding: 10px; min-height: 64px; }
 section.trust-strip .trust-item span { color: #163555; font-size: 24px; }
+section.trust-strip .trust-item svg,
+section.trust-strip .trust-item svg path { fill: #163555 !important; stroke: #163555 !important; }
 section.trust-strip .trust-item p { font-size: 14px; color: #324960; line-height: 1.5; }
 
 section.features-1 { margin-top: 30px; }
@@ -686,17 +711,28 @@ section.features-2 .container { background: #fff; border-radius: 16px; padding: 
 section.features-2 .container .heading { margin-bottom: 24px; }
 section.features-2 .container .heading h2 { font-size: clamp(30px, 4vw, 44px); line-height: 1.2; margin-bottom: 12px; }
 section.features-2 .container .heading p { color: #465d77; max-width: 880px; line-height: 1.7; }
-section.features-2 .container .features { gap: 18px; }
-section.features-2 .container .features .feature { background: #f8fbff; border: 1px solid #e4edf7; padding: 16px 14px; border-radius: 12px; min-height: 132px; justify-content: center; }
+section.features-2 .container .features { gap: 18px; align-items: stretch; }
+section.features-2 .container .features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+section.features-2 .container .features .feature { background: #f8fbff; border: 1px solid #e4edf7; padding: 20px 16px; border-radius: 12px; min-height: 150px; justify-content: center; width: 100%; height: 100%; }
+section.features-2 .container .features .feature svg { width: 58px; height: 58px; }
 section.features-2 .container .features .feature span { font-weight: 600; color: #163555; text-align: center; }
 
-section.loan-calculator { margin: 70px 0 20px; }
+section.loan-calculator { margin: 62px 0 20px; }
 section.loan-calculator .container { top: 0; }
+section.loan-calculator .container .loan-flow-alert {
+  grid-column: 1 / -1;
+  border: 1px solid #f6d7be;
+  background: #fff7ef;
+  color: #6f3a00;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 500;
+}
 section.loan-calculator .container .left .details h1 { font-size: 34px; }
 section.loan-calculator .container .left .details p { color: rgba(255,255,255,.9); }
 section.loan-calculator .container .left .calculator p,
 section.loan-calculator .container .left .calculator label { color: #fff; font-weight: 500; }
-section.loan-calculator .container .right { border-radius: 16px; right: 16px; width: 42%; }
+section.loan-calculator .container .right { border-radius: 16px; right: 16px; width: 100%; }
 section.loan-calculator .container .right > p:first-child { font-weight: 600; color: #324c68; }
 section.loan-calculator .container .right h1 { margin-bottom: 16px; }
 section.loan-calculator .container .right .loan-breakdown li span { color: #546b84; }
@@ -704,6 +740,7 @@ section.loan-calculator .container .right a { width: 100%; text-align: center; b
 section.loan-calculator .container .right a:hover { background: #0d2a46; }
 
 section.about-us .container .container-wrapper { padding: 70px 64px; gap: 44px; }
+section.about-us .container .left { background-size: cover; background-position: center; min-height: 420px; }
 section.about-us .container .right .heading h2 { font-size: clamp(30px, 4vw, 44px); margin-bottom: 8px; }
 section.about-us .container .right .heading p { color: #4f6480; line-height: 1.7; }
 section.about-us .container .right .content > div { align-items: flex-start; gap: 16px; border-bottom: 1px solid #edf2f8; padding: 14px 0; }
@@ -711,16 +748,33 @@ section.about-us .container .right .content > div:last-child { border-bottom: 0;
 section.about-us .container .right .content > div h2 { margin-bottom: 6px; font-size: 22px; }
 section.about-us .container .right .content > div p { color: #526882; line-height: 1.65; }
 
+section.about-us { margin-top: 34px; }
 section.benefits .container .heading h2 { margin-bottom: 18px; }
-section.benefits .container .benefits { background: #fff; border-radius: 16px; box-shadow: 0 12px 30px rgba(15,39,66,.08); padding: 18px; }
-section.benefits .container .benefits .left { border-radius: 12px; overflow: hidden; }
-section.benefits .container .benefits .right { padding: 12px 6px 6px; }
+section.benefits { padding-top: 56px; }
+section.benefits .container .benefits { background: #fff; border-radius: 16px; box-shadow: 0 12px 30px rgba(15,39,66,.08); padding: 20px; }
+section.benefits .container .benefits { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+section.benefits .container .benefits .left {
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 360px;
+  background: url("/assets/images/home/benefits/mobile-banking.jpg") center/cover no-repeat;
+}
+section.benefits .container .benefits .left img { object-position: center; display: block; }
+section.benefits .container .benefits .right { padding: 12px 6px 6px; min-height: 360px; }
 section.benefits .container .benefits .right .benefit h2 { margin-bottom: 10px; }
 section.benefits .container .benefits .right .benefit p { color: #4f6680; line-height: 1.7; }
-section.benefits .container .benefits .center { top: 50%; transform: translateY(-50%); }
-section.benefits .container .benefits .center > div { border-radius: 10px; }
+section.benefits .container .benefits .center {
+  position: static;
+  order: 3;
+  grid-column: 1 / -1;
+  justify-self: center;
+  transform: none;
+  margin-top: 12px;
+}
+section.benefits .container .benefits .center > div { border-radius: 10px; width: 52px; height: 52px; }
 
 section.features-3 .container { background: #fff; border-radius: 16px; padding: 40px; box-shadow: 0 12px 26px rgba(15,39,66,.08); }
+section.features-3 { margin-top: 34px; }
 section.features-3 .container .heading { margin-bottom: 20px; }
 section.features-3 .container .heading p { color: #506983; line-height: 1.7; }
 section.features-3 .swiper-slide { border: 1px solid #e7eef6; border-radius: 14px; overflow: hidden; background: #fff; }
@@ -730,6 +784,7 @@ section.features-3 .swiper-slide .content h3 { margin: 0; font-size: 22px; color
 section.features-3 .swiper-slide .content::after { content: 'Learn More'; display: inline-block; margin-top: 8px; color: #f13223; font-weight: 600; }
 
 section.faq .container { background: #fff; border-radius: 16px; padding: 38px; box-shadow: 0 12px 26px rgba(15,39,66,.08); }
+section.faq { margin-top: 34px; }
 section.faq .container .questions { display: grid; grid-template-columns: 1fr; gap: 12px; }
 section.faq .container .faq-item { border: 1px solid #e7eef7; border-radius: 12px; overflow: hidden; }
 section.faq .container .faq-question {

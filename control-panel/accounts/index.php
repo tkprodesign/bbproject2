@@ -2,6 +2,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
@@ -42,7 +46,7 @@
                             <td><?php echo htmlspecialchars($row['account_number']); ?></td>
                             <?php 
                                 $select_user_account = $row['account_number'];
-                                $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account' AND status IN ('Successful', 'Completed')";
+                                $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account' AND status IN ('Successful', 'Pending')";
                                 $su_result = $db->query($su_query);
                                 $account_balance = $su_result->fetch_assoc()['account_balance'] ?? 0;
                                 ?>

@@ -12,6 +12,8 @@ while ($stmt->fetch()) {
     $normalizedStatus = strtolower(trim((string)$status));
     if ($normalizedStatus === '' || $normalizedStatus === 'current') {
         $normalizedStatus = 'posted';
+    } elseif ($normalizedStatus === 'completed') {
+        $normalizedStatus = 'successful';
     }
     $normalizedStatus = ucwords(str_replace(['_', '-'], ' ', $normalizedStatus));
 
@@ -35,13 +37,19 @@ $dbconn->close();
 $runningBalance = (float)str_replace(',', '', $user_balance);
 foreach ($rows as &$row) {
     $row['balance'] = $runningBalance;
-    $runningBalance -= (float)$row['amount'];
+    if (strtolower((string)$row['status']) !== 'failed') {
+        $runningBalance -= (float)$row['amount'];
+    }
 }
 unset($row);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
