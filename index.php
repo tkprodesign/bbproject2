@@ -504,7 +504,7 @@ include('./common-sections/header.php');
                 <li><h3>Legal</h3></li>
                 <li><a href="/quick-links/#terms-and-conditions">Terms & Conditions</a></li>
                 <li><a href="/quick-links/#privacy-policy">Privacy Policy</a></li>
-                <li><a href="/quick-links/#cookie-policy">Cookie Policy</a></li>
+                <li><a href="/cookie-policy/">Cookie Policy</a></li>
                 <li><a href="/quick-links/#complaints-procedure">Complaints Procedure</a></li>
             </ul>
         </div>

@@ -73,7 +73,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
     <div class="cookie-consent" id="cookieConsent" role="region" aria-label="Cookie consent" hidden>
         <p>We use cookies to improve your experience.</p>
         <div class="cookie-actions">
-            <a href="/cookie-policy" class="learn-more">Learn More</a>
+            <a href="/cookie-policy/" class="learn-more">Learn More</a>
             <button type="button" id="cookieAcceptBtn">Accept</button>
         </div>
     </div>
