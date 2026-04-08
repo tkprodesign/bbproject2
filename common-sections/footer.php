@@ -30,20 +30,20 @@ $supportWhatsappLink = getSupportWhatsappLink();
             </ul>
         </div>
         <div class="right">
-            <form action="" method="post">
+            <form action="/contact/" method="get">
                 <h3>Subscribe to Our Newsletter</h3>
                 <input type="email" name="email" placeholder="Your Email Address">
-                <button type="submit">Subcribe</button>
+                <button type="submit">Subscribe</button>
             </form>
             <div class="contacts">
-                <a href="#" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
+                <a href="https://maps.google.com/?q=400+Park+Ave,+New+York,+NY+10022" target="_blank" rel="noopener" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
                 <a href="mailto:support@velmorabank.us" style="display: block; margin-bottom: 8px;">support@velmorabank.us</a>
                 <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener" style="display: block; margin-bottom: 8px;"><?php echo htmlspecialchars($supportPhoneNumber); ?></a>
             </div>
             <div class="social-links">
-                <a href="#"><i class="bi bi-facebook"></i></a>
-                <a href="#"><i class="bi bi-twitter"></i></a>
-                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-facebook"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-twitter"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-instagram"></i></a>
                 <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i></a>
             </div>
         </div>

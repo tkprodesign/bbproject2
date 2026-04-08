@@ -15,7 +15,7 @@
     <meta property="og:url" content="https://velmorabank.us/">
     <meta property="og:title" content="Velmora Bank — Digital Financial Solutions">
     <meta property="og:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:image" content="https://velmorabank.us/assets/images/home/hero/bank-exterior.jpg">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 
     <!-- Twitter -->
@@ -23,7 +23,7 @@
     <meta name="twitter:url" content="https://velmorabank.us/">
     <meta name="twitter:title" content="Velmora Bank — Digital Financial Solutions">
     <meta name="twitter:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:image" content="https://velmorabank.us/assets/images/home/hero/bank-exterior.jpg">
 
     <link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
@@ -47,7 +47,7 @@ include('./common-sections/header.php');
 
 
 <!-- Hero Section -->
-<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.82), rgba(10,28,52,.52)), url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1920&q=80');">
+<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.82), rgba(10,28,52,.52)), url('/assets/images/home/hero/consulting-banner.jpg');">
     <div class="hero-static-inner">
         <div class="content">
             <h1>Tailored Banking Solutions for You</h1>
@@ -311,9 +311,9 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80" alt="Convenience and Accessibility">
-                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80" alt="Financial Growth and Opportunities">
-                <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1200&q=80" alt="Security and Protection">
+                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility">
+                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities">
+                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection">
             </div>
             <div class="center buttons">
                 <div class="left">
@@ -360,37 +360,37 @@ include('./common-sections/header.php');
             <div class="swiper-wrapper">
                 <!-- Slides -->
                 <div class="swiper-slide slide-1">
-                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/mobile-banking.jpg" alt="Customer using mobile banking app">
                     <div class="content">
                         <h3>Online Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-2">
-                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/wealth-management.jpg" alt="Advisor discussing wealth management">
                     <div class="content">
                         <h3>Mobile Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-3">
-                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/mobile-banking.jpg" alt="Customer using mobile banking app">
                     <div class="content">
                         <h3>Loan and Mortgage Services</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-4">
-                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/wealth-management.jpg" alt="Advisor discussing wealth management">
                     <div class="content">
                         <h3>Investment and Wealth Management</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-5">
-                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/mobile-banking.jpg" alt="Customer using mobile banking app">
                     <div class="content">
                         <h3>Customer Support and Financial Advisory</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-6">
-                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/wealth-management.jpg" alt="Advisor discussing wealth management">
                     <div class="content">
                         <h3>Standby 24/7 ATMs</h3>
                     </div>
@@ -482,20 +482,20 @@ include('./common-sections/header.php');
             </ul>
         </div>
         <div class="right">
-            <form action="" method="post">
+            <form action="/contact/" method="get">
                 <h3>Subscribe to Our Newsletter</h3>
                 <input type="email" name="email" placeholder="Your Email Address">
-                <button type="submit">Subcribe</button>
+                <button type="submit">Subscribe</button>
             </form>
             <div class="contacts">
-                <a href="#" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
+                <a href="https://maps.google.com/?q=400+Park+Ave,+New+York,+NY+10022" target="_blank" rel="noopener" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
                 <a href="mailto:support@velmorabank.us" style="display: block; margin-bottom: 8px;">support@velmorabank.us</a>
                 <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener" style="display: block; margin-bottom: 8px;"><?php echo htmlspecialchars($supportPhoneNumber); ?></a>
             </div>
             <div class="social-links">
-                <a href="#"><i class="bi bi-facebook"></i></a>
-                <a href="#"><i class="bi bi-twitter"></i></a>
-                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-facebook"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-twitter"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-instagram"></i></a>
                 <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i></a>
             </div>
         </div>
