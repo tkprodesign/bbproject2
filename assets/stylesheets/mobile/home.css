@@ -44,3 +44,17 @@ section.credit-card .container .content .left .lists {
 section.credit-card .container .content .right {
   max-width: 500px;
 }/*# sourceMappingURL=home.css.map */
+.hero.hero-static .hero-static-inner { padding: 74px 0 90px; }
+.hero.hero-static .content h1 { font-size: 34px; }
+.hero.hero-static .content p { font-size: 16px; }
+.hero-actions a { width: 100%; text-align: center; }
+section.trust-strip { margin-top: -24px; }
+section.trust-strip .container { grid-template-columns: 1fr; padding: 14px; }
+section.loan-calculator .container .right { width: calc(100% - 26px); left: 13px; bottom: 14px; padding: 20px; min-height: 470px; }
+section.loan-calculator .container .left { padding-bottom: 510px; }
+section.features-3 .swiper-slide img { height: 180px; }
+section.faq .container { padding: 18px; }
+footer .container .left { grid-template-columns: 1fr; }
+section.features-3 .container .swiper-2 { overflow: hidden; }
+section.features-3 .container .swiper-2 .swiper-slide { height: auto; }
+section.features-3 .container .swiper-2 .swiper-slide img { height: 170px; object-fit: cover; }

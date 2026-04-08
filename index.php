@@ -15,7 +15,7 @@
     <meta property="og:url" content="https://velmorabank.us/">
     <meta property="og:title" content="Velmora Bank — Digital Financial Solutions">
     <meta property="og:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:image" content="https://velmorabank.us/assets/images/home/hero/bank-exterior.jpg">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 
     <!-- Twitter -->
@@ -23,7 +23,7 @@
     <meta name="twitter:url" content="https://velmorabank.us/">
     <meta name="twitter:title" content="Velmora Bank — Digital Financial Solutions">
     <meta name="twitter:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:image" content="https://velmorabank.us/assets/images/home/hero/bank-exterior.jpg">
 
     <link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
@@ -47,13 +47,25 @@ include('./common-sections/header.php');
 
 
 <!-- Hero Section -->
-<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.82), rgba(10,28,52,.52)), url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1920&q=80');">
+<section class="hero hero-static" style="background-image: linear-gradient(90deg, rgba(10,28,52,.82), rgba(10,28,52,.52)), url('/assets/images/home/hero/consulting-banner.jpg');">
     <div class="hero-static-inner">
         <div class="content">
-            <h1>Tailored Banking Solutions for You</h1>
-            <p>Your financial needs are unique, and so are our services. From personalized savings plans to customized loans, we offer solutions that fit your lifestyle and help you manage your money with confidence.</p>
-            <a href="/personal/">Find out more</a>
+            <h1>Secure Everyday Banking for Individuals, Families, and Businesses</h1>
+            <p>Manage accounts, transfer funds, access lending, and get expert support from one trusted banking partner built for your daily and long-term financial goals.</p>
+            <div class="hero-actions">
+                <a href="/login/" class="primary">Access Online Banking</a>
+                <a href="/contact/" class="secondary">Speak to a Banking Advisor</a>
+            </div>
         </div>
+    </div>
+</section>
+
+<section class="trust-strip" aria-label="Trust and security highlights">
+    <div class="container">
+        <div class="trust-item"><span class="material-symbols-outlined">encrypted</span><p>Protected sessions and encrypted transactions</p></div>
+        <div class="trust-item"><span class="material-symbols-outlined">verified_user</span><p>Compliance-first banking operations and controls</p></div>
+        <div class="trust-item"><span class="material-symbols-outlined">support_agent</span><p>Dedicated customer support when you need assistance</p></div>
+        <div class="trust-item"><span class="material-symbols-outlined">credit_card</span><p>Card and digital payment services for daily use</p></div>
     </div>
 </section>
 
@@ -71,7 +83,7 @@ include('./common-sections/header.php');
                 <path d="M37.2998 32.3667H27.4331" stroke="black" stroke-width="2" stroke-linejoin="round"/>
                 </svg>                
             <h2>Open an account.</h2>
-            <p>Open an account and open your world to more.</p>
+            <p>Open your account quickly and start banking with confidence.</p>
         </div>
         <div class="feature">
             <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +99,7 @@ include('./common-sections/header.php');
                 </svg>
                 
             <h2>Cards</h2>
-            <p>Cards you can use anywhere for all your financial transactions</p>
+            <p>Cards designed for secure everyday spending, online payments, and travel.</p>
         </div>
         <div class="feature">
             <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,7 +107,7 @@ include('./common-sections/header.php');
                 </svg>
                 
             <h2>Quick Loans</h2>
-            <p>Need Quick cash for Quick fixes? See how we can help.</p>
+            <p>Access short-term lending options with clear terms and guided support.</p>
         </div>
         <div class="feature">
             <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,7 +120,7 @@ include('./common-sections/header.php');
                 </svg>
                 
             <h2>Money Transfer</h2>
-            <p>Reliable, safe and secure ways to send and recieve money</p>
+            <p>Send and receive money securely across local and international destinations.</p>
         </div>
     </div>
 </section>
@@ -133,9 +145,8 @@ include('./common-sections/header.php');
 <section class="features-2">
     <div class="container">
         <div class="heading">
-            <h2>Banking Made Effortless: <span>Your Financial Life Simplified.</span></h2>
-            <p>Discover a world of convenience at your fingertips.
-                Enjoy the freedom to manage your finances anytime, anywhere with our secure and user-friendly online and mobile banking platforms.</p>
+            <h2>Banking Made Practical: <span>Services Built Around Real Financial Needs.</span></h2>
+            <p>From everyday payments to savings, lending, and advisory support, access core banking services through secure digital channels and responsive branch support.</p>
         </div>
         <div class="features">
             <div class="feature">
@@ -177,10 +188,6 @@ include('./common-sections/header.php');
                 <span>American Express Cards</span>
             </div>
             <div class="feature">
-                <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
-                <span>Business Opportunities</span>
-            </div>
-            <div class="feature">
                 <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M50.3601 7.81251C37.2632 7.65626 25.7792 16.5525 21.701 28.9978C17.387 42.1619 24.0407 52.5629 29.0985 60.4675C31.272 63.8644 33.2198 66.907 34.0057 69.5679C34.4057 70.9226 35.6023 71.875 37.0148 71.875H39.0625C39.0625 67.3422 36.2756 62.986 33.0475 57.9407C29.2741 52.0454 25 45.3641 25 37.5C25 23.8281 36.03 12.6844 49.6613 12.5C60.405 12.3578 69.6817 19.3995 73.4833 29.4495C77.8302 40.9417 71.951 50.1297 66.9525 57.9407C63.7244 62.986 60.9375 67.3422 60.9375 71.875H62.9852C64.3977 71.875 65.5943 70.921 65.9943 69.5679C66.7818 66.907 68.7281 63.8675 70.9015 60.4706C74.8171 54.3519 79.6875 46.736 79.6875 37.5C79.6875 21.25 66.5632 8.00782 50.3601 7.81251ZM13.5223 10.2326L10.6415 13.9313L17.7277 19.455L20.6085 15.7562L13.5223 10.2326ZM86.4807 10.2387L79.3915 15.7593L82.2723 19.458L89.3616 13.9343L86.4807 10.2387ZM3.125 35.9375V40.625H10.9375V35.9375H3.125ZM89.0625 35.9375V40.625H96.875V35.9375H89.0625ZM41.8793 38.681L41.3238 38.9954C39.3863 40.0985 38.5649 42.4453 39.3524 44.5313C41.1133 49.1953 43.75 58.4203 43.75 71.875H48.4375C48.4375 50.4063 42.1465 39.1514 41.8793 38.681ZM58.1207 38.681C57.8535 39.1498 51.5625 50.4063 51.5625 71.875H56.25C56.25 58.4188 58.8852 49.1922 60.6445 44.5313C61.432 42.4484 60.6151 40.1062 58.6823 39.0015L58.1207 38.681ZM82.2723 55.5451L79.3915 59.2438L86.4777 64.7675L89.3585 61.0687L82.2723 55.5451ZM17.7246 55.5481L10.6384 61.0718L13.5193 64.7675L20.6055 59.2468L17.7246 55.5481ZM35.9375 76.5625L36.8897 83.2215C37.2568 85.7965 39.1815 87.8728 41.7206 88.4369L43.9301 88.9282C44.578 91.689 47.0417 93.75 50 93.75C52.9584 93.75 55.422 91.689 56.07 88.9282L58.2794 88.4369C60.8185 87.8728 62.7432 85.7965 63.1104 83.2215L64.0625 76.5625H51.5625H48.4375H35.9375Z" fill="#444444"/>
                     <path d="M13.5223 10.2325L10.6415 13.9313L17.7277 19.455L20.6085 15.7562L13.5223 10.2325ZM86.4807 10.2386L79.3915 15.7593L82.2723 19.458L89.3616 13.9343L86.4807 10.2386ZM3.125 35.9375V40.625H10.9375V35.9375H3.125ZM89.0625 35.9375V40.625H96.875V35.9375H89.0625ZM82.2723 55.545L79.3915 59.2438L86.4777 64.7675L89.3585 61.0687L82.2723 55.545ZM17.7246 55.5481L10.6384 61.0718L13.5193 64.7675L20.6055 59.2468L17.7246 55.5481Z" fill="#F13223"/>
@@ -213,15 +220,21 @@ include('./common-sections/header.php');
         <div class="left">
             <div class="details">
                 <h1>Payday Loan<br>Calculator</h1>
-                <p>Your financial needs are important to us. We know that some emergencies arise before payday and you may be low on cash. With Payday Loan by Access, you can borrow money and pay back at the agreed time. </p>
+                <p>Use this tool to estimate a short-term loan based on your monthly income and repayment period. We calculate principal, service fee, total repayment, and an equivalent monthly installment.</p>
                 <p class="no">
                     <i class="bi bi-exclamation-circle"></i>
-                    <span>* Terms and Conditions Apply </span>
+                    <span>* Estimates only. Final approval depends on eligibility, account history, and underwriting checks.</span>
                 </p>
             </div>
             <div class="calculator">
                 <p>What is your monthly salary?</p>
-                <input type="number" id="salaryLiveInput" class="salary-live-input" min="0" max="15000" step="1" placeholder="Enter monthly salary">
+                <input type="number" id="salaryLiveInput" class="salary-live-input" min="500" max="50000" step="50" placeholder="Enter monthly salary">
+                <label for="loanTenorDays">Select repayment tenor</label>
+                <select id="loanTenorDays" class="loan-tenor-select">
+                    <option value="14">14 days</option>
+                    <option value="30" selected>30 days</option>
+                    <option value="60">60 days</option>
+                </select>
                 <div class="toggle-box">
                     <div class="toggle">
                         <span class="ball"></span>
@@ -235,13 +248,17 @@ include('./common-sections/header.php');
         </div>
         <div class="right">
             <p>Eligible Loan Amount</p>
-            <h1>$<span id="loanAmount">0</span></h1>
-            <div>Tenor: <p>Your next pay day or <nobr>30-days</nobr>, whichever comes first</p></div>
-            <a href="/dashboard">Get Instant Loan Now</a>
+            <h1>$<span id="loanAmount">0.00</span></h1>
+            <ul class="loan-breakdown">
+                <li><span>Processing Fee</span><strong>$<span id="loanFee">0.00</span></strong></li>
+                <li><span>Total Repayment</span><strong>$<span id="loanTotalRepayment">0.00</span></strong></li>
+                <li><span>Est. Monthly Installment</span><strong>$<span id="loanInstallment">0.00</span></strong></li>
+            </ul>
+            <div>Tenor: <p><span id="loanTenorDisplay">30</span> days</p></div>
+            <a id="applyLoanLink" href="/loan/?salary=0&amount=0&fee=0&tenor=30&repayment=0&installment=0">Apply with These Estimates</a>
         </div>
     </div>
 </section>
-
 
 
 
@@ -305,9 +322,9 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80" alt="Convenience and Accessibility">
-                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80" alt="Financial Growth and Opportunities">
-                <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1200&q=80" alt="Security and Protection">
+                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
             </div>
             <div class="center buttons">
                 <div class="left">
@@ -354,37 +371,37 @@ include('./common-sections/header.php');
             <div class="swiper-wrapper">
                 <!-- Slides -->
                 <div class="swiper-slide slide-1">
-                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/online-banking.jpg" alt="Customer using secure online banking" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Online Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-2">
-                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/mobile-banking.jpg" alt="Customer using mobile banking app" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Mobile Banking</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-3">
-                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/mortgage-and-loans.jpg" alt="Client reviewing mortgage and loan options" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Loan and Mortgage Services</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-4">
-                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/wealth-management.jpg" alt="Advisor discussing investment and wealth planning" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Investment and Wealth Management</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-5">
-                    <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/customer-support.jpg" alt="Customer support and financial advisory meeting" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Customer Support and Financial Advisory</h3>
                     </div>
                 </div>
                 <div class="swiper-slide slide-6">
-                    <img src="https://images.unsplash.com/photo-1616077167599-cad3639f2d0d?auto=format&fit=crop&w=1200&q=80">
+                    <img src="/assets/images/home/features/atms.jpg" alt="24/7 ATM and card self-service banking" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
                     <div class="content">
                         <h3>Standby 24/7 ATMs</h3>
                     </div>
@@ -413,38 +430,36 @@ include('./common-sections/header.php');
 <section class="faq">
     <div class="container">
         <div class="heading">
-            <h2>Frequently Ask Questions</h2>
+            <h2>Frequently Asked Questions</h2>
         </div>
-        <div class="questions">
-            <div class="faq">
-                <h2>What types of accounts can I open with your bank?</h2>
-                <p>We offer a variety of accounts to meet your financial needs, including savings accounts, checking accounts, fixed deposits, and business accounts. Each account type is designed to offer unique features and benefits, depending on your financial goals.</p>
+        <div class="questions" id="faqAccordion">
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">What types of accounts can I open with your bank?</button>
+                <div class="faq-answer"><p>We offer savings, checking, fixed deposit, and business accounts. Each option is built for a different financial goal and transaction need.</p></div>
             </div>
-            <div class="faq">
-                <h2>How can I access my account online?</h2>
-                <p>You can access your account online through our secure online banking portal or mobile app. Simply log in using your username and password to view your account balance, transfer funds, pay bills, and more. If you haven't registered yet, you can easily sign up on our website.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">How can I access my account online?</button>
+                <div class="faq-answer"><p>You can access your account through our secure online banking portal and mobile channels using your registered credentials.</p></div>
             </div>
-            <div class="faq">
-                <h2>What are the international transaction fees?</h2>
-                <p>International transaction fees vary depending on the type of account and transaction. Typically, there is a small percentage fee on the transaction amount, along with a fixed fee for currency conversion. Please check our fees and charges section for detailed information.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">What are the international transaction fees?</button>
+                <div class="faq-answer"><p>International transfer and card charges vary by product and transaction route. Please review the latest fee schedule before initiating cross-border transactions.</p></div>
             </div>
-            <div class="faq">
-                <h2>How can I apply for a loan or mortgage?</h2>
-                <p>Applying for a loan or mortgage with us is straightforward. You can start the process online, by phone, or in-person at any of our branches. Our financial advisors will guide you through the necessary steps, including the documentation required and eligibility criteria.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">How can I apply for a loan?</button>
+                <div class="faq-answer"><p>You can start from our loan calculator and continue to the application page. Our team will review eligibility, affordability, and supporting documents.</p></div>
             </div>
-            <div class="faq">
-                <h2>What security measures are in place to protect my account?</h2>
-                <p>Your security is our top priority. We employ advanced encryption technology, multi-factor authentication, and real-time fraud monitoring to protect your account. Additionally, our mobile app and online banking platforms are equipped with biometric login options for added security.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">How is my account protected?</button>
+                <div class="faq-answer"><p>We apply layered security controls including encrypted sessions, authentication checks, and continuous transaction monitoring.</p></div>
             </div>
-            <div class="faq">
-                <h2>How do I report a lost or stolen card?</h2>
-                <p>If your card is lost or stolen, please contact our customer service immediately via phone or through our mobile app. We will block the card to prevent unauthorized transactions and issue you a new one as quickly as possible. You can also freeze your card temporarily through our online banking platform.</p>
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">How do I report a lost or stolen card?</button>
+                <div class="faq-answer"><p>Contact support immediately via phone, WhatsApp, or the support center so your card can be blocked and replaced promptly.</p></div>
             </div>
-
         </div>
     </div>
 </section>
-
 
 
 
@@ -474,22 +489,29 @@ include('./common-sections/header.php');
                 <li><a href="/quick-links/#scam-alert">Scam Alert</a></li>
                 <li><a href="/quick-links/#support-center">Support Center</a></li>
             </ul>
+            <ul>
+                <li><h3>Legal</h3></li>
+                <li><a href="/quick-links/#terms-and-conditions">Terms & Conditions</a></li>
+                <li><a href="/quick-links/#privacy-policy">Privacy Policy</a></li>
+                <li><a href="/quick-links/#cookie-policy">Cookie Policy</a></li>
+                <li><a href="/quick-links/#complaints-procedure">Complaints Procedure</a></li>
+            </ul>
         </div>
         <div class="right">
-            <form action="" method="post">
+            <form action="/contact/" method="get">
                 <h3>Subscribe to Our Newsletter</h3>
                 <input type="email" name="email" placeholder="Your Email Address">
-                <button type="submit">Subcribe</button>
+                <button type="submit">Subscribe</button>
             </form>
             <div class="contacts">
-                <a href="#" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
+                <a href="https://maps.google.com/?q=400+Park+Ave,+New+York,+NY+10022" target="_blank" rel="noopener" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
                 <a href="mailto:support@velmorabank.us" style="display: block; margin-bottom: 8px;">support@velmorabank.us</a>
                 <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener" style="display: block; margin-bottom: 8px;"><?php echo htmlspecialchars($supportPhoneNumber); ?></a>
             </div>
             <div class="social-links">
-                <a href="#"><i class="bi bi-facebook"></i></a>
-                <a href="#"><i class="bi bi-twitter"></i></a>
-                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-facebook"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-twitter"></i></a>
+                <a href="/contact/" aria-label="Contact us"><i class="bi bi-instagram"></i></a>
                 <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i></a>
             </div>
         </div>

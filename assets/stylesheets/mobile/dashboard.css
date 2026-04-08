@@ -1,7 +1,7 @@
 .pre-header .container { flex-direction: column; align-items: flex-start; }
 .pre-header .right { width: 100%; justify-content: space-between; }
 
-header #menuToggle { top: 14px; right: 10px; }
+.dashboard-header #menuToggle { top: 14px; right: 10px; }
 section.add-account { margin-top: 72px; }
 section.add-account .container form { padding: 14px; }
 
@@ -32,10 +32,14 @@ section.kyc-ver .content { margin-top: 35px; padding: 20px; }
 .reference-transactions .right.full-width,
 .reference-transactions-page .accounts-list { padding: 14px; }
 
-header nav a,
-header nav text,
-header nav p { color: #153455; }
+.dashboard-header .mobile-drawer a,
+.dashboard-header .mobile-drawer p,
+.dashboard-header .mobile-drawer span { color: #153455; }
 
 .tx-actions { display: grid; grid-template-columns: 1fr 1fr; }
 #txSearchInput,
 #txExportBtn { grid-column: 1 / -1; width: 100%; }
+
+.profile-picture-preview { width: 150px; height: 150px; border-radius: 16px; }
+.profile-avatar-wrap { width: 100%; justify-content: flex-start; }
+.dashboard-avatar { width: 58px; height: 58px; }

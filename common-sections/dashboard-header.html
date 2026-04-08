@@ -6,184 +6,160 @@
         </div>
         <div class="right">
             <a href="/dashboard/security/complete-kyc" class="cta">Complete Account Information</a>
-            <a href="#" class="close">
-                <span class="material-symbols-outlined">
-                    close
-                    </span>
+            <a href="#" class="close" aria-label="Close alert">
+                <span class="material-symbols-outlined">close</span>
             </a>
         </div>
     </div>
 </div>
 <?php endif; ?>
+
 <div class="header-gap"></div>
-<header>
-    <div class="container">
-        <a href="/dashboard">
-            <span class="material-symbols-outlined">
-                space_dashboard
-                </span>
+<header class="dashboard-header">
+    <div class="container desktop-menu" aria-label="Dashboard menu">
+        <a href="/dashboard" class="menu-item">
+            <span class="material-symbols-outlined">space_dashboard</span>
             <p>Dashboard</p>
         </a>
-        <a href="/dashboard/fund/transfer">
-        <!-- <a href="#"> -->
-            <span class="material-symbols-outlined">
-                payments
-                </span>
+
+        <a href="/dashboard/fund/transfer" class="menu-item">
+            <span class="material-symbols-outlined">payments</span>
             <p>Transfer Funds</p>
         </a>
-        <div class="madre">
-            <span class="material-symbols-outlined">
-                deployed_code
-                </span>
-            <p>My Account</p>
-            <div class="miracle">
-                <a href="/dashboard/accounts/create">
-                    <span class="material-symbols-outlined">
-                        remove
-                        </span>
-                    <text>Add Account</text>
+
+        <div class="menu-group has-submenu" data-submenu>
+            <button type="button" class="menu-item menu-trigger" aria-expanded="false">
+                <span class="material-symbols-outlined">account_balance</span>
+                <p>My Account</p>
+                <span class="material-symbols-outlined arrow">expand_more</span>
+            </button>
+            <div class="submenu" role="menu">
+                <a href="/dashboard/accounts/create" class="submenu-link" role="menuitem">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    <span>Add Account</span>
                 </a>
-                <a href="/dashboard/accounts">
-                    <span class="material-symbols-outlined">
-                        remove
-                        </span>
-                    <text>Manage Account</text>
+                <a href="/dashboard/accounts" class="submenu-link" role="menuitem">
+                    <span class="material-symbols-outlined">manage_accounts</span>
+                    <span>Manage Account</span>
                 </a>
             </div>
         </div>
-        <a href="/dashboard/accounts/transactions">
-            <span class="material-symbols-outlined">
-                notifications
-                </span>
+
+        <a href="/dashboard/accounts/transactions" class="menu-item">
+            <span class="material-symbols-outlined">notifications</span>
             <p>Transaction Alerts <count><?php echo $transaction_count;?></count></p>
         </a>
-        <a href="/dashboard/profile">
-            <span class="material-symbols-outlined">
-                person
-                </span>
+
+        <a href="/dashboard/profile" class="menu-item">
+            <span class="material-symbols-outlined">person</span>
             <p>Profile</p>
         </a>
-        <a href="/dashboard/profile-picture">
-            <span class="material-symbols-outlined">
-                photo_camera
-                </span>
+
+        <a href="/dashboard/profile-picture" class="menu-item">
+            <span class="material-symbols-outlined">photo_camera</span>
             <p>Profile Picture</p>
         </a>
-        <div href="#" class="madre">
-            <span class="material-symbols-outlined">
-                admin_panel_settings
-                </span>
-            <p>Security</p>
-            <div class="miracle">
-                <a href="/dashboard/security/change-password">
-                    <span class="material-symbols-outlined">
-                        remove
-                        </span>
-                    <text>Change Password</text>
+
+        <div class="menu-group has-submenu" data-submenu>
+            <button type="button" class="menu-item menu-trigger" aria-expanded="false">
+                <span class="material-symbols-outlined">shield</span>
+                <p>Security</p>
+                <span class="material-symbols-outlined arrow">expand_more</span>
+            </button>
+            <div class="submenu" role="menu">
+                <a href="/dashboard/security/change-password" class="submenu-link" role="menuitem">
+                    <span class="material-symbols-outlined">password</span>
+                    <span>Change Password</span>
                 </a>
-                <a href="/dashboard/security/preferences">
-                    <span class="material-symbols-outlined">
-                        remove
-                        </span>
-                    <text>Security Preferences</text>
+                <a href="/dashboard/security/preferences" class="submenu-link" role="menuitem">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span>Security Preferences</span>
                 </a>
             </div>
         </div>
-        <a href="?logout=1">
-            <span class="material-symbols-outlined">
-                logout
-                </span>
+
+        <a href="?logout=1" class="menu-item">
+            <span class="material-symbols-outlined">logout</span>
             <p>Sign Out</p>
         </a>
     </div>
-    <nav>
+
+    <nav class="mobile-drawer" aria-label="Dashboard mobile menu">
         <a href="/" class="logo">
             <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank" style="height: 40px; width: auto;">
         </a>
-        <a href="/dashboard">
-            <span class="material-symbols-outlined">
-                space_dashboard
-                </span>
+
+        <a href="/dashboard" class="menu-item">
+            <span class="material-symbols-outlined">space_dashboard</span>
             <p>Dashboard</p>
         </a>
-        <a href="/dashboard/fund/transfer">
-            <span class="material-symbols-outlined">
-                payments
-                </span>
+
+        <a href="/dashboard/fund/transfer" class="menu-item">
+            <span class="material-symbols-outlined">payments</span>
             <p>Transfer Funds</p>
         </a>
-        <div class="madre">
-            <span class="material-symbols-outlined">
-                deployed_code
-                </span>
-            <p>My Account</p>
-            <div class="miracle">
-                <a class="submenu-link" href="/dashboard/accounts/create">
-                    <span class="material-symbols-outlined">
-                        remove
-                        </span>
-                    <text>Add Account</text>
+
+        <div class="menu-group has-submenu is-mobile" data-submenu>
+            <button type="button" class="menu-item menu-trigger" aria-expanded="false">
+                <span class="material-symbols-outlined">account_balance</span>
+                <p>My Account</p>
+                <span class="material-symbols-outlined arrow">expand_more</span>
+            </button>
+            <div class="submenu" role="menu">
+                <a href="/dashboard/accounts/create" class="submenu-link" role="menuitem">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    <span>Add Account</span>
                 </a>
-                <a class="submenu-link" href="/dashboard/accounts">
-                    <span class="material-symbols-outlined">
-                        remove
-                        </span>
-                    <text>Manage Account</text>
+                <a href="/dashboard/accounts" class="submenu-link" role="menuitem">
+                    <span class="material-symbols-outlined">manage_accounts</span>
+                    <span>Manage Account</span>
                 </a>
             </div>
         </div>
-        <a href="/dashboard/accounts/transactions">
-            <span class="material-symbols-outlined">
-                notifications
-                </span>
+
+        <a href="/dashboard/accounts/transactions" class="menu-item">
+            <span class="material-symbols-outlined">notifications</span>
             <p>Transaction Alerts <count><?php echo $transaction_count;?></count></p>
         </a>
-        <a href="/dashboard/profile">
-            <span class="material-symbols-outlined">
-                person
-                </span>
+
+        <a href="/dashboard/profile" class="menu-item">
+            <span class="material-symbols-outlined">person</span>
             <p>Profile</p>
         </a>
-        <a href="/dashboard/profile-picture">
-            <span class="material-symbols-outlined">
-                photo_camera
-                </span>
+
+        <a href="/dashboard/profile-picture" class="menu-item">
+            <span class="material-symbols-outlined">photo_camera</span>
             <p>Profile Picture</p>
         </a>
-        <div href="#" class="madre">
-            <span class="material-symbols-outlined">
-                admin_panel_settings
-                </span>
-            <p>Security</p>
-            <div class="miracle">
-                <a class="submenu-link" href="/dashboard/security/change-password">
-                    <span class="material-symbols-outlined">
-                        remove
-                        </span>
-                    <text>Change Password</text>
+
+        <div class="menu-group has-submenu is-mobile" data-submenu>
+            <button type="button" class="menu-item menu-trigger" aria-expanded="false">
+                <span class="material-symbols-outlined">shield</span>
+                <p>Security</p>
+                <span class="material-symbols-outlined arrow">expand_more</span>
+            </button>
+            <div class="submenu" role="menu">
+                <a href="/dashboard/security/change-password" class="submenu-link" role="menuitem">
+                    <span class="material-symbols-outlined">password</span>
+                    <span>Change Password</span>
                 </a>
-                <a class="submenu-link" href="/dashboard/security/preferences">
-                    <span class="material-symbols-outlined">
-                        remove
-                        </span>
-                    <text>Security Preferences</text>
+                <a href="/dashboard/security/preferences" class="submenu-link" role="menuitem">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span>Security Preferences</span>
                 </a>
             </div>
         </div>
-        <a href="?logout=1">
-            <span class="material-symbols-outlined">
-                logout
-                </span>
+
+        <a href="?logout=1" class="menu-item">
+            <span class="material-symbols-outlined">logout</span>
             <p>Sign Out</p>
         </a>
     </nav>
-    <a href="#" id="menuToggle">
-        <span class="material-symbols-outlined open">
-            menu
-            </span>
-        <span class="material-symbols-outlined close">
-            close
-            </span>
+
+    <a href="#" id="menuToggle" aria-label="Toggle dashboard menu" aria-expanded="false">
+        <span class="material-symbols-outlined open">menu</span>
+        <span class="material-symbols-outlined close">close</span>
     </a>
 </header>
+
 <?php include(__DIR__ . '/smartsupp-live-chat.html'); ?>

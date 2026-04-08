@@ -142,6 +142,13 @@ unset($row);
                 <h2 class="greeting">Welcome back, <?php echo htmlspecialchars(explode(' ', $dashboardMeta['account_holder'])[0]); ?></h2>
                 <p class="last-login">Here's what's happening with your account today.</p>
             </div>
+            <div class="right profile-avatar-wrap">
+                <?php if ($user_profile_picture && $user_profile_picture !== 'nil'): ?>
+                    <img src="/dashboard/security/complete-kyc/uploads/<?php echo htmlspecialchars($user_profile_picture); ?>" alt="<?php echo htmlspecialchars($dashboardMeta['account_holder']); ?> profile picture" class="dashboard-avatar">
+                <?php else: ?>
+                    <img src="/assets/images/placeholder-image.png" alt="Default profile picture" class="dashboard-avatar">
+                <?php endif; ?>
+            </div>
         </div>
 
         <div class="bars">
