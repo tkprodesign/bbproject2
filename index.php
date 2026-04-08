@@ -25,9 +25,12 @@
     <meta name="twitter:description" content="Velmora Bank provides secure, innovative financial services to individuals, businesses, and institutions worldwide.">
     <meta name="twitter:image" content="/assets/images/home/business-increase.png">
 
-    <link rel="stylesheet" href="/assets/stylesheets/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/home.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/home.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/home.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css?v=<?php echo time(); ?>">
 </head>
@@ -46,7 +49,7 @@
                 <div class="content">
                     <h1>Tailored Banking Solutions for You</h1>
                     <p>Your financial needs are unique, and so are our services. From personalized savings plans to customized loans, we offer solutions that fit your lifestyle and help you manage your money with confidence.</p>
-                    <a href="#">Find out more</a>
+                    <a href="/personal/">Find out more</a>
                 </div>
                 <img src="/assets/images/home/hero/consulting-banner.jpg" alt="Banner Image">
             </div>
@@ -54,7 +57,7 @@
                 <div class="content">
                     <h1>Global Reach, Local Expertise</h1>
                     <p>We combine global banking strength with local expertise to provide you with the best of both worlds. Wherever life takes you, our services are designed to meet your needs, with a personal touch you can trust.</p>
-                    <a href="#">Find out more</a>
+                    <a href="/business/">Find out more</a>
                 </div>
                 <img src="/assets/images/home/hero/corporatebanking-banner.png" alt="Corporate Banking">
             </div>
@@ -62,7 +65,7 @@
                 <div class="content">
                     <h1>Invest in Your Dreams with Us</h1>
                     <p>Dream big and invest with confidence. Our investment options are designed to help you grow your wealth and turn your dreams into reality. Let us be your partner in success, guiding you every step of the way.</p>
-                    <a href="#">Find out more</a>
+                    <a href="/loan/">Find out more</a>
                 </div>
                 <img src="/assets/images/home/hero/private-bank-banner.png" alt="Private Bank Banner">
             </div>
@@ -70,7 +73,7 @@
                 <div class="content">
                     <h1>Innovative Banking for the Modern World</h1>
                     <p>Stay ahead in the digital age with our cutting-edge banking solutions. From mobile banking to AI-driven insights, we offer the innovation you need to manage your finances effortlessly and efficiently.</p>
-                    <a href="#">Find out more</a>
+                    <a href="/online-banking/">Find out more</a>
                 </div>
                 <img src="/assets/images/home/hero/bank-exterior.jpg" alt="Bank Exterior">
             </div>
@@ -78,7 +81,7 @@
                 <div class="content">
                     <h1>Secure and Reliable Banking</h1>
                     <p>Your security is our priority. With advanced encryption and fraud protection, you can trust that your finances are safe with us. Experience peace of mind knowing that your banking is secure and reliable.</p>
-                    <a href="#">Find out more</a>
+                    <a href="/contact/">Find out more</a>
                 </div>
                 <img src="/assets/images/home/hero/amex-card.jpg" alt="Amex Card">
             </div>
@@ -86,7 +89,7 @@
                 <div class="content">
                     <h1>Invest in Your Dreams with Us</h1>
                     <p>Dream big and invest with confidence. Our investment options are designed to help you grow your wealth and turn your dreams into reality. Let us be your partner in success, guiding you every step of the way.</p>
-                    <a href="#">Find out more</a>
+                    <a href="/credit-card/">Find out more</a>
                 </div>
                 <img src="/assets/images/home/hero/student-banner.jpg" alt="Vacation">
             </div>
@@ -266,6 +269,7 @@
             </div>
             <div class="calculator">
                 <p>What is your monthly salary?</p>
+                <input type="number" id="salaryLiveInput" class="salary-live-input" min="0" max="15000" step="1" placeholder="Enter monthly salary">
                 <div class="toggle-box">
                     <div class="toggle">
                         <span class="ball"></span>
