@@ -39,6 +39,10 @@
 require_once('./common-sections/app.php');
 $supportPhoneNumber = getSupportPhoneNumber();
 $supportWhatsappLink = getSupportWhatsappLink();
+$loanFlowMessage = '';
+if (isset($_GET['loan_flow']) && $_GET['loan_flow'] === 'invalid') {
+    $loanFlowMessage = 'Please calculate a valid loan estimate before submitting an application.';
+}
 include('./common-sections/header.php');
 ?>
 
@@ -217,6 +221,11 @@ include('./common-sections/header.php');
 <!-- Loan Calculator Section -->
 <section class="loan-calculator">
     <div class="container">
+        <?php if ($loanFlowMessage !== ''): ?>
+            <div class="loan-flow-alert" role="status">
+                <?php echo htmlspecialchars($loanFlowMessage, ENT_QUOTES, 'UTF-8'); ?>
+            </div>
+        <?php endif; ?>
         <div class="left">
             <div class="details">
                 <h1>Payday Loan<br>Calculator</h1>

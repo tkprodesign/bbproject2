@@ -15,32 +15,37 @@ section.features-2 .container .features {
   align-items: center;
 }
 
+section.loan-calculator .container {
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
 section.loan-calculator .container .left {
   grid-template-columns: 100%;
   width: 100%;
-  padding-bottom: 428px;
+  padding-bottom: 0;
 }
 section.loan-calculator .container .left .calculator {
   justify-self: center;
+  width: 100%;
 }
 section.loan-calculator .container .right {
   min-height: 420px;
-  width: calc(100% - 64px);
+  width: 100%;
   -webkit-clip-path: unset;
           clip-path: unset;
   top: unset;
   right: unset;
-  bottom: 32px;
-  left: 32px;
-  padding: 48px;
+  bottom: unset;
+  left: unset;
+  padding: 32px;
 }
 section.loan-calculator .container .right div {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
 }
 section.loan-calculator .container .right a {
-  margin-bottom: 200px;
+  margin-bottom: 0;
 }
 
 section.about-us .container .container-wrapper {

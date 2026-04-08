@@ -268,13 +268,19 @@ section.loan-calculator .container {
   position: relative;
   z-index: 3;
   top: 200px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 1fr);
+  gap: 24px;
+  align-items: stretch;
 }
 section.loan-calculator .container .left {
   color: #fff;
   background: #444444;
-  width: 70%;
+  width: 100%;
   display: grid;
   grid-template-columns: 45% 55%;
+  border-radius: 16px;
+  overflow: hidden;
 }
 section.loan-calculator .container .left .details {
   padding: 48px 0 24px 48px;
@@ -303,7 +309,7 @@ section.loan-calculator .container .left .details p.no i {
   font-size: 20px;
 }
 section.loan-calculator .container .left .calculator {
-  padding: 48px 0 0 48px;
+  padding: 48px;
 }
 section.loan-calculator .container .left .calculator p {
   margin-bottom: 32px;
@@ -366,26 +372,29 @@ section.loan-calculator .container .left .calculator .toggle-box .fig {
   transform: rotate(90deg);
 }
 section.loan-calculator .container .right {
-  height: calc(100% - 64px);
-  width: 45%;
-  position: absolute;
-  right: 0;
-  top: 32px;
+  min-height: 100%;
+  width: 100%;
+  position: relative;
   background: #fff;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 48px;
-  -webkit-clip-path: polygon(22% 0, 100% 0, 100% 100%, 0% 100%);
-          clip-path: polygon(22% 0, 100% 0, 100% 100%, 0% 100%);
+  align-items: stretch;
+  justify-content: center;
+  padding: 36px 32px;
+  border-radius: 16px;
+  border: 1px solid #e4ebf3;
+  box-shadow: 0 10px 22px rgba(16, 38, 67, 0.1);
+  -webkit-clip-path: none;
+          clip-path: none;
 }
 section.loan-calculator .container .right > p:first-child {
   margin-bottom: 24px;
+  text-align: left;
 }
 section.loan-calculator .container .right h1 {
   font-size: 48px;
   color: #444444;
-  margin-bottom: 25px;
+  margin-bottom: 18px;
 }
 section.loan-calculator .container .right .loan-breakdown {
   list-style: none;
@@ -406,10 +415,11 @@ section.loan-calculator .container .right .loan-breakdown li strong {
   color: #262626;
 }
 section.loan-calculator .container .right div {
-  display: grid;
-  grid-template-columns: max-content 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   gap: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 section.loan-calculator .container .right div p {
   font-weight: 400;
@@ -419,6 +429,11 @@ section.loan-calculator .container .right a {
   padding: 16px;
   border: 2px solid #262626;
   transition: all 0.2s ease;
+  text-decoration: none;
+}
+section.loan-calculator .container .right a.is-disabled {
+  pointer-events: none;
+  opacity: 0.6;
 }
 section.loan-calculator .container .right a:hover {
   background: #262626;
@@ -692,11 +707,20 @@ section.features-2 .container .features .feature span { font-weight: 600; color:
 
 section.loan-calculator { margin: 70px 0 20px; }
 section.loan-calculator .container { top: 0; }
+section.loan-calculator .container .loan-flow-alert {
+  grid-column: 1 / -1;
+  border: 1px solid #f6d7be;
+  background: #fff7ef;
+  color: #6f3a00;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 500;
+}
 section.loan-calculator .container .left .details h1 { font-size: 34px; }
 section.loan-calculator .container .left .details p { color: rgba(255,255,255,.9); }
 section.loan-calculator .container .left .calculator p,
 section.loan-calculator .container .left .calculator label { color: #fff; font-weight: 500; }
-section.loan-calculator .container .right { border-radius: 16px; right: 16px; width: 42%; }
+section.loan-calculator .container .right { border-radius: 16px; right: 16px; width: 100%; }
 section.loan-calculator .container .right > p:first-child { font-weight: 600; color: #324c68; }
 section.loan-calculator .container .right h1 { margin-bottom: 16px; }
 section.loan-calculator .container .right .loan-breakdown li span { color: #546b84; }
