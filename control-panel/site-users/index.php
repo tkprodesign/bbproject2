@@ -41,7 +41,7 @@
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
                             <?php 
                                 $select_user_email = $row['email'];
-                                $su_query = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = '$select_user_email'";
+                                $su_query = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = '$select_user_email' AND status IN ('Successful', 'Completed')";
                                 $su_result = $db->query($su_query);
                                 $user_balance = $su_result->fetch_assoc()['user_balance'] ?? 0;
                             ?>

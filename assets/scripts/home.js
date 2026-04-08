@@ -1,5 +1,5 @@
 // hero image fallback for environments with root-path issues
-const heroImages = document.querySelectorAll('section.hero .swiper-slide img');
+const heroImages = document.querySelectorAll('section.hero img');
 heroImages.forEach((img) => {
   img.addEventListener('error', () => {
     const src = img.getAttribute('src') || '';
@@ -36,24 +36,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-const swiper1 = new Swiper('.swiper-1', {
-  direction: 'horizontal',
-  loop: true,
-  speed: 1000,
-  autoplay: {
-      delay: 5000
-  },
-  pagination: {
-      el: '.swiper-pagination-1',
-  },
-  navigation: {
-      nextEl: '.swiper-button-next-1',
-      prevEl: '.swiper-button-prev-1',
-  },
-  scrollbar: {
-      el: '.swiper-scrollbar-1',
-  },
-});
+const heroSwiperEl = document.querySelector('.swiper-1');
+if (heroSwiperEl && typeof Swiper !== 'undefined') {
+  const swiper1 = new Swiper('.swiper-1', {
+    direction: 'horizontal',
+    loop: true,
+    speed: 1000,
+    autoplay: {
+        delay: 5000
+    },
+    pagination: {
+        el: '.swiper-pagination-1',
+    },
+    navigation: {
+        nextEl: '.swiper-button-next-1',
+        prevEl: '.swiper-button-prev-1',
+    },
+    scrollbar: {
+        el: '.swiper-scrollbar-1',
+    },
+  });
+}
 
 const swiper2 = new Swiper('.swiper-2', {
   direction: 'horizontal',
