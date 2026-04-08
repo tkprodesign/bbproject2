@@ -26,10 +26,6 @@
              ?>
             <h2>Your Information</h2>
             <div class="input-box">
-                <label>Identification Photograph: <span>*</span></label>
-                <input type="file" name="profile_picture" accept="image/*">
-            </div>
-            <div class="input-box">
                 <label>First name:<span>*</span></label>
                 <input type="text" name="first_name" <?php echo $kyc_required; ?>>
             </div>

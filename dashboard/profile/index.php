@@ -17,11 +17,11 @@
 <section class="profile-kyc">
     <div class="container">
         <div class="heading">
-            <h1>You have not completed your KYC Verification</h1>
+            <h1>Profile & Verification</h1>
         </div>
-        <hr>
         <div class="content">
-            <a href="../security/complete-kyc" class="cta">Complete KYC Here</a>
+            <a href="/dashboard/profile-picture" class="sec-cta">Update Profile Picture</a>
+            <a href="../security/complete-kyc" class="cta">Complete KYC</a>
         </div>
     </div>
 </section>
