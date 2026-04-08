@@ -224,6 +224,7 @@ section.preferences .row > div:first-child { display: flex; justify-content: spa
 section.profile-kyc .heading { margin-bottom: 14px; }
 section.profile-kyc .content { margin-top: 14px; }
 section.profile-kyc .cta { display: inline-flex; }
+section.profile-kyc .content { display: flex; flex-wrap: wrap; gap: 10px; }
 
 /* Reference dashboard layout */
 .reference-dashboard .cta-sec { margin-bottom: 20px; }

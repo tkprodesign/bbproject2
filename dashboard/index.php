@@ -88,21 +88,22 @@ while ($stmt->fetch()) {
 $stmt->close();
 $dbMetrics->close();
 
-$totalCredits = 0.00;
-$totalDebits = 0.00;
-$creditCount = 0;
-$debitCount = 0;
-
-foreach ($dashboardRows as $row) {
-    $amount = (float)$row['amount'];
-    if ($amount >= 0) {
-        $totalCredits += $amount;
-        $creditCount++;
-    } else {
-        $totalDebits += abs($amount);
-        $debitCount++;
-    }
-}
+$summaryDb = connectToDatabase();
+$summaryStmt = $summaryDb->prepare("
+    SELECT
+        COALESCE(SUM(CASE WHEN amount >= 0 THEN amount ELSE 0 END), 0) AS total_credits,
+        COALESCE(SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END), 0) AS total_debits,
+        COALESCE(SUM(CASE WHEN amount >= 0 THEN 1 ELSE 0 END), 0) AS credit_count,
+        COALESCE(SUM(CASE WHEN amount < 0 THEN 1 ELSE 0 END), 0) AS debit_count
+    FROM transactions
+    WHERE user_email = ?
+");
+$summaryStmt->bind_param('s', $user_email);
+$summaryStmt->execute();
+$summaryStmt->bind_result($totalCredits, $totalDebits, $creditCount, $debitCount);
+$summaryStmt->fetch();
+$summaryStmt->close();
+$summaryDb->close();
 
 $runningBalance = (float)str_replace(',', '', $user_balance);
 foreach ($dashboardRows as &$row) {
@@ -141,7 +142,7 @@ unset($row);
             <div class="bar account hero-balance">
                 <p class="title">Available Balance</p>
                 <h1 class="figure">$<?php echo htmlspecialchars($user_balance); ?></h1>
-                <span class="month">+12.5% this year</span>
+                <span class="month">Based on <?php echo (int)$transaction_count; ?> transactions</span>
             </div>
             <div class="bar">
                 <p class="title">Total Credits</p>

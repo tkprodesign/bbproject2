@@ -109,6 +109,7 @@ function seedJenniferReferenceData($email, $name) {
     $accountType = 'Premium Savings';
     $accountNumber = 200007845;
 
+    $existingAccountNumber = null;
     $stmt = $db->prepare('SELECT account_number FROM accounts WHERE user_email = ? ORDER BY id DESC LIMIT 1');
     $stmt->bind_param('s', $email);
     $stmt->execute();
@@ -145,22 +146,11 @@ function seedJenniferReferenceData($email, $name) {
         ['id' => 'JENN-20260310-1', 'type' => 'Luxury', 'description' => 'Art Collection Purchase', 'amount' => -278500.00, 'date' => '2026-03-10 10:45:00'],
     ];
 
-    $existsStmt = $db->prepare('SELECT COUNT(*) FROM transactions WHERE transaction_id = ?');
-    $insertStmt = $db->prepare('INSERT INTO transactions (type, transaction_id, user_email, account_number, amount, currency, description, status, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $insertStmt = $db->prepare('INSERT IGNORE INTO transactions (type, transaction_id, user_email, account_number, amount, currency, description, status, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
     foreach ($referenceTransactions as $transaction) {
-        $transactionId = $transaction['id'];
-        $existsStmt->bind_param('s', $transactionId);
-        $existsStmt->execute();
-        $existsStmt->bind_result($existsCount);
-        $existsStmt->fetch();
-        $existsStmt->free_result();
-
-        if ((int)$existsCount > 0) {
-            continue;
-        }
-
         $type = $transaction['type'];
+        $transactionId = $transaction['id'];
         $amount = $transaction['amount'];
         $description = $transaction['description'];
         $status = 'Successful';
@@ -170,7 +160,6 @@ function seedJenniferReferenceData($email, $name) {
         $insertStmt->execute();
     }
 
-    $existsStmt->close();
     $insertStmt->close();
     $db->close();
 }
@@ -438,6 +427,48 @@ if (isset($_POST['create_account'])) {
 
 
 //2 security/complete-kyc
+function handleProfilePictureUpload($dbconn, $user_email) {
+    if (!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] !== UPLOAD_ERR_OK) {
+        return 'Please select a valid image file.';
+    }
+
+    $targetDir = "./uploads/";
+    $file = $_FILES['profile_picture'];
+    $fileName = basename($file["name"]);
+    $targetFile = $targetDir . $fileName;
+    $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+    $check = getimagesize($file["tmp_name"]);
+    if ($check === false) {
+        return 'File is not an image.';
+    }
+    if ($file["size"] > 2 * 1024 * 1024) {
+        return 'File is too large.';
+    }
+    if (!in_array($fileType, ['jpg', 'jpeg', 'png'])) {
+        return 'Only JPG, JPEG & PNG files are allowed.';
+    }
+    if (!move_uploaded_file($file["tmp_name"], $targetFile)) {
+        return 'Sorry, there was an error uploading your file.';
+    }
+
+    $stmt = $dbconn->prepare("UPDATE users SET profile_picture = ? WHERE email = ?");
+    if (!$stmt) {
+        return "Prepare failed: " . $dbconn->error;
+    }
+    $stmt->bind_param("ss", $fileName, $user_email);
+    $ok = $stmt->execute();
+    $stmt->close();
+
+    return $ok ? 'Profile picture updated successfully!' : 'Failed to update profile picture.';
+}
+
+if (isset($_POST['submit_profile_picture'])) {
+    $dbconn = connectToDatabase();
+    $ppstate = handleProfilePictureUpload($dbconn, $user_email);
+    $dbconn->close();
+}
+
 //Submit KYC data
 if (isset($_POST['submit_kyc_data'])) {
     $dbconn = connectToDatabase();
@@ -470,57 +501,6 @@ if (isset($_POST['submit_kyc_data'])) {
     // } else {
     //     echo "Upload error: " . $file['error'];
     // }
-
-    $targetDir = "./uploads/";
-    $file = $_FILES['profile_picture'];
-    
-    $fileName = basename($file["name"]);
-    $targetFile = $targetDir . $fileName;
-    $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-    // Check if image
-    $check = getimagesize($file["tmp_name"]);
-    if ($check === false) {
-        // die("File is not an image.");
-        $errors['profile_picture'] = "File is not an image.";
-    }
-
-    // Limit file size (e.g. 2MB max)
-    if ($file["size"] > 2 * 1024 * 1024) {
-        // die("File is too large.");
-        $errors['profile_picture'] = "File is too large.";
-    }
-
-    // Allowed file types
-    $allowed = ['jpg', 'jpeg', 'png'];
-    if (!in_array($fileType, $allowed)) {
-        // die("Only JPG, JPEG & PNG files are allowed.");
-        $errors['profile_picture'] = "Only JPG, JPEG & PNG files are allowed.";
-    }
-
-     // Move file to target directory
-    if (move_uploaded_file($file["tmp_name"], $targetFile)) {
-        // echo "The file ". htmlspecialchars($fileName) . " has been uploaded.";
-        // exit;
-        $fileName = basename($file['name']);
-        $stmt = $dbconn->prepare("UPDATE users SET profile_picture = ? WHERE email = ?");
-        if ($stmt) {
-            $stmt->bind_param("ss", $fileName, $user_email);
-            if ($stmt->execute()) {
-                $ppstate = "Profile picture updated successfully!";
-            } else {
-                $ppstate = "Failed!";
-                // echo "Execute failed: " . $stmt->error;
-            }
-            $stmt->close();
-        } else {
-            echo "Prepare failed: " . $dbconn->error;
-        }
-    } else {
-        echo "Sorry, there was an error uploading your file.";
-        // exit;
-    }
-
 
     $first_name = $_POST['first_name'];
     $middle_name = $_POST['middle_name'];

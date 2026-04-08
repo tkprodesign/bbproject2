@@ -25,10 +25,30 @@ header nav {
 header nav.active { transform: translateX(0); }
 header nav > a,
 header nav > div { display: flex; align-items: center; gap: 8px; color: #163555; font-weight: 600; }
+header nav > a,
+header nav > div.madre > p {
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+header nav > a:hover,
+header nav > a.active,
+header nav > div.madre:hover > p { background: #eef4ff; }
 header nav > a.logo { margin-bottom: 12px; }
 header nav > a.logo img { max-width: 220px; }
-header nav .madre { display: grid; grid-template-columns: 24px 1fr; }
-header nav .madre .miracle { grid-column: 1 / 3; display: grid; gap: 8px; padding: 8px 0 0 28px; }
+header nav .madre { display: grid; grid-template-columns: 24px 1fr; align-items: center; }
+header nav .madre .miracle {
+  grid-column: 1 / 3;
+  display: grid;
+  gap: 6px;
+  padding: 4px 0 10px 28px;
+}
+header nav .madre .miracle .submenu-link {
+  color: #4d6482;
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+header nav .madre .miracle .submenu-link:hover { background: #f3f7ff; color: #153455; }
 header #menuToggle {
   display: inline-flex;
   color: #163555;
@@ -38,7 +58,7 @@ header #menuToggle {
   padding: 10px;
   position: fixed;
   right: 12px;
-  top: 58px;
+  top: 14px;
   z-index: 35;
 }
 header #menuToggle .close { display: none; }
