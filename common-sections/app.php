@@ -30,6 +30,46 @@ function connectToDatabase() {
 
 
 
+
+
+// Dynamic contact details
+define('DEFAULT_SUPPORT_PHONE', '+17252885411');
+
+function normalizePhoneForWhatsapp(string $phone): string {
+    $digits = preg_replace('/\D+/', '', $phone);
+    return $digits ?: preg_replace('/\D+/', '', DEFAULT_SUPPORT_PHONE);
+}
+
+function getSupportPhoneNumber(): string {
+    static $cachedPhone = null;
+
+    if ($cachedPhone !== null) {
+        return $cachedPhone;
+    }
+
+    $dbconn = connectToDatabase();
+    $phone = DEFAULT_SUPPORT_PHONE;
+
+    $query = "SELECT `value` FROM dynamic_data WHERE `name` = 'phone_number' LIMIT 1";
+    $result = mysqli_query($dbconn, $query);
+
+    if ($result && ($row = mysqli_fetch_assoc($result))) {
+        $value = trim((string) ($row['value'] ?? ''));
+        if ($value !== '') {
+            $phone = $value;
+        }
+    }
+
+    mysqli_close($dbconn);
+    $cachedPhone = $phone;
+
+    return $cachedPhone;
+}
+
+function getSupportWhatsappLink(): string {
+    return 'https://wa.me/' . normalizePhoneForWhatsapp(getSupportPhoneNumber());
+}
+
 //Check for item in database
 function isInTable($email, $table) {
     $dbconn = connectToDatabase();

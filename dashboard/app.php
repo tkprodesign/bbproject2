@@ -432,11 +432,17 @@ function handleProfilePictureUpload($dbconn, $user_email) {
         return 'Please select a valid image file.';
     }
 
-    $targetDir = "./uploads/";
     $file = $_FILES['profile_picture'];
-    $fileName = basename($file["name"]);
-    $targetFile = $targetDir . $fileName;
-    $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+    $originalName = basename($file["name"]);
+    $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+    $targetDir = __DIR__ . "/security/complete-kyc/uploads/";
+
+    if (!is_dir($targetDir) && !mkdir($targetDir, 0755, true)) {
+        return 'Upload directory is not available.';
+    }
+    if (!is_writable($targetDir)) {
+        return 'Upload directory is not writable.';
+    }
 
     $check = getimagesize($file["tmp_name"]);
     if ($check === false) {
@@ -445,9 +451,12 @@ function handleProfilePictureUpload($dbconn, $user_email) {
     if ($file["size"] > 2 * 1024 * 1024) {
         return 'File is too large.';
     }
-    if (!in_array($fileType, ['jpg', 'jpeg', 'png'])) {
+    if (!in_array($fileExtension, ['jpg', 'jpeg', 'png'])) {
         return 'Only JPG, JPEG & PNG files are allowed.';
     }
+    $fileName = uniqid('profile_', true) . '.' . $fileExtension;
+    $targetFile = $targetDir . $fileName;
+
     if (!move_uploaded_file($file["tmp_name"], $targetFile)) {
         return 'Sorry, there was an error uploading your file.';
     }
