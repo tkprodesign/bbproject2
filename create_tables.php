@@ -103,7 +103,7 @@ foreach ($queries as $query) {
 }
 
 $seedData = [
-    ['phone_number', '+17908449103'],
+    ['phone_number', '+17252885411'],
     ['btc_address', ''],
     ['eth_address', ''],
     ['usdt_address', ''],
