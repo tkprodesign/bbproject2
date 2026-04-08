@@ -43,8 +43,18 @@ unset($row);
 <?php include('../../../common-sections/dashboard-header.html')?>
 <section class="transactions reference-transactions-page">
     <div class="container">
+        <div class="transactions-toolbar advanced">
+            <h2>Recent Transactions</h2>
+            <div class="tx-actions">
+                <input type="search" id="txSearchInput" placeholder="Search transactions..." aria-label="Search transactions">
+                <button type="button" class="tx-filter active" data-filter="all">All</button>
+                <button type="button" class="tx-filter" data-filter="credit">Credits</button>
+                <button type="button" class="tx-filter" data-filter="debit">Debits</button>
+                <button type="button" id="txExportBtn" class="sec-cta">Export</button>
+            </div>
+        </div>
         <div class="accounts-list">
-            <table>
+            <table id="transactionsTable">
                 <thead>
                 <tr>
                     <th>Date</th>
@@ -59,7 +69,7 @@ unset($row);
                     $amount = (float)$row['amount'];
                     $isCredit = $amount >= 0;
                     ?>
-                    <tr>
+                    <tr data-tx-type="<?php echo $isCredit ? 'credit' : 'debit'; ?>">
                         <td><?php echo htmlspecialchars($row['date']); ?></td>
                         <td><?php echo htmlspecialchars($row['description']); ?></td>
                         <td><span class="tx-category"><?php echo htmlspecialchars($row['category']); ?></span></td>
@@ -69,6 +79,7 @@ unset($row);
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            <p id="txEmptyState" class="tx-empty-state" style="display:none;">No transactions match your current filters.</p>
         </div>
     </div>
 </section>

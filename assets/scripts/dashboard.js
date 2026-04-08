@@ -51,4 +51,75 @@ if (nav && menuToggle) {
       menuToggle.classList.remove('active');
     });
   });
+
+  document.addEventListener('click', (event) => {
+    const clickedInsideMenu = nav.contains(event.target) || menuToggle.contains(event.target);
+    if (!clickedInsideMenu) {
+      nav.classList.remove('active');
+      menuToggle.classList.remove('active');
+    }
+  });
+}
+
+// Transactions search/filter/export UX
+const txTable = document.getElementById('transactionsTable');
+if (txTable) {
+  const searchInput = document.getElementById('txSearchInput');
+  const filterButtons = document.querySelectorAll('.tx-filter');
+  const emptyState = document.getElementById('txEmptyState');
+  const exportButton = document.getElementById('txExportBtn');
+  let activeFilter = 'all';
+
+  const applyTxFilters = () => {
+    const query = (searchInput?.value || '').trim().toLowerCase();
+    let visibleCount = 0;
+
+    txTable.querySelectorAll('tbody tr').forEach((row) => {
+      const rowText = row.innerText.toLowerCase();
+      const txType = row.getAttribute('data-tx-type') || 'all';
+      const typeMatch = activeFilter === 'all' || activeFilter === txType;
+      const searchMatch = !query || rowText.includes(query);
+      const isVisible = typeMatch && searchMatch;
+      row.style.display = isVisible ? '' : 'none';
+      if (isVisible) visibleCount++;
+    });
+
+    if (emptyState) {
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  };
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyTxFilters);
+  }
+
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      activeFilter = button.getAttribute('data-filter') || 'all';
+      filterButtons.forEach((btn) => btn.classList.remove('active'));
+      button.classList.add('active');
+      applyTxFilters();
+    });
+  });
+
+  if (exportButton) {
+    exportButton.addEventListener('click', () => {
+      const rows = [...txTable.querySelectorAll('tr')].filter((row) => row.style.display !== 'none');
+      const csv = rows
+        .map((row) => [...row.querySelectorAll('th, td')]
+          .map((cell) => `"${cell.innerText.replace(/"/g, '""')}"`)
+          .join(','))
+        .join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'transactions.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    });
+  }
 }

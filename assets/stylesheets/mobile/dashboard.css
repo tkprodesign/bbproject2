@@ -30,3 +30,7 @@ section.kyc-ver .content { margin-top: 35px; padding: 20px; }
 header nav a,
 header nav text,
 header nav p { color: #153455; }
+
+.tx-actions { display: grid; grid-template-columns: 1fr 1fr; }
+#txSearchInput,
+#txExportBtn { grid-column: 1 / -1; width: 100%; }
