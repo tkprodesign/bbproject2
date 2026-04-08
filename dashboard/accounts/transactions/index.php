@@ -2,7 +2,7 @@
 <?php
 $rows = [];
 $dbconn = connectToDatabase();
-$sql = "SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
+$sql = "SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending') ORDER BY time DESC";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -12,6 +12,8 @@ while ($stmt->fetch()) {
     $normalizedStatus = strtolower(trim((string)$status));
     if ($normalizedStatus === '' || $normalizedStatus === 'current') {
         $normalizedStatus = 'posted';
+    } elseif ($normalizedStatus === 'completed') {
+        $normalizedStatus = 'successful';
     }
     $normalizedStatus = ucwords(str_replace(['_', '-'], ' ', $normalizedStatus));
 
@@ -42,6 +44,10 @@ unset($row);
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
