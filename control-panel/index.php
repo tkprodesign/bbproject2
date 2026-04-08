@@ -44,6 +44,21 @@
     </div>
 </section>
 
+<section class="form">
+    <div class="container">
+        <form action="" method="post">
+            <h2>Support Phone Number</h2>
+            <div class="input-box">
+                <label>Phone Number</label>
+                <input type="text" name="support_phone_number" value="<?php echo htmlspecialchars(getSupportPhoneNumber()); ?>" required>
+            </div>
+            <div class="input-box">
+                <button type="submit" name="update_support_phone" value="1">Update Number</button>
+            </div>
+        </form>
+    </div>
+</section>
+
 <section class="table site-users">
     <div class="container">
         <h2>Site Users Short List (Max 10 Users)</h2>

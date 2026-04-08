@@ -35,7 +35,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css?v=<?php echo time(); ?>">
 </head>
 <body>
-<?php include('./common-sections/header.php'); ?>
+<?php
+require_once('./common-sections/app.php');
+$supportPhoneNumber = getSupportPhoneNumber();
+$supportWhatsappLink = getSupportWhatsappLink();
+include('./common-sections/header.php');
+?>
 
 
 
@@ -532,13 +537,13 @@
             <div class="contacts">
                 <a href="#" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
                 <a href="mailto:support@velmorabank.us" style="display: block; margin-bottom: 8px;">support@velmorabank.us</a>
-                <a href="#" style="display: block; margin-bottom: 8px;">+10000000000</a>
+                <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener" style="display: block; margin-bottom: 8px;"><?php echo htmlspecialchars($supportPhoneNumber); ?></a>
             </div>
             <div class="social-links">
                 <a href="#"><i class="bi bi-facebook"></i></a>
                 <a href="#"><i class="bi bi-twitter"></i></a>
                 <a href="#"><i class="bi bi-instagram"></i></a>
-                <a href="#"><i class="bi bi-whatsapp"></i></a>
+                <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i></a>
             </div>
         </div>
     </div>
