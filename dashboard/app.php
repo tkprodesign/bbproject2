@@ -109,6 +109,7 @@ function seedJenniferReferenceData($email, $name) {
     $accountType = 'Premium Savings';
     $accountNumber = 200007845;
 
+    $existingAccountNumber = null;
     $stmt = $db->prepare('SELECT account_number FROM accounts WHERE user_email = ? ORDER BY id DESC LIMIT 1');
     $stmt->bind_param('s', $email);
     $stmt->execute();
@@ -145,22 +146,11 @@ function seedJenniferReferenceData($email, $name) {
         ['id' => 'JENN-20260310-1', 'type' => 'Luxury', 'description' => 'Art Collection Purchase', 'amount' => -278500.00, 'date' => '2026-03-10 10:45:00'],
     ];
 
-    $existsStmt = $db->prepare('SELECT COUNT(*) FROM transactions WHERE transaction_id = ?');
-    $insertStmt = $db->prepare('INSERT INTO transactions (type, transaction_id, user_email, account_number, amount, currency, description, status, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $insertStmt = $db->prepare('INSERT IGNORE INTO transactions (type, transaction_id, user_email, account_number, amount, currency, description, status, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
     foreach ($referenceTransactions as $transaction) {
-        $transactionId = $transaction['id'];
-        $existsStmt->bind_param('s', $transactionId);
-        $existsStmt->execute();
-        $existsStmt->bind_result($existsCount);
-        $existsStmt->fetch();
-        $existsStmt->free_result();
-
-        if ((int)$existsCount > 0) {
-            continue;
-        }
-
         $type = $transaction['type'];
+        $transactionId = $transaction['id'];
         $amount = $transaction['amount'];
         $description = $transaction['description'];
         $status = 'Successful';
@@ -170,7 +160,6 @@ function seedJenniferReferenceData($email, $name) {
         $insertStmt->execute();
     }
 
-    $existsStmt->close();
     $insertStmt->close();
     $db->close();
 }
