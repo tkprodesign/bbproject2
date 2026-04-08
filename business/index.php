@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Business Banking | Velmora Bank</title><link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png"><link rel="stylesheet" href="/assets/stylesheets/main.css?v=<?php echo time(); ?>"><link rel="stylesheet" href="/assets/stylesheets/marketing-pages.css?v=<?php echo time(); ?>"></head><body>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow"><title>Business Banking | Velmora Bank</title><link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png"><link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>"><link rel="stylesheet" href="/assets/stylesheets/desktop/marketing-pages.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/marketing-pages.css?v=<?php echo time(); ?>"></head><body>
 <?php include('../common-sections/header.php'); ?>
 <section class="page-hero"><div class="container"><h1>Business Banking That Scales With You</h1><p>Whether you're a startup or established enterprise, Velmora gives you the tools to move faster and manage cash flow efficiently.</p></div></section>
 <section class="page-content"><div class="container grid">
