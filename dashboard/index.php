@@ -73,7 +73,7 @@ if ($stmt->fetch()) {
 }
 $stmt->close();
 
-$stmt = $dbMetrics->prepare("SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? ORDER BY `time` DESC LIMIT 10");
+$stmt = $dbMetrics->prepare("SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending') ORDER BY `time` DESC LIMIT 10");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
 $stmt->bind_result($tx_type, $tx_description, $tx_amount, $tx_status, $tx_time);

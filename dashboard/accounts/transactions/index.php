@@ -2,7 +2,7 @@
 <?php
 $rows = [];
 $dbconn = connectToDatabase();
-$sql = "SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
+$sql = "SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending') ORDER BY time DESC";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
