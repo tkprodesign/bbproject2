@@ -103,3 +103,7 @@ form.kyc-form { grid-template-columns: 1fr; }
 .transactions-toolbar { flex-direction: column; align-items: flex-start; }
 #txSearchInput { min-width: 220px; width: 100%; }
 .tx-actions { width: 100%; }
+
+.profile-picture-preview { width: 180px; height: 180px; }
+.profile-avatar-wrap { width: 100%; justify-content: flex-start; }
+.dashboard-avatar { width: 64px; height: 64px; }

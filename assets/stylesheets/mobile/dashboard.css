@@ -39,3 +39,7 @@ section.kyc-ver .content { margin-top: 35px; padding: 20px; }
 .tx-actions { display: grid; grid-template-columns: 1fr 1fr; }
 #txSearchInput,
 #txExportBtn { grid-column: 1 / -1; width: 100%; }
+
+.profile-picture-preview { width: 150px; height: 150px; border-radius: 16px; }
+.profile-avatar-wrap { width: 100%; justify-content: flex-start; }
+.dashboard-avatar { width: 58px; height: 58px; }
