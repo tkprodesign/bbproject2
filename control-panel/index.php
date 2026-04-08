@@ -44,6 +44,53 @@
     </div>
 </section>
 
+<?php
+$controlPanelActionMessages = [
+    'credit_user' => [
+        'success' => ['type' => 'success', 'text' => 'Deposit posted successfully.'],
+        'invalid' => ['type' => 'error', 'text' => 'Deposit failed: invalid input values.'],
+        'account_mismatch' => ['type' => 'error', 'text' => 'Deposit failed: the account number does not match the provided user email.'],
+        'failed' => ['type' => 'error', 'text' => 'Deposit failed due to a server/database error.'],
+    ],
+    'debit_user' => [
+        'success' => ['type' => 'success', 'text' => 'Withdrawal recorded successfully.'],
+        'invalid' => ['type' => 'error', 'text' => 'Withdrawal failed: invalid input values.'],
+        'failed' => ['type' => 'error', 'text' => 'Withdrawal failed due to a server/database error.'],
+    ],
+    'judge_withdrawal' => [
+        'success' => ['type' => 'success', 'text' => 'Withdrawal review saved successfully.'],
+        'not_found' => ['type' => 'error', 'text' => 'Withdrawal review failed: transaction not found.'],
+        'failed' => ['type' => 'error', 'text' => 'Withdrawal review failed due to a server/database error.'],
+    ],
+    'judge_kyc' => [
+        'success' => ['type' => 'success', 'text' => 'KYC decision saved successfully.'],
+        'not_found' => ['type' => 'error', 'text' => 'KYC decision failed: KYC record not found.'],
+        'failed' => ['type' => 'error', 'text' => 'KYC decision failed due to a server/database error.'],
+    ],
+];
+
+$actionFeedback = null;
+foreach ($controlPanelActionMessages as $actionKey => $actionStates) {
+    if (isset($_GET[$actionKey])) {
+        $statusKey = $_GET[$actionKey];
+        if (isset($actionStates[$statusKey])) {
+            $actionFeedback = $actionStates[$statusKey];
+        }
+        break;
+    }
+}
+?>
+
+<?php if ($actionFeedback): ?>
+<section class="form">
+    <div class="container">
+        <div style="padding: 14px 16px; border-radius: 8px; border: 1px solid <?php echo $actionFeedback['type'] === 'success' ? '#b8ebde' : '#ffd0cc'; ?>; background: <?php echo $actionFeedback['type'] === 'success' ? '#edfdf7' : '#fff2f1'; ?>; color: <?php echo $actionFeedback['type'] === 'success' ? '#0e6b4d' : '#8a1f17'; ?>;">
+            <?php echo htmlspecialchars($actionFeedback['text']); ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <section class="form">
     <div class="container">
         <form action="" method="post">
@@ -271,7 +318,7 @@ if (isset($_POST['delete_user_account'])) {
         $db->close();
 
         // Redirect to another page (e.g., account management) after deletion
-        header("Location: /conrol-panel");
+        header("Location: /control-panel");
         exit();
     } else {
         echo "Invalid account number provided.";
