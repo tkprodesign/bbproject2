@@ -1,0 +1,48 @@
+Revert Snapshot Created: 2026-04-07 (UTC)
+
+Purpose:
+- Preserve the full pre-redesign Dashboard + Control Panel implementation before modern UI refresh.
+- Preserve linked styles/scripts/header pieces so rollback can be done quickly.
+
+What was preserved:
+1) Full directories:
+   - dashboard/
+   - control-panel/
+2) Linked assets and shared pieces:
+   - assets/stylesheets/dashboard.css
+   - assets/stylesheets/tab/dashboard.css
+   - assets/stylesheets/mobile/dashboard.css
+   - assets/stylesheets/control-panel.css
+   - assets/stylesheets/tab/control-panel.css
+   - assets/scripts/dashboard.js
+   - assets/scripts/control-panel.js
+   - common-sections/dashboard-header.html
+
+Database model snapshot (from create_tables.php at time of snapshot):
+- users:
+  id, name, email, password, date_registered, human_time, kyc_level,
+  profile_picture, last_active, created_at
+- accounts:
+  id, account_type, user_name, user_email, currency, account_number,
+  account_status, creation_time, created_at
+- transactions:
+  id, type, transaction_id, user_email, account_number, amount, currency,
+  description, status, time, to_bank_name, to_account_type,
+  to_account_number, created_at
+- kyc_data:
+  id, first_name, middle_name, last_name, suffix, gender, address1,
+  address2, apartment_no, city, state, phone_number, date_of_birth,
+  zip_code, us_citizen, dual_citizenship, country_of_residence,
+  source_of_income, nationality, email, status, description,
+  time_uploaded, created_at
+- dynamic_data:
+  id, name, value, updated_at
+
+Quick rollback guide:
+- Copy snapshot directories/files back into project root paths.
+- If needed:
+  cp -a archive/revert-snapshot-2026-04-07/dashboard ./
+  cp -a archive/revert-snapshot-2026-04-07/control-panel ./
+  cp -a archive/revert-snapshot-2026-04-07/assets ./
+  cp -a archive/revert-snapshot-2026-04-07/common-sections/dashboard-header.html common-sections/
+

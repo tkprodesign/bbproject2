@@ -1,0 +1,13 @@
+# ----------------------------------------------------------------------
+# Optional staging lock-down for crawlers (disabled by default)
+#
+# To block Googlebot by User-Agent, uncomment the section below.
+# Keep this commented unless you explicitly want bot-level blocking
+# in addition to robots meta/robots.txt rules.
+#
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTP_USER_AGENT} Googlebot [NC]
+#   RewriteRule ^ - [F,L]
+# </IfModule>
+# ----------------------------------------------------------------------

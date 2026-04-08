@@ -1,7 +1,4 @@
 <header class="site-header">
-    <div class="demo-disclaimer">
-        Demo Website Only — Not a real bank. Do not submit real personal or financial information.
-    </div>
     <div class="header-meta-bar">
         <div class="container">
             <div class="meta-links">
@@ -67,18 +64,6 @@
             <li><a href="/signup/">Create Account</a></li>
         </ul>
     </nav>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
 </header>
-<script>
-    (function () {
-        const menuToggle = document.getElementById('menuToggle');
-        const mobileNav = document.getElementById('mobileNav');
-        if (!menuToggle || !mobileNav) return;
-
-        menuToggle.addEventListener('click', function (event) {
-            event.preventDefault();
-            menuToggle.classList.toggle('active');
-            mobileNav.classList.toggle('active');
-            document.body.classList.toggle('active');
-        });
-    })();
-</script>
+<script src="/assets/scripts/header.js?v=<?php echo time(); ?>"></script>

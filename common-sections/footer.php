@@ -30,9 +30,6 @@
                 <input type="email" name="email" placeholder="Your Email Address">
                 <button type="submit">Subcribe</button>
             </form>
-            <p style="font-size:12px;line-height:1.5;color:#ffd7d2;margin-bottom:14px;">
-                Demo notice: This is a non-production demonstration website built for UI/testing purposes only.
-            </p>
             <div class="contacts">
                 <a href="#" style="display: block; margin-bottom: 8px;">400 Park Ave, New York, NY 10022, United States</a>
                 <a href="mailto:support@velmorabank.us" style="display: block; margin-bottom: 8px;">support@velmorabank.us</a>

@@ -66,3 +66,8 @@ section.benefits .container .benefits .right {
 section.faq .container .questions {
   grid-template-columns: 100%;
 }/*# sourceMappingURL=home.css.map */
+
+
+section.loan-calculator .container .left .calculator .salary-live-input {
+  display: block;
+}
