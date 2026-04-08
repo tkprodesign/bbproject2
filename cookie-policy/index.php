@@ -22,6 +22,14 @@
     .policy-section h2 { color: #163555; margin-bottom: 10px; font-size: 24px; }
     .policy-section p, .policy-section li { color: #4f6680; line-height: 1.7; }
     .policy-section ul { padding-left: 20px; display: grid; gap: 8px; }
+    .cookie-hero {
+      background-image: linear-gradient(90deg, rgba(10, 28, 52, .62), rgba(10, 28, 52, .36)), url('/assets/images/home/hero/bank-exterior.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+    }
+    .cookie-hero h1, .cookie-hero p { color: #fff; }
+
     @media (max-width: 720px) {
       .policy-wrap { padding: 34px 0 44px; }
       .policy-card { padding: 18px; }
@@ -32,7 +40,7 @@
 <body>
 <?php include('../common-sections/header.php'); ?>
 
-<section class="page-hero">
+<section class="page-hero cookie-hero">
   <div class="container">
     <h1>Cookie Policy</h1>
     <p>How cookies are used on Velmora Bank digital channels.</p>
