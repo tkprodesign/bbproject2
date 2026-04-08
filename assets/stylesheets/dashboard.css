@@ -274,6 +274,41 @@ section.profile-kyc .content { display: flex; flex-wrap: wrap; gap: 10px; }
   margin-bottom: 12px;
 }
 .transactions-toolbar h2 { margin: 0; }
+.transactions-toolbar.advanced {
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.tx-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+#txSearchInput {
+  min-width: 240px;
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  padding: 9px 12px;
+}
+.tx-filter {
+  background: #f1f5fa;
+  color: #28435f;
+  border: 1px solid #e3ebf5;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.tx-filter.active {
+  background: var(--brand-navy);
+  color: #fff;
+  border-color: var(--brand-navy);
+}
+.tx-empty-state {
+  margin-top: 10px;
+  color: var(--text-muted);
+}
 .tx-category {
   display: inline-flex;
   background: #eef2f7;
