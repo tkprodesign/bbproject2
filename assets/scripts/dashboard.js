@@ -12,7 +12,7 @@ if (preHeader) {
 
 // Set active CTA based on current path
 const currentPath = window.location.pathname;
-document.querySelectorAll('header .container > a, header nav > a').forEach((link) => {
+document.querySelectorAll('.dashboard-header .menu-item, .dashboard-header .submenu-link').forEach((link) => {
   const href = link.getAttribute('href');
   if (!href || href === '#') return;
 
@@ -35,20 +35,22 @@ if (header) {
 }
 
 // Menu toggle (dashboard)
-const nav = document.querySelector('header nav');
+const nav = document.querySelector('.dashboard-header .mobile-drawer');
 const menuToggle = document.getElementById('menuToggle');
 
 if (nav && menuToggle) {
   menuToggle.addEventListener('click', (event) => {
     event.preventDefault();
-    nav.classList.toggle('active');
-    menuToggle.classList.toggle('active');
+    const isActive = nav.classList.toggle('active');
+    menuToggle.classList.toggle('active', isActive);
+    menuToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
   });
 
   nav.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       nav.classList.remove('active');
       menuToggle.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
     });
   });
 
@@ -57,9 +59,43 @@ if (nav && menuToggle) {
     if (!clickedInsideMenu) {
       nav.classList.remove('active');
       menuToggle.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
     }
   });
 }
+
+// Submenu behavior (desktop + mobile)
+document.querySelectorAll('.dashboard-header [data-submenu]').forEach((group) => {
+  const trigger = group.querySelector('.menu-trigger');
+  if (!trigger) return;
+
+  trigger.addEventListener('click', (event) => {
+    event.preventDefault();
+    const isMobileGroup = group.classList.contains('is-mobile');
+    if (!isMobileGroup && window.matchMedia('(min-width: 1001px)').matches) {
+      return;
+    }
+
+    const isActive = group.classList.toggle('active');
+    trigger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+
+    if (isMobileGroup && isActive) {
+      nav?.querySelectorAll('[data-submenu].is-mobile').forEach((otherGroup) => {
+        if (otherGroup !== group) {
+          otherGroup.classList.remove('active');
+          otherGroup.querySelector('.menu-trigger')?.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+  });
+
+  if (!group.classList.contains('is-mobile')) {
+    group.addEventListener('mouseleave', () => {
+      group.classList.remove('active');
+      trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+});
 
 // Transactions search/filter/export UX
 const txTable = document.getElementById('transactionsTable');
