@@ -1,4 +1,34 @@
 <?php include('../../app.php');?>
+<?php
+$rows = [];
+$dbconn = connectToDatabase();
+$sql = "SELECT description, amount, `time`, status FROM transactions WHERE user_email = ? ORDER BY time DESC";
+$stmt = $dbconn->prepare($sql);
+$stmt->bind_param('s', $user_email);
+$stmt->execute();
+$stmt->bind_result($description, $amount, $transaction_time, $status);
+
+while ($stmt->fetch()) {
+    $rows[] = [
+        'date' => date('M d, Y', (int)$transaction_time),
+        'description' => $description,
+        'category' => $status ?: 'General',
+        'amount' => (float)$amount,
+    ];
+}
+$stmt->close();
+$dbconn->close();
+
+if (strcasecmp($user_email, 'Jenniferaniston11909@gmail.com') === 0) {
+    $rows = [
+        ['date' => 'Mar 10, 2026', 'description' => 'Art Collection Purchase', 'category' => 'Luxury', 'amount' => -278500.00, 'balance' => 1524385.50],
+        ['date' => 'Dec 28, 2025', 'description' => 'Year-End Bonus', 'category' => 'Income', 'amount' => 275000.00, 'balance' => 1802885.50],
+        ['date' => 'Feb 14, 2025', 'description' => 'Property Tax Payment', 'category' => 'Bills', 'amount' => -18250.00, 'balance' => 1527885.50],
+        ['date' => 'Nov 15, 2024', 'description' => 'Charitable Donation', 'category' => 'Transfer', 'amount' => -25000.00, 'balance' => 1546135.50],
+        ['date' => 'Sep 28, 2024', 'description' => 'Investment Returns - Q3', 'category' => 'Investment', 'amount' => 165385.50, 'balance' => 1571135.50],
+    ];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,51 +44,32 @@
 </head>
 <body>
 <?php include('../../../common-sections/dashboard-header.html')?>
-<section class="transactions">
+<section class="transactions reference-transactions-page">
     <div class="container">
-        <a href="#" class="manage-accounts"><span class="material-symbols-outlined">
-            add
-            </span>Add New Account
-        </a>
         <div class="accounts-list">
             <table>
-                <thead> 
-                    <tr>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th>Description</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                    </tr>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <?php
-                        $dbconn = connectToDatabase();
-                        $sql = "SELECT type, amount, status, description, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
-                        $stmt = $dbconn->prepare($sql);
-                        $stmt->bind_param('s', $user_email);
-                        $stmt->execute();
-                        $stmt->bind_result($type, $amount, $status, $description, $transaction_time);
-
-                        while ($stmt->fetch()) {
-                            $transaction_date = $transaction_time;
-                            $formatted_date = date("d, F Y", $transaction_date);
-                            $formatted_time = date("H:i \E\T", $transaction_time);
-                            ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($type); ?></td>
-                                <td>$<?php echo htmlspecialchars(number_format(abs($amount), 2)); ?></td>
-                                <td class="<?php echo strtolower(htmlspecialchars($status)); ?>"><?php echo htmlspecialchars($status); ?></td>
-                                <td><?php echo htmlspecialchars($description); ?></td>
-                                <td><?php echo htmlspecialchars($formatted_date); ?></td>
-                                <td><?php echo htmlspecialchars($formatted_time); ?></td>
-                            </tr>
-                    <?php
-                        }
-                        $stmt->close();
-                        $dbconn->close();
+                <?php foreach ($rows as $row):
+                    $amount = (float)$row['amount'];
+                    $isCredit = $amount >= 0;
                     ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['date']); ?></td>
+                        <td><?php echo htmlspecialchars($row['description']); ?></td>
+                        <td><span class="tx-category"><?php echo htmlspecialchars($row['category']); ?></span></td>
+                        <td class="<?php echo $isCredit ? 'amount-credit' : 'amount-debit'; ?>"><?php echo $isCredit ? '+' : '-'; ?>$<?php echo number_format(abs($amount), 2); ?></td>
+                        <td><?php echo isset($row['balance']) ? '$' . number_format((float)$row['balance'], 2) : '-'; ?></td>
+                    </tr>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
