@@ -18,3 +18,11 @@ section.manage-account .row img { width: 100%; height: 130px; }
 
 section.account-success .content,
 section.kyc-ver .content { margin-top: 35px; padding: 20px; }
+
+.reference-dashboard .bars .bar .figure { font-size: 30px; }
+.account-summary-panel { padding: 18px; }
+.account-summary-panel h3 { font-size: 24px; }
+.summary-grid { grid-template-columns: 1fr; }
+.summary-grid div strong { font-size: 18px; }
+.reference-transactions .right.full-width,
+.reference-transactions-page .accounts-list { padding: 14px; }
