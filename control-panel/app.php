@@ -73,6 +73,28 @@ if (isset($_COOKIE['login_email'])) {
 
 
 
+
+// Update support phone number
+if (isset($_POST['update_support_phone'])) {
+    $supportPhone = trim($_POST['support_phone_number'] ?? '');
+
+    if ($supportPhone !== '') {
+        $db = connectToDatabase();
+        $stmt = $db->prepare("INSERT INTO dynamic_data (`name`, `value`) VALUES ('phone_number', ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)");
+
+        if ($stmt) {
+            $stmt->bind_param('s', $supportPhone);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        $db->close();
+    }
+
+    header('Location: /control-panel');
+    exit;
+}
+
 // Withdraw from user account
 if (isset($_POST['debit_user'])) {
     // Collect and sanitize form data

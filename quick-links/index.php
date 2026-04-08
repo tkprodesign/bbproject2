@@ -19,7 +19,12 @@
   </style>
 </head>
 <body>
-<?php include('../common-sections/header.php'); ?>
+<?php
+require_once('../common-sections/app.php');
+$supportPhoneNumber = getSupportPhoneNumber();
+$supportWhatsappLink = getSupportWhatsappLink();
+include('../common-sections/header.php');
+?>
 
 <section class="page-hero">
   <div class="container">
@@ -69,7 +74,7 @@
       <h2>Support Center</h2>
       <div class="meta"><span class="badge">24/7 Availability</span></div>
       <div class="grid">
-        <article class="card"><h3>General Support</h3><p>Email: support@velmorabank.us<br>Phone: +1 (000) 000-0000</p></article>
+        <article class="card"><h3>General Support</h3><p>Email: support@velmorabank.us<br>Phone: <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($supportPhoneNumber); ?></a></p></article>
         <article class="card"><h3>Card Lock/Unlock</h3><p>Available in mobile app under Cards &gt; Security Controls.</p></article>
         <article class="card"><h3>Dispute Escalation</h3><p>Dedicated team for billing and transaction investigation support.</p></article>
       </div>
