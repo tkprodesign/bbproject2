@@ -12,6 +12,9 @@ section.account-info .bars .bar .figure { font-size: 27px; }
 table { min-width: 700px; }
 
 form .input-box label { font-size: 14px; }
+form.kyc-form .input-box.full-width { flex-direction: column; }
+form.kyc-form .input-box.full-width button,
+form.kyc-form .input-box.full-width a { width: 100%; }
 
 section.manage-account .row { flex-direction: column; align-items: flex-start; }
 section.manage-account .row img { width: 100%; height: 130px; }

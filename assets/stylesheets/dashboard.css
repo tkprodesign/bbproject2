@@ -176,6 +176,7 @@ section.profile-kyc .container,
 section.change-password .container {
   padding: 20px;
 }
+section.add-account .container { max-width: 1040px; margin: 28px auto; }
 .manage-accounts { margin-bottom: 12px; display: inline-flex; align-items: center; gap: 6px; }
 form { display: grid; gap: 14px; }
 form .input-box label { display: block; margin-bottom: 6px; font-weight: 600; color: #2b4260; }
@@ -190,6 +191,27 @@ form .input-box textarea {
   color: var(--text-strong);
 }
 form .input-box .dark-bg { background: #eef3f9; }
+form.kyc-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+form.kyc-form .full-width { grid-column: 1 / -1; }
+form.kyc-form h2.full-width {
+  margin-bottom: 2px;
+  font-size: clamp(30px, 4vw, 42px);
+}
+form.kyc-form .input-box button,
+form.kyc-form .input-box a {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+form.kyc-form .input-box.full-width {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
 section.kyc-ver .content {
   width: min(94%, 620px); margin: 70px auto;

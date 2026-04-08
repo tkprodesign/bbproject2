@@ -83,6 +83,7 @@ section.manage-account .container,
 section.preferences .container,
 section.profile-kyc .container,
 section.change-password .container { padding: 16px; }
+form.kyc-form { grid-template-columns: 1fr; }
 
 .accounts-list, main .right { overflow-x: auto; }
 

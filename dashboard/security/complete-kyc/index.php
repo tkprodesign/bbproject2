@@ -17,14 +17,14 @@
 <?php include('../../../common-sections/dashboard-header.html')?>
 <section class="add-account">
     <div class="container">
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="" method="post" enctype="multipart/form-data" class="kyc-form">
             <?php if ($user_kyc_level == 2) {
                 $kyc_required = '';
             } else {
                 $kyc_required = 'required';
             }
              ?>
-            <h2>Your Information</h2>
+            <h2 class="full-width">Your Information</h2>
             <div class="input-box">
                 <label>First name:<span>*</span></label>
                 <input type="text" name="first_name" <?php echo $kyc_required; ?>>
@@ -59,7 +59,7 @@
                 <input type="text" name="address1" <?php echo $kyc_required; ?>>
             </div>
             <div class="input-box">
-                <label>Addres line 2:</label>
+                <label>Address line 2:</label>
                 <input type="text" name="address2">
             </div>
             <div class="input-box">
@@ -124,7 +124,7 @@
                 <label>Nationality:<span>*</span></label>
                 <input type="text" name="nationality" <?php echo $kyc_required; ?>>
             </div>
-            <div class="input-box">
+            <div class="input-box full-width">
                 <button type="submit" name="submit_kyc_data" value="kyc-verification">Submit KYC Verification</button>
                 <a href="/dashboard">Cancel</a>
             </div>
