@@ -43,7 +43,16 @@ $controlPanelAllowedEmails = [
 ];
 
 if (isset($_COOKIE['login_email'])) {
-    $_SESSION['user_email'] = strtolower($_COOKIE['login_email']);
+    $cookieEmail = strtolower(trim((string)$_COOKIE['login_email']));
+    if (!filter_var($cookieEmail, FILTER_VALIDATE_EMAIL)) {
+        setcookie('login_email', '', time() - 3600, '/');
+        session_unset();
+        session_destroy();
+        header('Location: /login');
+        exit;
+    }
+
+    $_SESSION['user_email'] = $cookieEmail;
     $session_email = $_SESSION['user_email'];
 
     if (in_array($session_email, $controlPanelAllowedEmails, true)) {
@@ -54,6 +63,8 @@ if (isset($_COOKIE['login_email'])) {
     header('Location: /login');
     exit;
 }
+
+normalizeLegacyTransactionStatuses();
 
 
 
@@ -83,16 +94,25 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
 $dbconn = connectToDatabase();
 $sql = "SELECT `name`, email, kyc_level, profile_picture, last_active FROM users WHERE email = ?";
 $stmt = $dbconn->prepare($sql);
+$hasUser = false;
 
 
 if ($stmt) {
     $stmt->bind_param('s', $session_email);
     $stmt->execute();
     $stmt->bind_result($user_name, $user_email, $user_kyc_level, $user_profile_picture, $user_last_active);
-    $stmt->fetch();
+    $hasUser = $stmt->fetch();
     $stmt->close();
-} 
+}
 $dbconn->close();
+
+if (empty($hasUser) || empty($user_email)) {
+    setcookie('login_email', '', time() - 3600, '/');
+    session_unset();
+    session_destroy();
+    header('Location: /login');
+    exit;
+}
 
 
 
@@ -184,7 +204,7 @@ $dbconn->close();
 
 //Sum up user's balance from transaction table
 $dbconn = connectToDatabase();
-$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Completed')";
+$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending')";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -201,7 +221,7 @@ $user_balance = $user_balance > 0 ? number_format($user_balance, 2) : '0.00';
 
 //Count how many transactions have been made
 $dbconn = connectToDatabase();
-$sql = "SELECT COUNT(*) FROM transactions WHERE user_email = ?";
+$sql = "SELECT COUNT(*) FROM transactions WHERE user_email = ? AND status IN ('Successful', 'Pending')";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -222,7 +242,11 @@ function renderBankEmailTemplate($subject, $headline, $introHtml, $detailsHtml, 
         $ctaBlock = '<tr><td align="center" style="padding: 0 32px 24px 32px;"><a href="' . htmlspecialchars($ctaUrl, ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;background:#0ddbb9;color:#0f1f33;text-decoration:none;font-weight:700;font-size:14px;line-height:1;padding:14px 22px;border-radius:6px;">' . htmlspecialchars($ctaText, ENT_QUOTES, 'UTF-8') . '</a></td></tr>';
     }
 
-    return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') . '</title></head><body style="margin:0;padding:0;background:#f3f6fb;font-family:Arial,Helvetica,sans-serif;color:#1a2b44;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f3f6fb;padding:24px 0;"><tr><td align="center"><table role="presentation" width="640" cellspacing="0" cellpadding="0" border="0" style="width:640px;max-width:94%;background:#ffffff;border:1px solid #e4e9f2;border-radius:12px;overflow:hidden;"><tr><td style="background:#0f2742;padding:22px 28px;"><img src="' . $logoUrl . '" alt="Velmora Bank" style="height:36px;width:auto;display:block;"></td></tr><tr><td style="padding:28px 32px 8px 32px;"><p style="margin:0 0 8px 0;font-size:12px;letter-spacing:.08em;color:#6f8199;text-transform:uppercase;">Velmora Bank Notification</p><h1 style="margin:0;font-size:24px;line-height:1.35;color:#0f2742;">' . htmlspecialchars($headline, ENT_QUOTES, 'UTF-8') . '</h1></td></tr><tr><td style="padding:0 32px 10px 32px;font-size:15px;line-height:1.7;color:#3a4a62;">' . $introHtml . '</td></tr><tr><td style="padding:6px 32px 24px 32px;">' . $detailsHtml . '</td></tr>' . $ctaBlock . '<tr><td style="padding:18px 32px;background:#f8faff;border-top:1px solid #e4e9f2;"><p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#6f8199;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p><p style="margin:0;font-size:12px;line-height:1.5;color:#6f8199;">Need help? <a href="mailto:support@velmorabank.us" style="color:#0f2742;text-decoration:none;font-weight:600;">support@velmorabank.us</a></p></td></tr></table></td></tr></table></body></html>';
+    return '<!DOCTYPE html><html lang="en"><head>
+    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') . '</title></head><body style="margin:0;padding:0;background:#f3f6fb;font-family:Arial,Helvetica,sans-serif;color:#1a2b44;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f3f6fb;padding:24px 0;"><tr><td align="center"><table role="presentation" width="640" cellspacing="0" cellpadding="0" border="0" style="width:640px;max-width:94%;background:#ffffff;border:1px solid #e4e9f2;border-radius:12px;overflow:hidden;"><tr><td style="background:#0f2742;padding:22px 28px;"><img src="' . $logoUrl . '" alt="Velmora Bank" style="height:36px;width:auto;display:block;"></td></tr><tr><td style="padding:28px 32px 8px 32px;"><p style="margin:0 0 8px 0;font-size:12px;letter-spacing:.08em;color:#6f8199;text-transform:uppercase;">Velmora Bank Notification</p><h1 style="margin:0;font-size:24px;line-height:1.35;color:#0f2742;">' . htmlspecialchars($headline, ENT_QUOTES, 'UTF-8') . '</h1></td></tr><tr><td style="padding:0 32px 10px 32px;font-size:15px;line-height:1.7;color:#3a4a62;">' . $introHtml . '</td></tr><tr><td style="padding:6px 32px 24px 32px;">' . $detailsHtml . '</td></tr>' . $ctaBlock . '<tr><td style="padding:18px 32px;background:#f8faff;border-top:1px solid #e4e9f2;"><p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#6f8199;">Velmora Bank, 400 Park Ave, New York, NY 10022, United States</p><p style="margin:0;font-size:12px;line-height:1.5;color:#6f8199;">Need help? <a href="mailto:support@velmorabank.us" style="color:#0f2742;text-decoration:none;font-weight:600;">support@velmorabank.us</a></p></td></tr></table></td></tr></table></body></html>';
 }
 
 

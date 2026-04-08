@@ -50,11 +50,16 @@ section.credit-card .container .content .right {
 .hero-actions a { width: 100%; text-align: center; }
 section.trust-strip { margin-top: -24px; }
 section.trust-strip .container { grid-template-columns: 1fr; padding: 14px; }
-section.loan-calculator .container .right { width: calc(100% - 26px); left: 13px; bottom: 14px; padding: 20px; min-height: 470px; }
-section.loan-calculator .container .left { padding-bottom: 510px; }
+section.loan-calculator .container { grid-template-columns: 1fr; gap: 14px; }
+section.loan-calculator .container .right { width: 100%; left: unset; bottom: unset; padding: 20px; min-height: 470px; }
+section.loan-calculator .container .left { padding-bottom: 0; }
 section.features-3 .swiper-slide img { height: 180px; }
 section.faq .container { padding: 18px; }
 footer .container .left { grid-template-columns: 1fr; }
 section.features-3 .container .swiper-2 { overflow: hidden; }
 section.features-3 .container .swiper-2 .swiper-slide { height: auto; }
 section.features-3 .container .swiper-2 .swiper-slide img { height: 170px; object-fit: cover; }
+section.features-2 .container .features .feature { width: 100%; min-height: 128px; }
+section.benefits .container .benefits .center { position: static; transform: none; margin-top: 12px; justify-content: center; }
+section.benefits .container .benefits .center > div { width: 46px; height: 46px; }
+section.benefits .container .benefits .right { min-height: 320px; height: auto; }

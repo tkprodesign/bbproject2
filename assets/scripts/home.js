@@ -163,6 +163,7 @@ const loanInstallment = document.getElementById('loanInstallment');
 const loanTenorDays = document.getElementById('loanTenorDays');
 const loanTenorDisplay = document.getElementById('loanTenorDisplay');
 const applyLoanLink = document.getElementById('applyLoanLink');
+const allowedTenors = [14, 30, 60];
 
 if (toggleBox && toggle && salaryInput && loanAmount) {
     function getCenter() {
@@ -199,7 +200,8 @@ if (toggleBox && toggle && salaryInput && loanAmount) {
 
     function updateCalculator(salary) {
         const safeSalary = Math.max(0, Math.min(50000, Math.round(salary)));
-        const tenor = Number(loanTenorDays?.value || 30);
+        const selectedTenor = Number(loanTenorDays?.value || 30);
+        const tenor = allowedTenors.includes(selectedTenor) ? selectedTenor : 30;
 
         salaryInput.textContent = safeSalary.toLocaleString('en-US');
         if (salaryLiveInput && document.activeElement !== salaryLiveInput) {
@@ -228,6 +230,9 @@ if (toggleBox && toggle && salaryInput && loanAmount) {
                 installment: monthlyEquivalent.toFixed(2),
             });
             applyLoanLink.href = `/loan/?${query.toString()}`;
+            const isValidEstimate = safeSalary >= 500 && principal > 0;
+            applyLoanLink.classList.toggle('is-disabled', !isValidEstimate);
+            applyLoanLink.setAttribute('aria-disabled', isValidEstimate ? 'false' : 'true');
         }
 
         const angle = salaryToAngle(Math.min(safeSalary, 15000));
