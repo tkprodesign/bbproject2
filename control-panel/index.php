@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
+    <link rel="icon" type="image/png" href="/assets/images/branding/icon.png">
+    <link rel="shortcut icon" href="/assets/images/branding/icon.png">
+    <link rel="apple-touch-icon" href="/assets/images/branding/icon.png">
     <title>Control Panel</title>
     <link rel="stylesheet" href="/assets/stylesheets/control-panel.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/tab/control-panel.css?v=<?php echo time(); ?>" media="screen and (max-width: 1000px)">
@@ -136,7 +138,7 @@ foreach ($controlPanelActionMessages as $actionKey => $actionStates) {
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
                             <?php 
                                 $select_user_email = $row['email'];
-                                $su_query = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = '$select_user_email' AND status IN ('Successful', 'Completed')";
+                                $su_query = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = '$select_user_email' AND status IN ('Successful', 'Pending')";
                                 $su_result = $db->query($su_query);
                                 $user_balance = $su_result->fetch_assoc()['user_balance'] ?? 0;
                             ?>
@@ -220,7 +222,7 @@ foreach ($controlPanelActionMessages as $actionKey => $actionStates) {
                             <td><?php echo htmlspecialchars($row['account_number']); ?></td>
                             <?php 
                                 $select_user_account = $row['account_number'];
-                                $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account' AND status IN ('Successful', 'Completed')";
+                                $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account' AND status IN ('Successful', 'Pending')";
                                 $su_result = $db->query($su_query);
                                 $account_balance = $su_result->fetch_assoc()['account_balance'] ?? 0;
                                 ?>
@@ -468,7 +470,7 @@ if (isset($_POST['delete_user_account'])) {
             <div class="input-box">
                 <label>Decision</label>
                 <select name="decision">
-                    <option value="Completed">Approve</option>
+                    <option value="Successful">Approve</option>
                     <option value="Failed">Reject</option>
                 </select>
             </div>

@@ -13,34 +13,44 @@ section.features-2 .container .features {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+}
+section.features-2 .container .features .feature {
+  width: 100%;
+  min-height: 140px;
 }
 
+section.loan-calculator .container {
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
 section.loan-calculator .container .left {
   grid-template-columns: 100%;
   width: 100%;
-  padding-bottom: 428px;
+  padding-bottom: 0;
 }
 section.loan-calculator .container .left .calculator {
   justify-self: center;
+  width: 100%;
 }
 section.loan-calculator .container .right {
   min-height: 420px;
-  width: calc(100% - 64px);
+  width: 100%;
   -webkit-clip-path: unset;
           clip-path: unset;
   top: unset;
   right: unset;
-  bottom: 32px;
-  left: 32px;
-  padding: 48px;
+  bottom: unset;
+  left: unset;
+  padding: 32px;
 }
 section.loan-calculator .container .right div {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
 }
 section.loan-calculator .container .right a {
-  margin-bottom: 200px;
+  margin-bottom: 0;
 }
 
 section.about-us .container .container-wrapper {
@@ -57,11 +67,24 @@ section.benefits .container .benefits .left {
   height: 350px;
 }
 section.benefits .container .benefits .center {
-  top: 318px;
+  position: static;
+  transform: none;
+  margin-top: 10px;
+  justify-content: center;
 }
 section.benefits .container .benefits .right {
-  height: 318px;
+  height: auto;
+  min-height: 280px;
 }
+
+section.trust-strip { margin-top: -18px; }
+section.features-2,
+section.loan-calculator,
+section.about-us,
+section.benefits,
+section.features-3,
+section.faq { margin-top: 26px; }
+section.benefits .container .benefits { gap: 20px; padding: 16px; }
 
 section.faq .container .questions {
   grid-template-columns: 100%;
