@@ -136,7 +136,7 @@ foreach ($controlPanelActionMessages as $actionKey => $actionStates) {
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
                             <?php 
                                 $select_user_email = $row['email'];
-                                $su_query = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = '$select_user_email'";
+                                $su_query = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = '$select_user_email' AND status IN ('Successful', 'Completed')";
                                 $su_result = $db->query($su_query);
                                 $user_balance = $su_result->fetch_assoc()['user_balance'] ?? 0;
                             ?>
@@ -220,7 +220,7 @@ foreach ($controlPanelActionMessages as $actionKey => $actionStates) {
                             <td><?php echo htmlspecialchars($row['account_number']); ?></td>
                             <?php 
                                 $select_user_account = $row['account_number'];
-                                $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account'";
+                                $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account' AND status IN ('Successful', 'Completed')";
                                 $su_result = $db->query($su_query);
                                 $account_balance = $su_result->fetch_assoc()['account_balance'] ?? 0;
                                 ?>

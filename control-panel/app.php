@@ -103,7 +103,7 @@ if (isset($_POST['update_support_phone'])) {
 // Deposit into user account
 if (isset($_POST['credit_user'])) {
     $user_email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
-    $account_number = preg_replace('/\D+/', '', $_POST['account_number'] ?? '');
+    $account_number = (int) preg_replace('/\D+/', '', $_POST['account_number'] ?? '');
     $amount = filter_var($_POST['amount'] ?? null, FILTER_VALIDATE_FLOAT);
     $currency = strtoupper(trim($_POST['currency'] ?? ''));
     $description = trim($_POST['description'] ?? '');
@@ -124,7 +124,7 @@ if (isset($_POST['credit_user'])) {
         header('Location: /control-panel?credit_user=failed');
         exit;
     }
-    $accountStmt->bind_param("ss", $user_email, $account_number);
+    $accountStmt->bind_param("si", $user_email, $account_number);
     $accountStmt->execute();
     $accountResult = $accountStmt->get_result();
     $accountExists = $accountResult && $accountResult->num_rows > 0;
@@ -167,7 +167,7 @@ if (isset($_POST['credit_user'])) {
         exit;
     }
 
-    $stmt->bind_param("ssssdsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
+    $stmt->bind_param("sssidsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
     if ($stmt->execute()) {
         $display_amount = number_format($amount, 2);
         $email_subject = 'Deposit Confirmation - Velmora Bank';
@@ -214,7 +214,7 @@ if (isset($_POST['credit_user'])) {
 if (isset($_POST['debit_user'])) {
     // Collect and sanitize form data
     $user_email = htmlspecialchars($_POST['email']);
-    $account_number = htmlspecialchars($_POST['account_number']);
+    $account_number = (int)($_POST['account_number'] ?? 0);
     $amount = filter_var($_POST['amount'], FILTER_VALIDATE_FLOAT); // Sanitize as float
     $amount = -abs($amount); // Ensure amount is negative for a debit
     $currency = htmlspecialchars($_POST['currency']);
@@ -257,7 +257,7 @@ if (isset($_POST['debit_user'])) {
             die("An internal error occurred. Please try again later.");
         }
         // Use "d" for float/double for the amount to ensure precision
-        $stmt->bind_param("ssssdsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
+        $stmt->bind_param("sssidsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
 
         if ($stmt->execute()) {
             // --- Send Withdrawal Confirmation Email via Resend API ---
