@@ -24,7 +24,7 @@ section.loan-calculator .container .left .calculator {
   justify-self: center;
 }
 section.loan-calculator .container .right {
-  height: 300px;
+  min-height: 420px;
   width: calc(100% - 64px);
   -webkit-clip-path: unset;
           clip-path: unset;
@@ -71,3 +71,5 @@ section.faq .container .questions {
 section.loan-calculator .container .left .calculator .salary-live-input {
   display: block;
 }
+
+section.loan-calculator .container .right .loan-breakdown li strong { font-size: 18px; }

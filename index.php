@@ -177,10 +177,6 @@ include('./common-sections/header.php');
                 <span>American Express Cards</span>
             </div>
             <div class="feature">
-                <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80">
-                <span>Business Opportunities</span>
-            </div>
-            <div class="feature">
                 <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M50.3601 7.81251C37.2632 7.65626 25.7792 16.5525 21.701 28.9978C17.387 42.1619 24.0407 52.5629 29.0985 60.4675C31.272 63.8644 33.2198 66.907 34.0057 69.5679C34.4057 70.9226 35.6023 71.875 37.0148 71.875H39.0625C39.0625 67.3422 36.2756 62.986 33.0475 57.9407C29.2741 52.0454 25 45.3641 25 37.5C25 23.8281 36.03 12.6844 49.6613 12.5C60.405 12.3578 69.6817 19.3995 73.4833 29.4495C77.8302 40.9417 71.951 50.1297 66.9525 57.9407C63.7244 62.986 60.9375 67.3422 60.9375 71.875H62.9852C64.3977 71.875 65.5943 70.921 65.9943 69.5679C66.7818 66.907 68.7281 63.8675 70.9015 60.4706C74.8171 54.3519 79.6875 46.736 79.6875 37.5C79.6875 21.25 66.5632 8.00782 50.3601 7.81251ZM13.5223 10.2326L10.6415 13.9313L17.7277 19.455L20.6085 15.7562L13.5223 10.2326ZM86.4807 10.2387L79.3915 15.7593L82.2723 19.458L89.3616 13.9343L86.4807 10.2387ZM3.125 35.9375V40.625H10.9375V35.9375H3.125ZM89.0625 35.9375V40.625H96.875V35.9375H89.0625ZM41.8793 38.681L41.3238 38.9954C39.3863 40.0985 38.5649 42.4453 39.3524 44.5313C41.1133 49.1953 43.75 58.4203 43.75 71.875H48.4375C48.4375 50.4063 42.1465 39.1514 41.8793 38.681ZM58.1207 38.681C57.8535 39.1498 51.5625 50.4063 51.5625 71.875H56.25C56.25 58.4188 58.8852 49.1922 60.6445 44.5313C61.432 42.4484 60.6151 40.1062 58.6823 39.0015L58.1207 38.681ZM82.2723 55.5451L79.3915 59.2438L86.4777 64.7675L89.3585 61.0687L82.2723 55.5451ZM17.7246 55.5481L10.6384 61.0718L13.5193 64.7675L20.6055 59.2468L17.7246 55.5481ZM35.9375 76.5625L36.8897 83.2215C37.2568 85.7965 39.1815 87.8728 41.7206 88.4369L43.9301 88.9282C44.578 91.689 47.0417 93.75 50 93.75C52.9584 93.75 55.422 91.689 56.07 88.9282L58.2794 88.4369C60.8185 87.8728 62.7432 85.7965 63.1104 83.2215L64.0625 76.5625H51.5625H48.4375H35.9375Z" fill="#444444"/>
                     <path d="M13.5223 10.2325L10.6415 13.9313L17.7277 19.455L20.6085 15.7562L13.5223 10.2325ZM86.4807 10.2386L79.3915 15.7593L82.2723 19.458L89.3616 13.9343L86.4807 10.2386ZM3.125 35.9375V40.625H10.9375V35.9375H3.125ZM89.0625 35.9375V40.625H96.875V35.9375H89.0625ZM82.2723 55.545L79.3915 59.2438L86.4777 64.7675L89.3585 61.0687L82.2723 55.545ZM17.7246 55.5481L10.6384 61.0718L13.5193 64.7675L20.6055 59.2468L17.7246 55.5481Z" fill="#F13223"/>
@@ -213,15 +209,21 @@ include('./common-sections/header.php');
         <div class="left">
             <div class="details">
                 <h1>Payday Loan<br>Calculator</h1>
-                <p>Your financial needs are important to us. We know that some emergencies arise before payday and you may be low on cash. With Payday Loan by Access, you can borrow money and pay back at the agreed time. </p>
+                <p>Use this tool to estimate a short-term loan based on your monthly income and repayment period. We calculate principal, service fee, total repayment, and an equivalent monthly installment.</p>
                 <p class="no">
                     <i class="bi bi-exclamation-circle"></i>
-                    <span>* Terms and Conditions Apply </span>
+                    <span>* Estimates only. Final approval depends on eligibility, account history, and underwriting checks.</span>
                 </p>
             </div>
             <div class="calculator">
                 <p>What is your monthly salary?</p>
-                <input type="number" id="salaryLiveInput" class="salary-live-input" min="0" max="15000" step="1" placeholder="Enter monthly salary">
+                <input type="number" id="salaryLiveInput" class="salary-live-input" min="500" max="50000" step="50" placeholder="Enter monthly salary">
+                <label for="loanTenorDays">Select repayment tenor</label>
+                <select id="loanTenorDays" class="loan-tenor-select">
+                    <option value="14">14 days</option>
+                    <option value="30" selected>30 days</option>
+                    <option value="60">60 days</option>
+                </select>
                 <div class="toggle-box">
                     <div class="toggle">
                         <span class="ball"></span>
@@ -235,13 +237,17 @@ include('./common-sections/header.php');
         </div>
         <div class="right">
             <p>Eligible Loan Amount</p>
-            <h1>$<span id="loanAmount">0</span></h1>
-            <div>Tenor: <p>Your next pay day or <nobr>30-days</nobr>, whichever comes first</p></div>
-            <a href="/dashboard">Get Instant Loan Now</a>
+            <h1>$<span id="loanAmount">0.00</span></h1>
+            <ul class="loan-breakdown">
+                <li><span>Processing Fee</span><strong>$<span id="loanFee">0.00</span></strong></li>
+                <li><span>Total Repayment</span><strong>$<span id="loanTotalRepayment">0.00</span></strong></li>
+                <li><span>Est. Monthly Installment</span><strong>$<span id="loanInstallment">0.00</span></strong></li>
+            </ul>
+            <div>Tenor: <p><span id="loanTenorDisplay">30</span> days</p></div>
+            <a id="applyLoanLink" href="/loan/?salary=0&amount=0&fee=0&tenor=30&repayment=0&installment=0">Continue to Loan Application</a>
         </div>
     </div>
 </section>
-
 
 
 

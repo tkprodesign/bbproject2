@@ -319,6 +319,20 @@ section.loan-calculator .container .left .calculator .salary-live-input {
   color: #fff;
   font-size: 18px;
 }
+section.loan-calculator .container .left .calculator .loan-tenor-select {
+  width: min(100%, 260px);
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: #2f2f2f;
+  color: #fff;
+  font-size: 16px;
+}
+section.loan-calculator .container .left .calculator label {
+  display: block;
+  margin: 8px 0 10px;
+}
 section.loan-calculator .container .left .calculator .toggle-box {
   width: 200px;
   height: 200px;
@@ -372,6 +386,24 @@ section.loan-calculator .container .right h1 {
   font-size: 48px;
   color: #444444;
   margin-bottom: 25px;
+}
+section.loan-calculator .container .right .loan-breakdown {
+  list-style: none;
+  width: 100%;
+  margin: 0 0 18px;
+  padding: 0;
+}
+section.loan-calculator .container .right .loan-breakdown li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ececec;
+  padding: 10px 0;
+  gap: 10px;
+}
+section.loan-calculator .container .right .loan-breakdown li strong {
+  font-size: 20px;
+  color: #262626;
 }
 section.loan-calculator .container .right div {
   display: grid;
