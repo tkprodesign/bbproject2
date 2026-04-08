@@ -73,15 +73,21 @@ if ($stmt->fetch()) {
 }
 $stmt->close();
 
-$stmt = $dbMetrics->prepare("SELECT type, description, amount, `time` FROM transactions WHERE user_email = ? ORDER BY `time` DESC LIMIT 10");
+$stmt = $dbMetrics->prepare("SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? ORDER BY `time` DESC LIMIT 10");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
-$stmt->bind_result($tx_type, $tx_description, $tx_amount, $tx_time);
+$stmt->bind_result($tx_type, $tx_description, $tx_amount, $tx_status, $tx_time);
 while ($stmt->fetch()) {
+    $normalizedType = strtolower(trim((string)$tx_type));
+    if ($normalizedType === '' || $normalizedType === 'current') {
+        $normalizedType = ((float)$tx_amount < 0) ? 'withdrawal' : 'deposit';
+    }
+    $normalizedType = ucwords(str_replace(['_', '-'], ' ', $normalizedType));
     $dashboardRows[] = [
         'date' => date('M d, Y', (int)$tx_time),
         'description' => $tx_description,
-        'category' => $tx_type ?: 'General',
+        'category' => $normalizedType,
+        'status' => $tx_status ?: 'Posted',
         'amount' => (float)$tx_amount,
     ];
 }

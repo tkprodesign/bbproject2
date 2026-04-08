@@ -9,11 +9,23 @@ $stmt->execute();
 $stmt->bind_result($type, $description, $amount, $status, $transaction_time);
 
 while ($stmt->fetch()) {
+    $normalizedStatus = strtolower(trim((string)$status));
+    if ($normalizedStatus === '' || $normalizedStatus === 'current') {
+        $normalizedStatus = 'posted';
+    }
+    $normalizedStatus = ucwords(str_replace(['_', '-'], ' ', $normalizedStatus));
+
+    $normalizedType = strtolower(trim((string)$type));
+    if ($normalizedType === '' || $normalizedType === 'current') {
+        $normalizedType = ((float)$amount < 0) ? 'withdrawal' : 'deposit';
+    }
+    $normalizedType = ucwords(str_replace(['_', '-'], ' ', $normalizedType));
+
     $rows[] = [
         'date' => date('M d, Y', (int)$transaction_time),
         'description' => $description,
-        'status' => $status ?: ($amount < 0 ? 'Debit' : 'Credit'),
-        'category' => $type ?: ($amount < 0 ? 'Withdrawal' : 'Deposit'),
+        'status' => $normalizedStatus,
+        'category' => $normalizedType,
         'amount' => (float)$amount,
     ];
 }
