@@ -632,7 +632,7 @@ if (isset($_POST['transfer_funds'])) {
         $status = 'Pending';
         $type = 'Transfer';
         $description = 'Transfer to ' . $to_bank_name . ' account number ' . $to_account_number;
-        $stmt->bind_param("sssidsssisss", $transaction_id, $from_account_type, $user_email, $from_account_number, $negative_amount, $currency, $description, $status, $time, $to_bank_name, $to_account_type, $to_account_number);
+        $stmt->bind_param("sssidsssisss", $transaction_id, $type, $user_email, $from_account_number, $negative_amount, $currency, $description, $status, $time, $to_bank_name, $to_account_type, $to_account_number);
 
         if (!$stmt->execute()) {
             echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
