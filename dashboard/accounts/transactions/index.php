@@ -2,7 +2,7 @@
 <?php
 $rows = [];
 $dbconn = connectToDatabase();
-$sql = "SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? AND (status IS NULL OR LOWER(status) <> 'failed') ORDER BY time DESC";
+$sql = "SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -19,7 +19,11 @@ while ($stmt->fetch()) {
 
     $normalizedType = strtolower(trim((string)$type));
     if ($normalizedType === '' || $normalizedType === 'current') {
-        $normalizedType = ((float)$amount < 0) ? 'withdrawal' : 'deposit';
+        $descriptionText = strtolower((string)$description);
+        $looksLikeTransfer = strpos($descriptionText, 'transfer to ') !== false
+            || strpos($descriptionText, 'wire transfer') !== false
+            || strpos($descriptionText, 'bank transfer') !== false;
+        $normalizedType = $looksLikeTransfer ? 'transfer' : (((float)$amount < 0) ? 'withdrawal' : 'deposit');
     }
     $normalizedType = ucwords(str_replace(['_', '-'], ' ', $normalizedType));
 
