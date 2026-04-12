@@ -338,7 +338,7 @@ let autoSlideInterval;
 // Function to set the state of the benefits section
 function setBenefitsState() {
   benefitsImages.forEach((img, index) => {
-    const stateIndex = (benefitsState + index) % 3;
+    const stateIndex = (index - benefitsState + 3) % 3;
     img.style.left = benefitsImageProperties[stateIndex].left;
     img.style.zIndex = benefitsImageProperties[stateIndex].zIndex;
     img.style.transition = 'all 0.5s ease';
