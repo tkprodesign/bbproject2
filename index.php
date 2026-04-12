@@ -333,15 +333,15 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
-                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
-                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" decoding="async">
+                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" decoding="async">
+                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" decoding="async">
             </div>
             <div class="center buttons">
-                <div class="left">
+                <div class="nav-prev" role="button" aria-label="Previous benefit" tabindex="0">
                     <i class="bi bi-arrow-left"></i>
                 </div>
-                <div class="right">
+                <div class="nav-next" role="button" aria-label="Next benefit" tabindex="0">
                     <i class="bi bi-arrow-right"></i>
                 </div>
             </div>
@@ -535,7 +535,7 @@ include('./common-sections/header.php');
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/assets/scripts/home.js"></script>
+<script src="/assets/scripts/home.js?v=<?php echo time(); ?>"></script>
 <?php include('./common-sections/smartsupp-live-chat.html'); ?>
 </body>
 </html>
