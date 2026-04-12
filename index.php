@@ -333,9 +333,9 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
-                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
-                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" decoding="async">
+                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" decoding="async">
+                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" decoding="async">
             </div>
             <div class="center buttons">
                 <div class="nav-prev" role="button" aria-label="Previous benefit" tabindex="0">

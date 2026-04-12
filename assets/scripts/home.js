@@ -313,20 +313,6 @@ const benefitsImages = benefitsBlock ? benefitsBlock.querySelectorAll('.benefits
 const benefitsTextBlocks = benefitsBlock ? benefitsBlock.querySelectorAll('.benefits > .right .benefit') : [];
 const benefitsLeftToggle = benefitsBlock ? benefitsBlock.querySelector('.center .nav-prev') : null;
 const benefitsRightToggle = benefitsBlock ? benefitsBlock.querySelector('.center .nav-next') : null;
-const benefitFallbackImage = '/assets/images/placeholder-image.png';
-benefitsImages.forEach((img) => {
-  img.addEventListener('error', () => {
-    img.onerror = null;
-    img.src = benefitFallbackImage;
-    if (benefitsBlock) {
-      const leftPanel = benefitsBlock.querySelector('.benefits .left');
-      if (leftPanel) {
-        leftPanel.style.background = '#e9eff6';
-      }
-    }
-  });
-});
-
 
 const benefitsImageProperties = [
   {
