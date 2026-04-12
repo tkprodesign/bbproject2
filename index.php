@@ -333,9 +333,9 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80" alt="Person using digital mobile banking on a smartphone" decoding="async">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80" alt="Professionals reviewing financial growth analytics on a laptop" decoding="async">
-                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80" alt="Cybersecurity lock interface representing secure banking protection" decoding="async">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80" alt="Customer using mobile digital banking app on smartphone" decoding="async">
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80" alt="Financial planning and growth review with analytics dashboard" decoding="async">
+                <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=1600&q=80" alt="Secure banking cybersecurity interface with encrypted lock protection" decoding="async">
             </div>
             <div class="center buttons">
                 <div class="nav-prev" role="button" aria-label="Previous benefit" tabindex="0">
