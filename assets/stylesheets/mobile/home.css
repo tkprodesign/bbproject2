@@ -4,10 +4,15 @@ section.hero .content {
 }
 section.hero .content h1 {
   width: unset;
-  font-size: 51px;
+  font-size: 40px;
+  line-height: 1.15;
 }
 section.hero .content p {
   width: unset;
+}
+section.hero .content :is(h2, h3, h4, h5, h6) {
+  line-height: 1.2;
+  margin-bottom: 10px;
 }
 
 section.stats .stats {
@@ -51,7 +56,7 @@ section.credit-card .container .content .right {
   background-position: center;
   background-repeat: no-repeat;
 }
-.hero.hero-static .content h1 { font-size: 34px; }
+.hero.hero-static .content h1 { font-size: 32px; line-height: 1.18; }
 .hero.hero-static .content p { font-size: 16px; }
 .hero-actions a { width: 100%; text-align: center; }
 section.trust-strip { margin-top: 10px; }
@@ -72,6 +77,7 @@ section.benefits .container .benefits .right { min-height: 320px; height: auto; 
 
 @media (max-width: 720px) {
   .hero.hero-static .hero-static-inner { padding: 64px 0 96px; }
+  .hero.hero-static .content h1 { font-size: 30px; line-height: 1.2; }
   .hero-actions { gap: 10px; margin-bottom: 32px; }
   section.trust-strip { margin-top: 10px; z-index: 2; }
   section.trust-strip .container { gap: 8px; padding: 12px; }
