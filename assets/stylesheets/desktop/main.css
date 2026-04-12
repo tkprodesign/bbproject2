@@ -159,6 +159,9 @@ body.active {
 .site-header #menuToggle {
   font-size: 26px;
   color: #27334d;
+  border: 0;
+  background: transparent;
+  padding: 0;
   align-items: center;
   justify-content: center;
   width: 42px;
