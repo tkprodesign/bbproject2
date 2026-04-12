@@ -4,8 +4,11 @@ section.hero {
   position: relative;
 }
 section.hero.hero-static {
+  background-color: #0a1c34;
+  background-image: linear-gradient(90deg, rgba(10, 28, 52, 0.58), rgba(10, 28, 52, 0.34)), url("/assets/images/home/hero/consulting-banner.jpg");
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
 }
@@ -815,8 +818,11 @@ section.benefits .container .benefits .left img { object-fit: cover; }
 
 /* --- Final homepage visual polish pass --- */
 section.hero.hero-static {
+  background-color: #0a1c34;
+  background-image: linear-gradient(90deg, rgba(10, 28, 52, 0.58), rgba(10, 28, 52, 0.34)), url("/assets/images/home/hero/consulting-banner.jpg");
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
 }
 section.hero.hero-static::before {
   content: "";
