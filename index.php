@@ -333,15 +333,15 @@ include('./common-sections/header.php');
         </div>
         <div class="benefits">
             <div class="left">
-                <img src="/assets/images/home/benefits/mobile-banking.jpg" alt="Convenience and Accessibility" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
-                <img src="/assets/images/home/benefits/financial-growth.jpg" alt="Financial Growth and Opportunities" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
-                <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80" alt="Customer using mobile digital banking app on smartphone" decoding="async">
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80" alt="Financial planning and growth review with analytics dashboard" decoding="async">
+                <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=1600&q=80" alt="Secure banking cybersecurity interface with encrypted lock protection" decoding="async">
             </div>
             <div class="center buttons">
-                <div class="left">
+                <div class="nav-prev" role="button" aria-label="Previous benefit" tabindex="0">
                     <i class="bi bi-arrow-left"></i>
                 </div>
-                <div class="right">
+                <div class="nav-next" role="button" aria-label="Next benefit" tabindex="0">
                     <i class="bi bi-arrow-right"></i>
                 </div>
             </div>
@@ -535,7 +535,7 @@ include('./common-sections/header.php');
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/assets/scripts/home.js"></script>
+<script src="/assets/scripts/home.js?v=<?php echo time(); ?>"></script>
 <?php include('./common-sections/smartsupp-live-chat.html'); ?>
 </body>
 </html>
