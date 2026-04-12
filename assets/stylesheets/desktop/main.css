@@ -159,6 +159,9 @@ body.active {
 .site-header #menuToggle {
   font-size: 26px;
   color: #27334d;
+  border: 0;
+  background: transparent;
+  padding: 0;
   align-items: center;
   justify-content: center;
   width: 42px;
@@ -259,6 +262,8 @@ footer .container .right .social-links i {
   font-weight: 700;
   cursor: pointer;
 }
+
+.cookie-consent[hidden] { display: none !important; }
 
 /* Header sizing */
 .site-header .header-nav-bar .container { min-height: 74px; padding: 10px 0; }

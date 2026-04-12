@@ -50,10 +50,10 @@ $supportWhatsappLink = getSupportWhatsappLink();
                     <span>Online Banking</span>
                 </a>
             </div>
-            <a href="#" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
+            <button type="button" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
                 <i class="bi bi-list open"></i>
                 <i class="bi bi-x-lg close"></i>
-            </a>
+            </button>
         </div>
     </div>
     <nav class="mobile-nav" id="mobileNav">
