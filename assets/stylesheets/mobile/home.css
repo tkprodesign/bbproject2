@@ -4,10 +4,15 @@ section.hero .content {
 }
 section.hero .content h1 {
   width: unset;
-  font-size: 51px;
+  font-size: 40px;
+  line-height: 1.15;
 }
 section.hero .content p {
   width: unset;
+}
+section.hero .content :is(h2, h3, h4, h5, h6) {
+  line-height: 1.2;
+  margin-bottom: 10px;
 }
 
 section.stats .stats {
@@ -44,11 +49,17 @@ section.credit-card .container .content .left .lists {
 section.credit-card .container .content .right {
   max-width: 500px;
 }/*# sourceMappingURL=home.css.map */
-.hero.hero-static .hero-static-inner { padding: 74px 0 90px; }
-.hero.hero-static .content h1 { font-size: 34px; }
+.hero.hero-static .hero-static-inner { padding: 74px 0 108px; }
+.hero.hero-static {
+  background-image: linear-gradient(90deg, rgba(10, 28, 52, 0.58), rgba(10, 28, 52, 0.34)), url("/assets/images/home/hero/consulting-banner.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.hero.hero-static .content h1 { font-size: 32px; line-height: 1.18; }
 .hero.hero-static .content p { font-size: 16px; }
 .hero-actions a { width: 100%; text-align: center; }
-section.trust-strip { margin-top: -24px; }
+section.trust-strip { margin-top: 10px; }
 section.trust-strip .container { grid-template-columns: 1fr; padding: 14px; }
 section.loan-calculator .container { grid-template-columns: 1fr; gap: 14px; }
 section.loan-calculator .container .right { width: 100%; left: unset; bottom: unset; padding: 20px; min-height: 470px; }
@@ -65,9 +76,10 @@ section.benefits .container .benefits .center > div { width: 46px; height: 46px;
 section.benefits .container .benefits .right { min-height: 320px; height: auto; }
 
 @media (max-width: 720px) {
-  .hero.hero-static .hero-static-inner { padding: 64px 0 78px; }
-  .hero-actions { gap: 10px; margin-bottom: 26px; }
-  section.trust-strip { margin-top: 0; z-index: 2; }
+  .hero.hero-static .hero-static-inner { padding: 64px 0 96px; }
+  .hero.hero-static .content h1 { font-size: 30px; line-height: 1.2; }
+  .hero-actions { gap: 10px; margin-bottom: 32px; }
+  section.trust-strip { margin-top: 10px; z-index: 2; }
   section.trust-strip .container { gap: 8px; padding: 12px; }
 
   section.features-2 .container .features { gap: 10px; }
