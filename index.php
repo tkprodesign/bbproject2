@@ -338,10 +338,10 @@ include('./common-sections/header.php');
                 <img src="/assets/images/home/benefits/financial-security.jpg" alt="Security and Protection" onerror="this.onerror=null;this.src='/assets/images/placeholder-image.png';">
             </div>
             <div class="center buttons">
-                <div class="left">
+                <div class="nav-prev" role="button" aria-label="Previous benefit" tabindex="0">
                     <i class="bi bi-arrow-left"></i>
                 </div>
-                <div class="right">
+                <div class="nav-next" role="button" aria-label="Next benefit" tabindex="0">
                     <i class="bi bi-arrow-right"></i>
                 </div>
             </div>

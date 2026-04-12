@@ -309,10 +309,10 @@ if (toggleBox && toggle && salaryInput && loanAmount) {
 
 // Benefits Section JS Functions
 const benefitsBlock = document.querySelector('section.benefits');
-const benefitsImages = benefitsBlock ? benefitsBlock.querySelectorAll('.left img') : [];
-const benefitsTextBlocks = benefitsBlock ? benefitsBlock.querySelectorAll('.right .benefit') : [];
-const benefitsLeftToggle = benefitsBlock ? benefitsBlock.querySelector('.center .left') : null;
-const benefitsRightToggle = benefitsBlock ? benefitsBlock.querySelector('.center .right') : null;
+const benefitsImages = benefitsBlock ? benefitsBlock.querySelectorAll('.benefits > .left img') : [];
+const benefitsTextBlocks = benefitsBlock ? benefitsBlock.querySelectorAll('.benefits > .right .benefit') : [];
+const benefitsLeftToggle = benefitsBlock ? benefitsBlock.querySelector('.center .nav-prev') : null;
+const benefitsRightToggle = benefitsBlock ? benefitsBlock.querySelector('.center .nav-next') : null;
 const benefitFallbackImage = '/assets/images/placeholder-image.png';
 benefitsImages.forEach((img) => {
   img.addEventListener('error', () => {
@@ -376,16 +376,46 @@ function resetInterval() {
 }
 
 if (benefitsImages.length && benefitsTextBlocks.length && benefitsLeftToggle && benefitsRightToggle) {
-  benefitsLeftToggle.addEventListener('click', () => {
-    benefitsState = (benefitsState - 1 + 3) % 3;
-    setBenefitsState();
+  const handleActivate = (event, callback) => {
+    const isKeyboardActivate = event.type === 'keydown' && (event.key === 'Enter' || event.key === ' ');
+    const isClickActivate = event.type === 'click';
+
+    if (!isKeyboardActivate && !isClickActivate) {
+      return;
+    }
+
+    if (isKeyboardActivate) {
+      event.preventDefault();
+    }
+
+    callback();
     resetInterval();
+  };
+
+  benefitsLeftToggle.addEventListener('click', (event) => {
+    handleActivate(event, () => {
+      benefitsState = (benefitsState - 1 + 3) % 3;
+      setBenefitsState();
+    });
+  });
+  benefitsLeftToggle.addEventListener('keydown', (event) => {
+    handleActivate(event, () => {
+      benefitsState = (benefitsState - 1 + 3) % 3;
+      setBenefitsState();
+    });
   });
 
-  benefitsRightToggle.addEventListener('click', () => {
-    benefitsState = (benefitsState + 1) % 3;
-    setBenefitsState();
-    resetInterval();
+  benefitsRightToggle.addEventListener('click', (event) => {
+    handleActivate(event, () => {
+      benefitsState = (benefitsState + 1) % 3;
+      setBenefitsState();
+    });
+  });
+  benefitsRightToggle.addEventListener('keydown', (event) => {
+    handleActivate(event, () => {
+      benefitsState = (benefitsState + 1) % 3;
+      setBenefitsState();
+    });
   });
 
   setBenefitsState();
