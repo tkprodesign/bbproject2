@@ -13,6 +13,7 @@
     <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>">
   <link rel="stylesheet" href="/assets/stylesheets/desktop/marketing-pages.css?v=<?php echo time(); ?>">
   <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/marketing-pages.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/marketing-pages.css?v=<?php echo time(); ?>">
   <style>
     .section-block{padding:56px 0;border-bottom:1px solid #e6edf5}
     .resource{background:#fff;border-radius:14px;padding:22px;box-shadow:0 8px 24px rgba(17,43,69,.08)}

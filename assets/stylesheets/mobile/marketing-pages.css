@@ -1,0 +1,82 @@
+@media (max-width: 720px) {
+  .container {
+    width: min(94%, 1200px);
+  }
+
+  .container.min {
+    width: min(92%, 1000px);
+  }
+
+  .page-hero {
+    padding: 66px 0;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(28px, 8vw, 34px);
+    line-height: 1.15;
+  }
+
+  .page-hero p {
+    max-width: none;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .page-content {
+    padding: 46px 0;
+  }
+
+  .page-content .grid {
+    gap: 14px;
+  }
+
+  .page-content .card {
+    padding: 18px;
+    border-radius: 12px;
+  }
+
+  .section-block {
+    padding: 34px 0 !important;
+  }
+
+  .split {
+    gap: 16px !important;
+  }
+
+  .highlight {
+    padding: 18px !important;
+  }
+
+  .kpi,
+  .timeline,
+  .meta {
+    gap: 10px !important;
+  }
+
+  .resource {
+    padding: 16px !important;
+  }
+
+  .timeline .item {
+    padding: 12px 14px !important;
+  }
+
+  .page-content img,
+  .page-content picture,
+  .page-content figure {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+  }
+
+  .contact-wrap,
+  .cta-band {
+    width: min(94%, 1200px);
+  }
+
+  .contact-wrap .box,
+  .cta-band,
+  .page-content .card {
+    overflow-wrap: anywhere;
+  }
+}

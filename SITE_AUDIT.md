@@ -52,6 +52,11 @@
 - Observation: No observable unit/integration tests tied to core banking flows.
 - Recommendation: Add CI checks: PHP lint/static analysis, integration tests for auth and transaction workflows.
 
+### [Resolved] Mobile marketing pages previously appeared overly narrow on small screens
+- Previous observation: Shared marketing sections (cards, split blocks, and content wrappers) had excessive effective side spacing on phones, making text/image blocks look cramped.
+- Current state (April 2026): Mobile width/padding rules were standardized with a dedicated stylesheet for marketing pages and updated small-screen container widths, improving usable content area without introducing horizontal overflow.
+- Remaining recommendation: Validate future page additions against the shared marketing section classes so mobile spacing remains consistent.
+
 
 ## Positive Notes
 - Use of `password_hash`/`password_verify` for login credentials is a good baseline.

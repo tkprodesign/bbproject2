@@ -13,6 +13,7 @@
   <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>">
   <link rel="stylesheet" href="/assets/stylesheets/desktop/marketing-pages.css?v=<?php echo time(); ?>">
   <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/marketing-pages.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/marketing-pages.css?v=<?php echo time(); ?>">
   <style>
     .policy-wrap { padding: 52px 0 66px; }
     .policy-card { background: #fff; border: 1px solid #e3ebf4; border-radius: 14px; padding: 28px; box-shadow: 0 8px 24px rgba(15, 39, 66, .08); }

@@ -46,6 +46,9 @@
 }
 
 @media (max-width: 720px) {
+  .container { width: min(94%, 1200px); }
+  .container.min { width: min(92%, 1000px); }
+
   .site-header .header-nav-bar .container { min-height: 62px; padding: 8px 12px; }
   .site-header .header-nav-bar .container #logo img { height: 34px; max-width: 158px; }
   .site-header #menuToggle { width: 42px; height: 42px; }
