@@ -38,6 +38,23 @@ Velmora Bank is a PHP-based banking web application with a public marketing site
 - **Dashboard:** user balances, accounts, transactions, profile/KYC summaries.
 - **APIs/Integrations:** Resend email API usage in control panel, Finnhub API usage for homepage news ticker, bundled PHPMailer library.
 
+### Responsive layout update (April 2026)
+
+- Mobile spacing/width handling for marketing-style pages now uses a dedicated stylesheet at `assets/stylesheets/mobile/marketing-pages.css`.
+- Shared mobile container sizing was tightened to increase usable width on small screens (`assets/stylesheets/mobile/main.css`).
+- Marketing templates that share `.page-hero`, `.page-content`, `.grid`, and `.card` structures now explicitly load the mobile marketing stylesheet for consistent narrow-screen behavior:
+  - `about-us/index.php`
+  - `quick-links/index.php`
+  - `contact/index.php`
+  - `cookie-policy/index.php`
+  - `business/index.php`
+  - `credit-card/index.php`
+  - `personal/index.php`
+  - `careers/index.php`
+  - `atm-and-bank-locations/index.php`
+  - `loan/index.php`
+  - `online-banking/index.php`
+
 
 ## 3. Key Files Only
 

@@ -109,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/assets/stylesheets/desktop/marketing-pages.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/marketing-pages.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/marketing-pages.css?v=<?php echo time(); ?>">
     <style>
         .loan-application-shell { max-width: 940px; display: grid; gap: 18px; }
         .loan-summary, .loan-form-card { background:#fff; border:1px solid #e8eef7; border-radius:14px; box-shadow:0 8px 28px rgba(17,42,78,.08); }
