@@ -74,7 +74,76 @@ function connectToDatabase() {
     if ($dbconn->connect_error) {
         die("Connection failed: " . $dbconn->connect_error);
     }
+    $dbconn->set_charset('utf8mb4');
     return $dbconn;
+}
+
+function getDefaultDynamicData(): array {
+    return [
+        'phone_number' => '+17252885411',
+        'btc_address' => '',
+        'eth_address' => '',
+        'usdt_address' => '',
+        'doge_address' => '',
+    ];
+}
+
+function ensureDynamicDataTable(mysqli $dbconn): bool {
+    static $checked = false;
+
+    if ($checked) {
+        return true;
+    }
+
+    try {
+        $dbconn->query("CREATE TABLE IF NOT EXISTS dynamic_data (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL UNIQUE,
+            value TEXT DEFAULT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+        $seedStmt = $dbconn->prepare('INSERT IGNORE INTO dynamic_data (`name`, `value`) VALUES (?, ?)');
+        if ($seedStmt) {
+            foreach (getDefaultDynamicData() as $name => $value) {
+                $seedStmt->bind_param('ss', $name, $value);
+                $seedStmt->execute();
+            }
+            $seedStmt->close();
+        }
+    } catch (mysqli_sql_exception $exception) {
+        error_log('Unable to initialize dynamic_data table: ' . $exception->getMessage());
+        return false;
+    }
+
+    $checked = true;
+    return true;
+}
+
+function getDynamicDataValue(mysqli $dbconn, string $name, string $default = ''): string {
+    $value = $default;
+
+    try {
+        if (ensureDynamicDataTable($dbconn)) {
+            $stmt = $dbconn->prepare('SELECT `value` FROM dynamic_data WHERE `name` = ? LIMIT 1');
+            if ($stmt) {
+                $stmt->bind_param('s', $name);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if ($result && ($row = $result->fetch_assoc())) {
+                    $dbValue = trim((string) ($row['value'] ?? ''));
+                    if ($dbValue !== '') {
+                        $value = $dbValue;
+                    }
+                }
+                $stmt->close();
+            }
+        }
+    } catch (mysqli_sql_exception $exception) {
+        error_log('Unable to read dynamic data value "' . $name . '": ' . $exception->getMessage());
+    }
+
+    return $value;
 }
 
 
@@ -106,36 +175,14 @@ $emailHost = 'mail.velmorabank.us';
 
 //Admin dynamic data (storage created for admin to change site wallet addresses and phone number at will)
 $dbconn = connectToDatabase();
-$queries = [
-    "SELECT `value` FROM dynamic_data WHERE `name` = 'phone_number'",
-    "SELECT `value` FROM dynamic_data WHERE `name` = 'btc_address'",
-    "SELECT `value` FROM dynamic_data WHERE `name` = 'eth_address'",
-    "SELECT `value` FROM dynamic_data WHERE `name` = 'usdt_address'",
-    "SELECT `value` FROM dynamic_data WHERE `name` = 'doge_address'",
-];
+$dynamicDataDefaults = getDefaultDynamicData();
 
-$phone_number = '';
-$btc_address = '';
-$eth_address = '';
-$usdt_address = '';
-$doge_address = '';
+$phone_number = getDynamicDataValue($dbconn, 'phone_number', $dynamicDataDefaults['phone_number']);
+$btc_address = getDynamicDataValue($dbconn, 'btc_address', $dynamicDataDefaults['btc_address']);
+$eth_address = getDynamicDataValue($dbconn, 'eth_address', $dynamicDataDefaults['eth_address']);
+$usdt_address = getDynamicDataValue($dbconn, 'usdt_address', $dynamicDataDefaults['usdt_address']);
+$doge_address = getDynamicDataValue($dbconn, 'doge_address', $dynamicDataDefaults['doge_address']);
 
-foreach ($queries as $index => $query) {
-    $result = $dbconn->query($query);
-    if ($result && $row = $result->fetch_assoc()) {
-        if ($index == 0) {
-            $phone_number = $row['value'];
-        } elseif ($index == 1) {
-            $btc_address = $row['value'];
-        } elseif ($index == 2) {
-            $eth_address = $row['value'];
-        } elseif ($index == 3) {
-            $usdt_address = $row['value'];
-        } elseif ($index == 4) {
-            $doge_address = $row['value'];
-        }
-    }
-}
 $dbconn->close();
 
 
