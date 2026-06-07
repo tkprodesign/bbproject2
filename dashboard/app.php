@@ -325,7 +325,7 @@ if (isset($_POST['create_account'])) {
     //     $mail->Host       = 'velmorabank.us';                     // Specify main and backup SMTP servers
     //     $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
     //     $mail->Username   = 'no-reply@velmorabank.us';               // SMTP username
-    //     $mail->Password   = 'jh22,-K<G38f(;9';                  // SMTP password
+    //     $mail->Password   = getenv('NOREPLY_EMAIL_PASSWORD') ?: '';                  // SMTP password
     //     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption, `ssl` also accepted
     //     $mail->Port       = 587;                                    // TCP port to connect to
 
