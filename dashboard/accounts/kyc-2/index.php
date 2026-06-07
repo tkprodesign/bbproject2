@@ -41,12 +41,11 @@
                     $unique_file_name = $file_name_without_ext . '_' . time() . '.' . $file_ext;
 
                     // Set the target directory and file path
-                    $target_dir = '/assets/images/profile-pictures/';
-                    $target_file = $_SERVER['DOCUMENT_ROOT'] . $target_dir . $unique_file_name;
+                    $target_dir = __DIR__ . '/../../../assets/images/profile-pictures/';
+                    $target_file = rtrim($target_dir, '/') . '/' . $unique_file_name;
 
                     // Move the uploaded file to the target directory
                     if (move_uploaded_file($file_tmp_name, $target_file)) {
-                        // exit();
                         // Update the database with the new profile picture name
                         $db = connectToDatabase();
                         $stmt = $db->prepare("UPDATE users SET profile_picture = ? WHERE email = ?");
@@ -58,7 +57,7 @@
                         $db->close();
 
                         // Redirect to the dashboard
-                        // header("Location: /dashboard");
+                        header("Location: /dashboard");
                         exit();
                     } else {
                         echo "Sorry, there was an error uploading your file.";

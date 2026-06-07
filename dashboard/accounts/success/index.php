@@ -31,7 +31,7 @@ if (!isset($_GET['nos'])) {
     <div class="content">
         <div class="success-mark" aria-hidden="true">✓</div>
         <p>Congratulations, a new account has been created with account number <strong><?php echo $account_number; ?></strong>.</p>
-        <a href="../" class="cta">View Details</a>
+        <a href="/dashboard/accounts" class="cta">View Details</a>
     </div>
 </section>
 <script src="/assets/scripts/dashboard.js?v=<?php echo time(); ?>"></script>

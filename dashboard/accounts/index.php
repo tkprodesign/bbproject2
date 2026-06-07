@@ -19,9 +19,7 @@
 <?php include('../../common-sections/dashboard-header.html')?>
 <section class="add-account">
     <div class="container">
-        <a href="create" class="manage-accounts"><span class="material-symbols-outlined">
-            add
-            </span>Add New Account
+        <a href="/dashboard/accounts/create" class="manage-accounts"><span class="material-symbols-outlined">add</span>Add New Account
         </a>
         <div class="accounts-list">
             <?php

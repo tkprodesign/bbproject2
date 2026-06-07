@@ -1,2 +1,3 @@
-- [MariaDB init on Replit](mariadb-init.md) — MariaDB init on Replit requires specific bootstrap sequence; user auth via global_priv + init-file pattern.
-- [PHP mysqli socket syntax](php-mysqli-socket.md) — PHP mysqli socket connection uses `new mysqli(null, user, pass, db, null, $socket)` — NOT `'localhost:' . $socket`.
+- [Velmora routing & paths](velmora-routing.md) — router.php uses chdir(); all page includes must be relative or __DIR__-based from their own directory.
+- [Velmora control-panel auth](velmora-cp-auth.md) — allowed admin emails list lives in dashboard/app.php; control-panel/app.php has the credit/debit/judge handlers.
+- [Velmora profile picture path](velmora-profile-pic.md) — profile pictures stored in assets/images/profile-pictures/; kyc-2/index.php now uses __DIR__ path, not DOCUMENT_ROOT.

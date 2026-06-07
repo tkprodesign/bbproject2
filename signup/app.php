@@ -1,12 +1,5 @@
 <?php
-// Include app.php based on its location in the directory structure
-if (file_exists('../common-sections/app.php')) {
-    require '../common-sections/app.php';
-} elseif (file_exists('../../common-sections/app.php')) {
-    require '../../common-sections/app.php';
-} else {
-    require '../../../common-sections/app.php';
-}
+require_once __DIR__ . '/../common-sections/app.php';
 
 // Form handler for alert information section
 if (isset($_GET['alert_info_section'])) {

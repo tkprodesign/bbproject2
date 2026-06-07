@@ -19,7 +19,7 @@
 <?php include('../../../common-sections/dashboard-header.html')?>
 <section class="add-account">
     <div class="container">
-        <a href="#" class="manage-accounts">Manage Accounts</a>
+        <a href="/dashboard/accounts" class="manage-accounts">Manage Accounts</a>
         <form action="" method="post">
             <h2>Create New Account Wallet</h2>
             <div class="input-box">

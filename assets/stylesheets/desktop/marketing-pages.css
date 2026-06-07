@@ -73,3 +73,19 @@ body { background: #f6f8fb; }
   padding: 12px;
   border-radius: 8px;
 }
+.contact-wrap .contact-success {
+  background: #edfdf7;
+  border: 1px solid #b8ebde;
+  border-radius: 8px;
+  padding: 16px;
+  color: #0e6b4d;
+  font-weight: 600;
+}
+.contact-wrap .contact-error {
+  background: #fff2f1;
+  border: 1px solid #ffd0cc;
+  border-radius: 8px;
+  padding: 12px;
+  color: #8a1f17;
+  margin-bottom: 4px;
+}

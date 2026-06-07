@@ -1,12 +1,5 @@
 <?php
-    // Include the common sections application file
-    if (file_exists('../common-sections/app.php')) {
-        require '../common-sections/app.php';
-    } elseif (file_exists('../../common-sections/app.php')) {
-        require '../../common-sections/app.php';
-    } else {
-        require '../../../common-sections/app.php';
-    }
+    require_once __DIR__ . '/../common-sections/app.php';
 
     // Handle alert info section based on time
     if (isset($_GET['alert_info_section'])) {

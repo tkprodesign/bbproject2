@@ -27,6 +27,7 @@
   }
 
   .page-content .grid {
+    grid-template-columns: 1fr;
     gap: 14px;
   }
 

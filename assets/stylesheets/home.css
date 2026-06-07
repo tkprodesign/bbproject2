@@ -686,6 +686,8 @@ section.faq .container .questions p {
 .hero-actions a.primary:hover { background: #d42618; }
 .hero-actions a.secondary { background: rgba(255,255,255,0.96); color: #163555; border: 1px solid #d3deea; }
 .hero-actions a.secondary:hover { background: #fff; border-color: #163555; }
+section.hero.hero-static .hero-actions a.secondary,
+section.hero.hero-static .hero-actions a.secondary span { color: #163555; }
 
 section.trust-strip { margin-top: -38px; position: relative; z-index: 5; }
 section.trust-strip .container {

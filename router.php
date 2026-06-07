@@ -22,6 +22,7 @@ if (is_dir($docRoot . $uri)) {
         if (file_exists($candidate)) {
             $_SERVER['SCRIPT_FILENAME'] = $candidate;
             $_SERVER['SCRIPT_NAME'] = rtrim($uri, '/') . '/index.php';
+            chdir(dirname($candidate));
             require $candidate;
             return true;
         }
@@ -30,8 +31,10 @@ if (is_dir($docRoot . $uri)) {
 
 // Try adding .php extension
 if (file_exists($docRoot . $uri . '.php')) {
-    $_SERVER['SCRIPT_FILENAME'] = $docRoot . $uri . '.php';
-    require $docRoot . $uri . '.php';
+    $file = $docRoot . $uri . '.php';
+    $_SERVER['SCRIPT_FILENAME'] = $file;
+    chdir(dirname($file));
+    require $file;
     return true;
 }
 
@@ -39,6 +42,7 @@ if (file_exists($docRoot . $uri . '.php')) {
 $phpFile = $docRoot . $uri . '/index.php';
 if (file_exists($phpFile)) {
     $_SERVER['SCRIPT_FILENAME'] = $phpFile;
+    chdir(dirname($phpFile));
     require $phpFile;
     return true;
 }

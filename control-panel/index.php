@@ -23,9 +23,10 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/control-panel">Control Panel</a></li>
-                <li><a href="/site-users">All Users</a></li>
-                <li><a href="/kyc-data">All KYC Details</a></li>
-                <li><a href="/transactions">All Transactions</a></li>
+                <li><a href="/control-panel/site-users">All Users</a></li>
+                <li><a href="/control-panel/kyc-data">All KYC Details</a></li>
+                <li><a href="/control-panel/transactions">All Transactions</a></li>
+                <li><a href="/control-panel/accounts">All Accounts</a></li>
             </ul>
         </nav>
         <a href="#" id="menuToggle">
@@ -534,7 +535,7 @@ if (isset($_POST['delete_user_account'])) {
             $db->close();
         ?>
 
-        <a href="kyc-data" class="cta">View All KYC Data</a>
+        <a href="/control-panel/kyc-data" class="cta">View All KYC Data</a>
     </div>
 </section>
 <section class="form approve-kyc">

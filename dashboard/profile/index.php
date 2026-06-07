@@ -25,7 +25,7 @@
         </div>
         <div class="content">
             <a href="/dashboard/profile-picture" class="sec-cta">Update Profile Picture</a>
-            <a href="../security/complete-kyc" class="cta">Complete KYC</a>
+            <a href="/dashboard/security/complete-kyc" class="cta">Complete KYC</a>
         </div>
     </div>
 </section>

@@ -1,34 +1,8 @@
 <?php
-if (file_exists('../common-sections/app.php')) {
-    require '../common-sections/app.php';
-} elseif (file_exists('../../common-sections/app.php')) {
-    require '../../common-sections/app.php';
-} else {
-    require '../../../common-sections/app.php';
-}
+require_once __DIR__ . '/../common-sections/app.php';
 
 
 
-
-
-
-// Require PHP Admin
-if (file_exists('../PHPMailer/src/PHPMailer.php')) {
-    require '../PHPMailer/src/PHPMailer.php';
-    require '../PHPMailer/src/SMTP.php';
-    require '../PHPMailer/src/Exception.php';
-} elseif (file_exists('../../PHPMailer/src/PHPMailer.php')) {
-    require '../../PHPMailer/src/PHPMailer.php';
-    require '../../PHPMailer/src/SMTP.php';
-    require '../../PHPMailer/src/Exception.php'; 
-} else {
-    require '../../../PHPMailer/src/PHPMailer.php';
-    require '../../../PHPMailer/src/SMTP.php';
-    require '../../../PHPMailer/src/Exception.php'; 
-}
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
 
 
 

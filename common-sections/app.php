@@ -263,22 +263,44 @@ function requireLoginForInternalPages() {
         $normalizedPath = '/';
     }
 
+    // Exact public paths
     $publicPaths = [
         '/',
         '/index.php',
         '/create_tables',
         '/create_tables.php',
-        '/login',
-        '/login/index.php',
-        '/signup',
-        '/signup/',
-        '/signup/index.php',
-        '/sign-up',
-        '/sign-up/',
-        '/sign-up/index.php',
     ];
 
-    if (!in_array($normalizedPath, $publicPaths, true) && !isset($_COOKIE['login_email'])) {
+    // Public path prefixes — any URL starting with these is accessible without login
+    $publicPrefixes = [
+        '/login',
+        '/signup',
+        '/sign-up',
+        '/about-us',
+        '/personal',
+        '/business',
+        '/credit-card',
+        '/loan',
+        '/contact',
+        '/careers',
+        '/atm-and-bank-locations',
+        '/quick-links',
+        '/online-banking',
+        '/cookie-policy',
+        '/assets',
+    ];
+
+    if (in_array($normalizedPath, $publicPaths, true)) {
+        return;
+    }
+
+    foreach ($publicPrefixes as $prefix) {
+        if ($normalizedPath === $prefix || str_starts_with($normalizedPath, $prefix . '/')) {
+            return;
+        }
+    }
+
+    if (!isset($_COOKIE['login_email'])) {
         header('Location: /login');
         exit;
     }
