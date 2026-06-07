@@ -1,76 +1,54 @@
-name: Deploy changed files to server
+name: Deploy full site to server
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  ftp-push-changed:
+  ftp-upload-site:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
-      - name: Upload only changed files
+      - name: Upload all site files
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          REMOTE_DIR: /
+          REMOTE_DIR: /velmorabank.us/htdocs
         run: |
-          set -e
+          set -euo pipefail
 
           if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ]; then
             echo "Missing FTP secrets"
             exit 1
           fi
 
-          if git rev-parse HEAD^ >/dev/null 2>&1; then
-            CHANGED_FILES=$(git diff --name-status HEAD^ HEAD)
-          else
-            CHANGED_FILES=$(git diff-tree --no-commit-id --name-status -r HEAD)
-          fi
+          echo "Uploading full site contents to ftp://$FTP_SERVER$REMOTE_DIR/"
 
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
-
-          echo "$CHANGED_FILES" | while IFS=$'\t' read -r status file; do
-            [ -z "$file" ] && continue
-
-            case "$file" in
-              .github/*|.git/*|node_modules/*)
-                echo "Skipping $file"
-                continue
-                ;;
-            esac
-
-            remote_path="$REMOTE_DIR/$file"
+          find . \
+            -type f \
+            ! -path './.git/*' \
+            ! -path './.github/*' \
+            ! -path './.vscode/*' \
+            ! -path './node_modules/*' \
+            -print0 |
+          while IFS= read -r -d '' file; do
+            relative_path="${file#./}"
+            remote_path="$REMOTE_DIR/$relative_path"
             remote_dir="$(dirname "$remote_path")"
 
-            if [ "$status" = "D" ]; then
-              echo "Deleting remote file: $remote_path"
-              curl --silent --show-error --fail \
-                --user "$FTP_USERNAME:$FTP_PASSWORD" \
-                --quote "DELE $remote_path" \
-                "ftp://$FTP_SERVER/" || true
-            else
-              if [ ! -f "$file" ]; then
-                echo "Local file not found, skipping: $file"
-                continue
-              fi
-
-              echo "Uploading: $file -> $remote_path"
-              curl --silent --show-error --fail \
-                --user "$FTP_USERNAME:$FTP_PASSWORD" \
-                --ftp-create-dirs \
-                -T "$file" \
-                "ftp://$FTP_SERVER$remote_dir/"
-            fi
+            echo "Uploading: $relative_path -> $remote_path"
+            curl --silent --show-error --fail \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --ftp-create-dirs \
+              -T "$file" \
+              "ftp://$FTP_SERVER$remote_dir/"
           done
