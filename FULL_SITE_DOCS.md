@@ -131,9 +131,9 @@ date_default_timezone_set('America/New_York');
 // Database connection function
 function connectToDatabase() {
     $servername = getenv('DB_HOST') ?: 'sql309.byethost7.com';
-    $dbusername = getenv('DB_USER') ?: 'b7_42123491';
+    $dbusername = getenv('DB_USER') ?: 'rjhzxfeknu_user';
     $dbpassword = getenv('DB_PASS') ?: 'Wateva06@';
-    $dbname = getenv('DB_NAME') ?: 'b7_42123491_db';
+    $dbname = getenv('DB_NAME') ?: 'rjhzxfeknu_db';
     
     $dbconn = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);
     
@@ -1466,7 +1466,7 @@ if (isset($_POST['create_account'])) {
     //     $mail->Host       = 'velmorabank.us';                     // Specify main and backup SMTP servers
     //     $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
     //     $mail->Username   = 'no-reply@velmorabank.us';               // SMTP username
-    //     $mail->Password   = 'jh22,-K<G38f(;9';                  // SMTP password
+    //     $mail->Password   = getenv('NOREPLY_EMAIL_PASSWORD') ?: '';                  // SMTP password
     //     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption, `ssl` also accepted
     //     $mail->Port       = 587;                                    // TCP port to connect to
 

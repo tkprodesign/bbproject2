@@ -48,10 +48,10 @@ foreach ($paths as $path) {
 
 // Database connection function
 function connectToDatabase() {
-    $host = 'localhost';
-    $dbname = 'zmvqfohm_sos';
-    $username = 'zmvqfohm_dev';
-    $password = '3gpJ.[bK1)}9';
+    $host = getenv('DB_HOST') ?: 'sql309.byethost7.com';
+    $dbname = getenv('DB_NAME') ?: 'rjhzxfeknu_db';
+    $username = getenv('DB_USER') ?: 'rjhzxfeknu_user';
+    $password = getenv('DB_PASS') ?: 'Wateva06@';
     // Create a connection
     $dbconn = new mysqli($host, $username, $password, $dbname);
     // Check connection
@@ -67,13 +67,13 @@ function connectToDatabase() {
 
 //Emails
 $adminEmail = 'admin@velmorabank.us';
-$adminEmailPassword = 'jh22,-K<G38f(;9';
+$adminEmailPassword = getenv('ADMIN_EMAIL_PASSWORD') ?: '';
 
 $supportEmail = 'support@velmorabank.us';
-$supportEmailPassword = 'Password-2025';
+$supportEmailPassword = getenv('SUPPORT_EMAIL_PASSWORD') ?: '';
 
 $autoEmail = 'no-reply@velmorabank.us';
-$autoEmailPassword = 'Password-2025';
+$autoEmailPassword = getenv('NOREPLY_EMAIL_PASSWORD') ?: '';
 
 $byepassEmail = 'itekena.s.iyowuna@gmail.co';
 
