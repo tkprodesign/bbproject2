@@ -1,0 +1,2 @@
+- [MariaDB init on Replit](mariadb-init.md) — MariaDB init on Replit requires specific bootstrap sequence; user auth via global_priv + init-file pattern.
+- [PHP mysqli socket syntax](php-mysqli-socket.md) — PHP mysqli socket connection uses `new mysqli(null, user, pass, db, null, $socket)` — NOT `'localhost:' . $socket`.

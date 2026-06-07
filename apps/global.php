@@ -9,7 +9,9 @@
 6. Setting logout function
 */
 // Start session and error reporting
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -48,13 +50,20 @@ foreach ($paths as $path) {
 
 // Database connection function
 function connectToDatabase() {
-    $host = getenv('DB_HOST') ?: 'sql309.byethost7.com';
-    $dbname = getenv('DB_NAME') ?: 'rjhzxfeknu_db';
-    $username = getenv('DB_USER') ?: 'rjhzxfeknu_user';
-    $password = getenv('DB_PASS') ?: 'Wateva06@';
-    // Create a connection
-    $dbconn = new mysqli($host, $username, $password, $dbname);
-    // Check connection
+    $socket   = getenv('DB_SOCKET') ?: '/home/runner/mysql-run/mysql.sock';
+    $host     = getenv('DB_HOST')   ?: '127.0.0.1';
+    $port     = (int)(getenv('DB_PORT') ?: 3306);
+    $username = getenv('DB_USER')   ?: 'velmora_user';
+    $password = getenv('DB_PASS')   ?: 'VelmoraPass2024!';
+    $dbname   = getenv('DB_NAME')   ?: 'velmora_db';
+
+    // Use null host to trigger Unix socket mode in mysqli
+    if ($socket && file_exists($socket)) {
+        $dbconn = new mysqli(null, $username, $password, $dbname, null, $socket);
+    } else {
+        $dbconn = new mysqli($host, $username, $password, $dbname, $port);
+    }
+
     if ($dbconn->connect_error) {
         die("Connection failed: " . $dbconn->connect_error);
     }

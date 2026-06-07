@@ -1,3 +1,4 @@
+<?php require_once('../common-sections/app.php'); ?>
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow"><title>Contact Us | Velmora Bank</title><link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png"><link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
@@ -8,7 +9,6 @@
   <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/marketing-pages.css?v=<?php echo time(); ?>">
   <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/marketing-pages.css?v=<?php echo time(); ?>"></head><body>
 <?php
-require_once('../common-sections/app.php');
 $supportPhoneNumber = getSupportPhoneNumber();
 $supportWhatsappLink = getSupportWhatsappLink();
 include('../common-sections/header.php');

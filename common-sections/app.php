@@ -1,7 +1,8 @@
 <?php
 // Setting initials
-// rsend api re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -12,19 +13,26 @@ date_default_timezone_set('America/New_York');
 
 // Database connection function
 function connectToDatabase() {
-    $servername = getenv('DB_HOST') ?: 'localhost';
-    $dbusername = getenv('DB_USER') ?: 'rjhzxfeknu_user';
-    $dbpassword = getenv('DB_PASS') ?: 'Wateva06@';
-    $dbname = getenv('DB_NAME') ?: 'rjhzxfeknu_db';
-    
-    $dbconn = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);
-    
-    if (!$dbconn) {
-        die("Database connection failed. Please verify database configuration.");
+    $socket     = getenv('DB_SOCKET') ?: '/home/runner/mysql-run/mysql.sock';
+    $host       = getenv('DB_HOST')   ?: '127.0.0.1';
+    $port       = (int)(getenv('DB_PORT') ?: 3306);
+    $dbusername = getenv('DB_USER')   ?: 'velmora_user';
+    $dbpassword = getenv('DB_PASS')   ?: 'VelmoraPass2024!';
+    $dbname     = getenv('DB_NAME')   ?: 'velmora_db';
+
+    // Prefer Unix socket when socket file exists (null host triggers socket mode)
+    if ($socket && file_exists($socket)) {
+        $dbconn = new mysqli(null, $dbusername, $dbpassword, $dbname, null, $socket);
+    } else {
+        $dbconn = new mysqli($host, $dbusername, $dbpassword, $dbname, $port);
     }
 
-    mysqli_set_charset($dbconn, 'utf8mb4');
-    
+    if ($dbconn->connect_error) {
+        die("Database connection failed: " . $dbconn->connect_error);
+    }
+
+    $dbconn->set_charset('utf8mb4');
+
     return $dbconn;
 }
 

@@ -1,3 +1,4 @@
+<?php require_once('../common-sections/app.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +24,6 @@
 </head>
 <body>
 <?php
-require_once('../common-sections/app.php');
 $supportPhoneNumber = getSupportPhoneNumber();
 $supportWhatsappLink = getSupportWhatsappLink();
 include('../common-sections/header.php');
