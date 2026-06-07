@@ -1,4 +1,4 @@
-name: Deploy full site to server
+name: Deploy changed site files to server
 
 on:
   push:
@@ -16,13 +16,15 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Upload all site files
+      - name: Upload changed site files
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          REMOTE_DIR: /velmorabank.us/
+          REMOTE_DIR: /velmorabank.us
         run: |
           set -euo pipefail
 
@@ -31,17 +33,29 @@ jobs:
             exit 1
           fi
 
-          echo "Uploading full site contents to ftp://$FTP_SERVER$REMOTE_DIR/"
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            base_sha="${{ github.event.before }}"
+          else
+            base_sha="HEAD^"
+          fi
 
-          find . \
-            -type f \
-            ! -path './.git/*' \
-            ! -path './.github/*' \
-            ! -path './.vscode/*' \
-            ! -path './node_modules/*' \
-            -print0 |
-          while IFS= read -r -d '' file; do
-            relative_path="${file#./}"
+          changed_files="$(git diff --name-only --diff-filter=ACMRT "$base_sha" "$GITHUB_SHA" -- \
+            ':(exclude).git/**' \
+            ':(exclude).github/**' \
+            ':(exclude).vscode/**' \
+            ':(exclude)node_modules/**' \
+            ':(exclude)archive/**')"
+
+          if [ -z "$changed_files" ]; then
+            echo "No changed deployable files to upload."
+            exit 0
+          fi
+
+          echo "Uploading changed files to ftp://$FTP_SERVER$REMOTE_DIR/"
+          while IFS= read -r relative_path; do
+            [ -z "$relative_path" ] && continue
+            [ -f "$relative_path" ] || continue
+
             remote_path="$REMOTE_DIR/$relative_path"
             remote_dir="$(dirname "$remote_path")"
 
@@ -49,6 +63,6 @@ jobs:
             curl --silent --show-error --fail \
               --user "$FTP_USERNAME:$FTP_PASSWORD" \
               --ftp-create-dirs \
-              -T "$file" \
+              -T "$relative_path" \
               "ftp://$FTP_SERVER$remote_dir/"
-          done
+          done <<< "$changed_files"
