@@ -1,11 +1,9 @@
 <?php
-// Production database credentials
-// These are used as fallbacks when environment variables are not set (e.g. shared hosting)
 define('DB_CONFIG', [
-    'host'     => 'localhost',
-    'port'     => 3306,
-    'user'     => 'rjhzxfeknu_user',
-    'password' => 'Wateva06@',
-    'name'     => 'rjhzxfeknu_db',
-    'socket'   => '',
+    'host'     => getenv('DB_HOST') ?: 'localhost',
+    'port'     => (int)(getenv('DB_PORT') ?: 3306),
+    'user'     => getenv('DB_USER') ?: 'velmora_user',
+    'password' => getenv('DB_PASS') ?: 'VelmoraPass2024!',
+    'name'     => getenv('DB_NAME') ?: 'velmora_db',
+    'socket'   => getenv('DB_SOCKET') ?: '',
 ]);
