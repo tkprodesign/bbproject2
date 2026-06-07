@@ -19,8 +19,6 @@ if (file_exists($appPath)) {
     die("An internal error occurred. Please try again later.");
 }
 
-// Your Resend API Key
-$resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8";
 
 function renderControlPanelBankEmail($subject, $headline, $introHtml, $detailsHtml) {
     $logoUrl = 'https://velmorabank.us/assets/images/branding/logo.png';
@@ -188,27 +186,8 @@ if (isset($_POST['credit_user'])) {
         $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $display_amount, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
         $email_body = renderControlPanelBankEmail($email_subject, 'Deposit Confirmation', $introHtml, $detailsHtml);
 
-        $post_data = [
-            "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-            "to" => $user_email,
-            "subject" => $email_subject,
-            "html" => $email_body
-        ];
-
-        $ch = curl_init("https://api.resend.com/emails");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: Bearer " . $resend_api_key,
-            "Content-Type: application/json"
-        ]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if (!($httpCode === 200 || $httpCode === 202)) {
-            error_log("Failed to send deposit confirmation email. HTTP Code: $httpCode | Response: $response");
+        if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+            error_log('Failed to send deposit confirmation email via SMTP.');
         }
         $stmt->close();
         $dbconn->close();
@@ -273,7 +252,7 @@ if (isset($_POST['debit_user'])) {
         $stmt->bind_param("sssidsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
 
         if ($stmt->execute()) {
-            // --- Send Withdrawal Confirmation Email via Resend API ---
+            // --- Send Withdrawal Confirmation Email via SpaceMail SMTP ---
             $email_subject = 'Withdrawal Confirmation - Velmora Bank';
             // Use abs($amount) for display to show a positive withdrawal amount to the user
             $display_amount = number_format(abs($amount), 2);
@@ -281,28 +260,8 @@ if (isset($_POST['debit_user'])) {
             $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $display_amount, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
             $email_body = renderControlPanelBankEmail($email_subject, 'Withdrawal Confirmation', $introHtml, $detailsHtml);
 
-            $post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => $user_email,
-                "subject" => $email_subject,
-                "html" => $email_body
-            ];
-
-            $ch = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if (!($httpCode === 200 || $httpCode === 202)) {
-                error_log("Failed to send withdrawal confirmation email. HTTP Code: $httpCode | Response: $response");
+            if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+                error_log('Failed to send withdrawal confirmation email via SMTP.');
             }
             header('Location: /control-panel?debit_user=success');
             exit;
@@ -372,7 +331,7 @@ if (isset($_POST['judge_withdrawal'])) {
         $stmt->bind_param("ssi", $decision, $description, $withdrawal_id);
         
         if ($stmt->execute()) {
-            // Send an email notification based on the decision using Resend API
+            // Send an email notification based on the decision using SpaceMail SMTP
             $user_email = $transaction['user_email'];
             $transaction_id = $transaction['transaction_id'];
             $account_number = $transaction['account_number'];
@@ -399,28 +358,8 @@ if (isset($_POST['judge_withdrawal'])) {
             $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $amount_display, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
             $email_body = renderControlPanelBankEmail($email_subject, $email_heading, $introHtml, $detailsHtml);
 
-            $post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => $user_email,
-                "subject" => $email_subject,
-                "html" => $email_body
-            ];
-
-            $ch = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if (!($httpCode === 200 || $httpCode === 202)) {
-                error_log("Failed to send withdrawal " . strtolower($decision) . " email. HTTP Code: $httpCode | Response: $response");
+            if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+                error_log('Failed to send withdrawal ' . strtolower($decision) . ' email via SMTP.');
             }
             header('Location: /control-panel?judge_withdrawal=success');
             exit;
@@ -501,7 +440,7 @@ if (isset($_POST['judge_kyc'])) {
                 }
             }
 
-            // --- Send KYC Notification Email via Resend API ---
+            // --- Send KYC Notification Email via SpaceMail SMTP ---
             $email_subject = '';
             $email_message = '';
             $email_heading = '';
@@ -521,28 +460,8 @@ if (isset($_POST['judge_kyc'])) {
             $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Verification Type</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">KYC Review</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Decision</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars(ucfirst($decision), ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Reference</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($user_email, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
             $email_body = renderControlPanelBankEmail($email_subject, $email_heading, $introHtml, $detailsHtml);
 
-            $post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => $user_email,
-                "subject" => $email_subject,
-                "html" => $email_body
-            ];
-
-            $ch = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if (!($httpCode === 200 || $httpCode === 202)) {
-                error_log("Failed to send KYC " . strtolower($decision) . " email. HTTP Code: $httpCode | Response: $response");
+            if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+                error_log('Failed to send KYC ' . strtolower($decision) . ' email via SMTP.');
             }
             header('Location: /control-panel?judge_kyc=success');
             exit;

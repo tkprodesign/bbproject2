@@ -20,7 +20,7 @@
         <h2>User Accounts Full List</h2>
         <?php
             $db = connectToDatabase();
-            $query = "SELECT * FROM accounts ORDER BY `time` DESC";
+            $query = "SELECT * FROM accounts ORDER BY `creation_time` DESC";
             $result = $db->query($query);
         ?>
 
@@ -51,7 +51,7 @@
                                 $account_balance = $su_result->fetch_assoc()['account_balance'] ?? 0;
                                 ?>
                             <td>$<?php echo htmlspecialchars(number_format($account_balance, 2)); ?></td>
-                            <td><?php echo htmlspecialchars($row['status']); ?></td>
+                            <td><?php echo htmlspecialchars($row['account_status']); ?></td>
                             <td><?php echo htmlspecialchars(date('d, F Y', $row['creation_time'])); ?></td>
                         </tr>
                     <?php endwhile; ?>

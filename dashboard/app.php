@@ -284,36 +284,8 @@ if (isset($_POST['create_account'])) {
     $email_body = renderBankEmailTemplate($email_subject, 'Account Successfully Created', $introHtml, $detailsHtml, 'View Account', 'https://velmorabank.us/dashboard/accounts');
 
 
-    // Prepare the data for the Resend API call
-    $post_data = [
-        "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>", // Sender name and email
-        "to" => $user_email,
-        "subject" => $email_subject,
-        "html" => $email_body
-    ];
-
-    // Initialize cURL session
-    $ch = curl_init("https://api.resend.com/emails");
-
-    // Set cURL options
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response as a string
-    curl_setopt($ch, CURLOPT_POST, true);         // Set as POST request
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8", // Your Resend API Key
-        "Content-Type: application/json"
-    ]);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data)); // Encode data as JSON
-
-    // Execute the cURL request
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); // Get HTTP status code
-    curl_close($ch); // Close cURL session
-
-    // Handle the Resend API response
-    if ($httpCode === 200 || $httpCode === 202) {
-        $fgfgf = "Message sent successfully via Resend.";
-    } else {
-        echo "Failed to send message. HTTP Code: $httpCode <br> Response: $response";
+    if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+        error_log('Failed to send account creation email via SMTP.');
     }
 
     // // Create a new PHPMailer instance
@@ -637,74 +609,30 @@ if (isset($_POST['transfer_funds'])) {
         if (!$stmt->execute()) {
             echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
         } else {
-            // --- Send an email notification to the admin via Resend ---
+            // --- Send an email notification to the admin via SpaceMail SMTP ---
             $admin_email_subject = 'New Transfer Attempt';
             $admin_intro = '<p style="margin:0;">A new outbound transfer has been initiated by a client and is currently pending compliance review.</p>';
             $admin_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($from_account, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Destination Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Destination Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($amount . ' ' . $currency, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#a16b00;font-weight:700;text-align:right;">Pending</td></tr>            </table>';
             $admin_email_body = renderBankEmailTemplate($admin_email_subject, 'New Transfer Attempt', $admin_intro, $admin_details);
 
-            $resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8"; // Your NEW Resend API Key
-
-            $admin_post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => "admin@velmorabank.us", // Admin's email address
-                "subject" => $admin_email_subject,
-                "html" => $admin_email_body
-            ];
-
-            $ch_admin = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch_admin, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch_admin, CURLOPT_POST, true);
-            curl_setopt($ch_admin, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch_admin, CURLOPT_POSTFIELDS, json_encode($admin_post_data));
-
-            $response_admin = curl_exec($ch_admin);
-            $httpCode_admin = curl_getinfo($ch_admin, CURLINFO_HTTP_CODE);
-            curl_close($ch_admin);
-
-            if ($httpCode_admin === 200 || $httpCode_admin === 202) {
-                // Admin notification sent successfully via Resend.
-            } else {
-                error_log("Failed to send admin notification. HTTP Code: $httpCode_admin | Response: $response_admin");
+            if (!sendSiteEmail('admin@velmorabank.us', $admin_email_subject, $admin_email_body)) {
+                error_log('Failed to send admin transfer notification via SMTP.');
             }
 
-            // --- Send an email notification to the user via Resend ---
+            // --- Send an email notification to the user via SpaceMail SMTP ---
             $user_email_subject = 'New Transfer Initiated';
             $user_intro = '<p style="margin:0;">Dear ' . htmlspecialchars($user_name, ENT_QUOTES, 'UTF-8') . ', your transfer request has been received and is now awaiting approval.</p>';
             $user_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($from_account, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">To Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">To Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($amount . ' ' . $currency, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#a16b00;font-weight:700;text-align:right;">Pending</td></tr>            </table>';
             $user_email_body = renderBankEmailTemplate($user_email_subject, 'Transfer Initiated', $user_intro, $user_details, 'View Transactions', 'https://velmorabank.us/dashboard/accounts/transactions');
 
-            $user_post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => $user_email,
-                "subject" => $user_email_subject,
-                "html" => $user_email_body
-            ];
-
-            $ch_user = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch_user, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch_user, CURLOPT_POST, true);
-            curl_setopt($ch_user, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch_user, CURLOPT_POSTFIELDS, json_encode($user_post_data));
-
-            $response_user = curl_exec($ch_user);
-            $httpCode_user = curl_getinfo($ch_user, CURLINFO_HTTP_CODE);
-            curl_close($ch_user);
-
-            if ($httpCode_user === 200 || $httpCode_user === 202) {
-                header('location: /dashboard/accounts/transactions');
-                exit();
-            } else {
-                error_log("Failed to send user notification. HTTP Code: $httpCode_user | Response: $response_user");
+            if (!sendSiteEmail($user_email, $user_email_subject, $user_email_body)) {
+                error_log('Failed to send user transfer notification via SMTP.');
                 header('location: /dashboard/accounts/transactions?email_failed=true');
                 exit();
             }
+
+            header('location: /dashboard/accounts/transactions');
+            exit();
         }
     }
 

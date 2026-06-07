@@ -36,7 +36,7 @@ Velmora Bank is a PHP-based banking web application with a public marketing site
 - **Backend:** plain PHP (procedural + helper functions), MySQL via `mysqli`.
 - **Auth:** cookie-based (`login_email`) checks plus role allow-list for admin panel.
 - **Dashboard:** user balances, accounts, transactions, profile/KYC summaries.
-- **APIs/Integrations:** Resend email API usage in control panel, Finnhub API usage for homepage news ticker, bundled PHPMailer library.
+- **APIs/Integrations:** SpaceMail SMTP email delivery in control panel, Finnhub API usage for homepage news ticker, bundled PHPMailer library.
 
 ### Responsive layout update (April 2026)
 
@@ -118,8 +118,9 @@ Velmora Bank is a PHP-based banking web application with a public marketing site
 ```php
 <?php
 // Setting initials
-// rsend api re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -130,19 +131,33 @@ date_default_timezone_set('America/New_York');
 
 // Database connection function
 function connectToDatabase() {
-    $servername = getenv('DB_HOST') ?: 'sql309.byethost7.com';
-    $dbusername = getenv('DB_USER') ?: 'rjhzxfeknu_user';
-    $dbpassword = getenv('DB_PASS') ?: 'Wateva06@';
-    $dbname = getenv('DB_NAME') ?: 'rjhzxfeknu_db';
-    
-    $dbconn = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);
-    
-    if (!$dbconn) {
-        die("Database connection failed. Please verify database configuration.");
+    // Load production config file if present (used on shared hosting with no env vars)
+    $configFile = __DIR__ . '/../db-config.php';
+    if (!defined('DB_CONFIG') && file_exists($configFile)) {
+        require_once $configFile;
+    }
+    $cfg = defined('DB_CONFIG') ? DB_CONFIG : [];
+
+    $socket     = getenv('DB_SOCKET') ?: ($cfg['socket'] ?? '');
+    $host       = getenv('DB_HOST')   ?: ($cfg['host']   ?? 'localhost');
+    $port       = (int)(getenv('DB_PORT') ?: ($cfg['port'] ?? 3306));
+    $dbusername = getenv('DB_USER')   ?: ($cfg['user']   ?? '');
+    $dbpassword = getenv('DB_PASS')   ?: ($cfg['password'] ?? '');
+    $dbname     = getenv('DB_NAME')   ?: ($cfg['name']   ?? '');
+
+    // Prefer Unix socket when socket file exists (null host triggers socket mode)
+    if ($socket && file_exists($socket)) {
+        $dbconn = new mysqli(null, $dbusername, $dbpassword, $dbname, null, $socket);
+    } else {
+        $dbconn = new mysqli($host, $dbusername, $dbpassword, $dbname, $port);
     }
 
-    mysqli_set_charset($dbconn, 'utf8mb4');
-    
+    if ($dbconn->connect_error) {
+        die("Database connection failed: " . $dbconn->connect_error);
+    }
+
+    $dbconn->set_charset('utf8mb4');
+
     return $dbconn;
 }
 
@@ -153,6 +168,76 @@ function connectToDatabase() {
 // Dynamic contact details
 define('DEFAULT_SUPPORT_PHONE', '+17252885411');
 
+function getDefaultDynamicData(): array {
+    return [
+        'phone_number' => DEFAULT_SUPPORT_PHONE,
+        'btc_address' => '',
+        'eth_address' => '',
+        'usdt_address' => '',
+        'doge_address' => '',
+    ];
+}
+
+function ensureDynamicDataTable(mysqli $dbconn): bool {
+    static $checked = false;
+
+    if ($checked) {
+        return true;
+    }
+
+    try {
+        $dbconn->query("CREATE TABLE IF NOT EXISTS dynamic_data (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL UNIQUE,
+            value TEXT DEFAULT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+        $seedStmt = $dbconn->prepare('INSERT IGNORE INTO dynamic_data (`name`, `value`) VALUES (?, ?)');
+        if ($seedStmt) {
+            foreach (getDefaultDynamicData() as $name => $value) {
+                $seedStmt->bind_param('ss', $name, $value);
+                $seedStmt->execute();
+            }
+            $seedStmt->close();
+        }
+    } catch (mysqli_sql_exception $exception) {
+        error_log('Unable to initialize dynamic_data table: ' . $exception->getMessage());
+        return false;
+    }
+
+    $checked = true;
+    return true;
+}
+
+function getDynamicDataValue(string $name, string $default = ''): string {
+    $dbconn = connectToDatabase();
+    $value = $default;
+
+    try {
+        if (ensureDynamicDataTable($dbconn)) {
+            $stmt = $dbconn->prepare('SELECT `value` FROM dynamic_data WHERE `name` = ? LIMIT 1');
+            if ($stmt) {
+                $stmt->bind_param('s', $name);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if ($result && ($row = $result->fetch_assoc())) {
+                    $dbValue = trim((string) ($row['value'] ?? ''));
+                    if ($dbValue !== '') {
+                        $value = $dbValue;
+                    }
+                }
+                $stmt->close();
+            }
+        }
+    } catch (mysqli_sql_exception $exception) {
+        error_log('Unable to read dynamic data value "' . $name . '": ' . $exception->getMessage());
+    }
+
+    $dbconn->close();
+    return $value;
+}
+
 function normalizePhoneForWhatsapp(string $phone): string {
     $digits = preg_replace('/\D+/', '', $phone);
     return $digits ?: preg_replace('/\D+/', '', DEFAULT_SUPPORT_PHONE);
@@ -161,31 +246,86 @@ function normalizePhoneForWhatsapp(string $phone): string {
 function getSupportPhoneNumber(): string {
     static $cachedPhone = null;
 
-    if ($cachedPhone !== null) {
-        return $cachedPhone;
+    if ($cachedPhone === null) {
+        $cachedPhone = getDynamicDataValue('phone_number', DEFAULT_SUPPORT_PHONE);
     }
-
-    $dbconn = connectToDatabase();
-    $phone = DEFAULT_SUPPORT_PHONE;
-
-    $query = "SELECT `value` FROM dynamic_data WHERE `name` = 'phone_number' LIMIT 1";
-    $result = mysqli_query($dbconn, $query);
-
-    if ($result && ($row = mysqli_fetch_assoc($result))) {
-        $value = trim((string) ($row['value'] ?? ''));
-        if ($value !== '') {
-            $phone = $value;
-        }
-    }
-
-    mysqli_close($dbconn);
-    $cachedPhone = $phone;
 
     return $cachedPhone;
 }
 
 function getSupportWhatsappLink(): string {
     return 'https://wa.me/' . normalizePhoneForWhatsapp(getSupportPhoneNumber());
+}
+
+function loadPHPMailerClasses(): bool {
+    if (class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        return true;
+    }
+
+    $phpMailerPath = __DIR__ . '/../PHPMailer/src/';
+    if (!file_exists($phpMailerPath . 'PHPMailer.php')) {
+        error_log('PHPMailer library was not found at ' . $phpMailerPath);
+        return false;
+    }
+
+    require_once $phpMailerPath . 'PHPMailer.php';
+    require_once $phpMailerPath . 'SMTP.php';
+    require_once $phpMailerPath . 'Exception.php';
+
+    return class_exists('PHPMailer\PHPMailer\PHPMailer');
+}
+
+function getEmailPasswordForSender(string $fromEmail): string {
+    $passwordsBySender = [
+        'admin@velmorabank.us' => getenv('ADMIN_EMAIL_PASSWORD') ?: '',
+        'support@velmorabank.us' => getenv('SUPPORT_EMAIL_PASSWORD') ?: '',
+        'no-reply@velmorabank.us' => getenv('NOREPLY_EMAIL_PASSWORD') ?: '',
+    ];
+
+    return getenv('SMTP_PASSWORD') ?: ($passwordsBySender[strtolower($fromEmail)] ?? '');
+}
+
+function sendSiteEmail(string $to, string $subject, string $htmlBody, string $fromEmail = 'no-reply@velmorabank.us', string $fromName = 'Velmora Bank Notifications'): bool {
+    if (!loadPHPMailerClasses()) {
+        return false;
+    }
+
+    $smtpHost = getenv('SMTP_HOST') ?: 'mail.spacemail.com';
+    $smtpPort = (int) (getenv('SMTP_PORT') ?: 465);
+    $smtpUser = getenv('SMTP_USERNAME') ?: $fromEmail;
+    $smtpPassword = getEmailPasswordForSender($fromEmail);
+    $smtpEncryption = strtolower(getenv('SMTP_ENCRYPTION') ?: ($smtpPort === 465 ? 'ssl' : 'tls'));
+
+    if ($smtpPassword === '') {
+        error_log('SMTP password is not configured for ' . $fromEmail);
+        return false;
+    }
+
+    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host = $smtpHost;
+        $mail->SMTPAuth = true;
+        $mail->Username = $smtpUser;
+        $mail->Password = $smtpPassword;
+        $mail->Port = $smtpPort;
+        $mail->SMTPSecure = $smtpEncryption === 'ssl'
+            ? \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS
+            : \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+
+        $mail->setFrom($fromEmail, $fromName);
+        $mail->addAddress($to);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $htmlBody;
+        $mail->AltBody = trim(html_entity_decode(strip_tags($htmlBody), ENT_QUOTES, 'UTF-8'));
+
+        return $mail->send();
+    } catch (\PHPMailer\PHPMailer\Exception $exception) {
+        error_log('SMTP email failed: ' . $exception->getMessage());
+        return false;
+    }
 }
 
 //Check for item in database
@@ -1425,36 +1565,8 @@ if (isset($_POST['create_account'])) {
     $email_body = renderBankEmailTemplate($email_subject, 'Account Successfully Created', $introHtml, $detailsHtml, 'View Account', 'https://velmorabank.us/dashboard/accounts');
 
 
-    // Prepare the data for the Resend API call
-    $post_data = [
-        "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>", // Sender name and email
-        "to" => $user_email,
-        "subject" => $email_subject,
-        "html" => $email_body
-    ];
-
-    // Initialize cURL session
-    $ch = curl_init("https://api.resend.com/emails");
-
-    // Set cURL options
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response as a string
-    curl_setopt($ch, CURLOPT_POST, true);         // Set as POST request
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8", // Your Resend API Key
-        "Content-Type: application/json"
-    ]);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data)); // Encode data as JSON
-
-    // Execute the cURL request
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); // Get HTTP status code
-    curl_close($ch); // Close cURL session
-
-    // Handle the Resend API response
-    if ($httpCode === 200 || $httpCode === 202) {
-        $fgfgf = "Message sent successfully via Resend.";
-    } else {
-        echo "Failed to send message. HTTP Code: $httpCode <br> Response: $response";
+    if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+        error_log('Failed to send account creation email via SMTP.');
     }
 
     // // Create a new PHPMailer instance
@@ -1773,79 +1885,35 @@ if (isset($_POST['transfer_funds'])) {
         $status = 'Pending';
         $type = 'Transfer';
         $description = 'Transfer to ' . $to_bank_name . ' account number ' . $to_account_number;
-        $stmt->bind_param("sssidsssisss", $transaction_id, $from_account_type, $user_email, $from_account_number, $negative_amount, $currency, $description, $status, $time, $to_bank_name, $to_account_type, $to_account_number);
+        $stmt->bind_param("sssidsssisss", $transaction_id, $type, $user_email, $from_account_number, $negative_amount, $currency, $description, $status, $time, $to_bank_name, $to_account_type, $to_account_number);
 
         if (!$stmt->execute()) {
             echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
         } else {
-            // --- Send an email notification to the admin via Resend ---
+            // --- Send an email notification to the admin via SpaceMail SMTP ---
             $admin_email_subject = 'New Transfer Attempt';
             $admin_intro = '<p style="margin:0;">A new outbound transfer has been initiated by a client and is currently pending compliance review.</p>';
             $admin_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($from_account, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Destination Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Destination Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($amount . ' ' . $currency, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#a16b00;font-weight:700;text-align:right;">Pending</td></tr>            </table>';
             $admin_email_body = renderBankEmailTemplate($admin_email_subject, 'New Transfer Attempt', $admin_intro, $admin_details);
 
-            $resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8"; // Your NEW Resend API Key
-
-            $admin_post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => "admin@velmorabank.us", // Admin's email address
-                "subject" => $admin_email_subject,
-                "html" => $admin_email_body
-            ];
-
-            $ch_admin = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch_admin, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch_admin, CURLOPT_POST, true);
-            curl_setopt($ch_admin, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch_admin, CURLOPT_POSTFIELDS, json_encode($admin_post_data));
-
-            $response_admin = curl_exec($ch_admin);
-            $httpCode_admin = curl_getinfo($ch_admin, CURLINFO_HTTP_CODE);
-            curl_close($ch_admin);
-
-            if ($httpCode_admin === 200 || $httpCode_admin === 202) {
-                // Admin notification sent successfully via Resend.
-            } else {
-                error_log("Failed to send admin notification. HTTP Code: $httpCode_admin | Response: $response_admin");
+            if (!sendSiteEmail('admin@velmorabank.us', $admin_email_subject, $admin_email_body)) {
+                error_log('Failed to send admin transfer notification via SMTP.');
             }
 
-            // --- Send an email notification to the user via Resend ---
+            // --- Send an email notification to the user via SpaceMail SMTP ---
             $user_email_subject = 'New Transfer Initiated';
             $user_intro = '<p style="margin:0;">Dear ' . htmlspecialchars($user_name, ENT_QUOTES, 'UTF-8') . ', your transfer request has been received and is now awaiting approval.</p>';
             $user_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($from_account, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">To Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">To Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($amount . ' ' . $currency, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#a16b00;font-weight:700;text-align:right;">Pending</td></tr>            </table>';
             $user_email_body = renderBankEmailTemplate($user_email_subject, 'Transfer Initiated', $user_intro, $user_details, 'View Transactions', 'https://velmorabank.us/dashboard/accounts/transactions');
 
-            $user_post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => $user_email,
-                "subject" => $user_email_subject,
-                "html" => $user_email_body
-            ];
-
-            $ch_user = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch_user, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch_user, CURLOPT_POST, true);
-            curl_setopt($ch_user, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch_user, CURLOPT_POSTFIELDS, json_encode($user_post_data));
-
-            $response_user = curl_exec($ch_user);
-            $httpCode_user = curl_getinfo($ch_user, CURLINFO_HTTP_CODE);
-            curl_close($ch_user);
-
-            if ($httpCode_user === 200 || $httpCode_user === 202) {
-                header('location: /dashboard/accounts/transactions');
-                exit();
-            } else {
-                error_log("Failed to send user notification. HTTP Code: $httpCode_user | Response: $response_user");
+            if (!sendSiteEmail($user_email, $user_email_subject, $user_email_body)) {
+                error_log('Failed to send user transfer notification via SMTP.');
                 header('location: /dashboard/accounts/transactions?email_failed=true');
                 exit();
             }
+
+            header('location: /dashboard/accounts/transactions');
+            exit();
         }
     }
 
@@ -2137,8 +2205,6 @@ if (file_exists($appPath)) {
     die("An internal error occurred. Please try again later.");
 }
 
-// Your Resend API Key
-$resend_api_key = "re_6UXBpV3q_Ee83gTNZod4QexanZjZh9Ss8";
 
 function renderControlPanelBankEmail($subject, $headline, $introHtml, $detailsHtml) {
     $logoUrl = 'https://velmorabank.us/assets/images/branding/logo.png';
@@ -2209,12 +2275,19 @@ if (isset($_POST['update_support_phone'])) {
 
     if ($supportPhone !== '') {
         $db = connectToDatabase();
-        $stmt = $db->prepare("INSERT INTO dynamic_data (`name`, `value`) VALUES ('phone_number', ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)");
 
-        if ($stmt) {
-            $stmt->bind_param('s', $supportPhone);
-            $stmt->execute();
-            $stmt->close();
+        try {
+            if (ensureDynamicDataTable($db)) {
+                $stmt = $db->prepare("INSERT INTO dynamic_data (`name`, `value`) VALUES ('phone_number', ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)");
+
+                if ($stmt) {
+                    $stmt->bind_param('s', $supportPhone);
+                    $stmt->execute();
+                    $stmt->close();
+                }
+            }
+        } catch (mysqli_sql_exception $exception) {
+            error_log('Unable to update support phone number: ' . $exception->getMessage());
         }
 
         $db->close();
@@ -2299,27 +2372,8 @@ if (isset($_POST['credit_user'])) {
         $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $display_amount, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
         $email_body = renderControlPanelBankEmail($email_subject, 'Deposit Confirmation', $introHtml, $detailsHtml);
 
-        $post_data = [
-            "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-            "to" => $user_email,
-            "subject" => $email_subject,
-            "html" => $email_body
-        ];
-
-        $ch = curl_init("https://api.resend.com/emails");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: Bearer " . $resend_api_key,
-            "Content-Type: application/json"
-        ]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if (!($httpCode === 200 || $httpCode === 202)) {
-            error_log("Failed to send deposit confirmation email. HTTP Code: $httpCode | Response: $response");
+        if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+            error_log('Failed to send deposit confirmation email via SMTP.');
         }
         $stmt->close();
         $dbconn->close();
@@ -2384,7 +2438,7 @@ if (isset($_POST['debit_user'])) {
         $stmt->bind_param("sssidsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
 
         if ($stmt->execute()) {
-            // --- Send Withdrawal Confirmation Email via Resend API ---
+            // --- Send Withdrawal Confirmation Email via SpaceMail SMTP ---
             $email_subject = 'Withdrawal Confirmation - Velmora Bank';
             // Use abs($amount) for display to show a positive withdrawal amount to the user
             $display_amount = number_format(abs($amount), 2);
@@ -2392,28 +2446,8 @@ if (isset($_POST['debit_user'])) {
             $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $display_amount, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
             $email_body = renderControlPanelBankEmail($email_subject, 'Withdrawal Confirmation', $introHtml, $detailsHtml);
 
-            $post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => $user_email,
-                "subject" => $email_subject,
-                "html" => $email_body
-            ];
-
-            $ch = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if (!($httpCode === 200 || $httpCode === 202)) {
-                error_log("Failed to send withdrawal confirmation email. HTTP Code: $httpCode | Response: $response");
+            if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+                error_log('Failed to send withdrawal confirmation email via SMTP.');
             }
             header('Location: /control-panel?debit_user=success');
             exit;
@@ -2483,7 +2517,7 @@ if (isset($_POST['judge_withdrawal'])) {
         $stmt->bind_param("ssi", $decision, $description, $withdrawal_id);
         
         if ($stmt->execute()) {
-            // Send an email notification based on the decision using Resend API
+            // Send an email notification based on the decision using SpaceMail SMTP
             $user_email = $transaction['user_email'];
             $transaction_id = $transaction['transaction_id'];
             $account_number = $transaction['account_number'];
@@ -2510,28 +2544,8 @@ if (isset($_POST['judge_withdrawal'])) {
             $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $amount_display, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
             $email_body = renderControlPanelBankEmail($email_subject, $email_heading, $introHtml, $detailsHtml);
 
-            $post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => $user_email,
-                "subject" => $email_subject,
-                "html" => $email_body
-            ];
-
-            $ch = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if (!($httpCode === 200 || $httpCode === 202)) {
-                error_log("Failed to send withdrawal " . strtolower($decision) . " email. HTTP Code: $httpCode | Response: $response");
+            if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+                error_log('Failed to send withdrawal ' . strtolower($decision) . ' email via SMTP.');
             }
             header('Location: /control-panel?judge_withdrawal=success');
             exit;
@@ -2612,7 +2626,7 @@ if (isset($_POST['judge_kyc'])) {
                 }
             }
 
-            // --- Send KYC Notification Email via Resend API ---
+            // --- Send KYC Notification Email via SpaceMail SMTP ---
             $email_subject = '';
             $email_message = '';
             $email_heading = '';
@@ -2632,28 +2646,8 @@ if (isset($_POST['judge_kyc'])) {
             $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Verification Type</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">KYC Review</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Decision</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars(ucfirst($decision), ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Reference</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($user_email, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
             $email_body = renderControlPanelBankEmail($email_subject, $email_heading, $introHtml, $detailsHtml);
 
-            $post_data = [
-                "from" => "Velmora Bank Notifications <no-reply@velmorabank.us>",
-                "to" => $user_email,
-                "subject" => $email_subject,
-                "html" => $email_body
-            ];
-
-            $ch = curl_init("https://api.resend.com/emails");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $resend_api_key,
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if (!($httpCode === 200 || $httpCode === 202)) {
-                error_log("Failed to send KYC " . strtolower($decision) . " email. HTTP Code: $httpCode | Response: $response");
+            if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+                error_log('Failed to send KYC ' . strtolower($decision) . ' email via SMTP.');
             }
             header('Location: /control-panel?judge_kyc=success');
             exit;
@@ -3257,7 +3251,7 @@ if (isset($_POST['delete_user_account'])) {
 <?php
 /**
  * Database bootstrapper for Velmora Bank.
- * Creates required tables if they do not already exist.
+ * Creates and updates required tables if they do not already exist.
  */
 
 require_once __DIR__ . '/common-sections/app.php';
@@ -3265,6 +3259,56 @@ require_once __DIR__ . '/common-sections/app.php';
 $db = connectToDatabase();
 if (!$db) {
     die('Database connection failed.');
+}
+
+function columnExists(mysqli $db, string $table, string $column): bool {
+    $stmt = $db->prepare('SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?');
+    if (!$stmt) {
+        return false;
+    }
+
+    $stmt->bind_param('ss', $table, $column);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+
+    return (int)$count > 0;
+}
+
+function addColumnIfMissing(mysqli $db, string $table, string $column, string $definition, array &$errors): void {
+    if (columnExists($db, $table, $column)) {
+        return;
+    }
+
+    if (!$db->query("ALTER TABLE `$table` ADD COLUMN $definition")) {
+        $errors[] = "Unable to add `$table`.`$column`: " . $db->error;
+    }
+}
+
+function indexExists(mysqli $db, string $table, string $index): bool {
+    $stmt = $db->prepare('SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?');
+    if (!$stmt) {
+        return false;
+    }
+
+    $stmt->bind_param('ss', $table, $index);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+
+    return (int)$count > 0;
+}
+
+function addIndexIfMissing(mysqli $db, string $table, string $index, string $definition, array &$errors): void {
+    if (indexExists($db, $table, $index)) {
+        return;
+    }
+
+    if (!$db->query("ALTER TABLE `$table` ADD $definition")) {
+        $errors[] = "Unable to add `$table` index `$index`: " . $db->error;
+    }
 }
 
 $queries = [
@@ -3291,7 +3335,8 @@ $queries = [
         account_status VARCHAR(50) NOT NULL DEFAULT 'Active',
         creation_time INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX idx_accounts_user_email (user_email)
+        INDEX idx_accounts_user_email (user_email),
+        INDEX idx_accounts_creation_time (creation_time)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
     "CREATE TABLE IF NOT EXISTS transactions (
@@ -3358,17 +3403,102 @@ foreach ($queries as $query) {
     }
 }
 
-$seedData = [
-    ['phone_number', '+17252885411'],
-    ['btc_address', ''],
-    ['eth_address', ''],
-    ['usdt_address', ''],
-    ['doge_address', ''],
+$columnMigrations = [
+    'users' => [
+        'name' => "`name` VARCHAR(150) NOT NULL DEFAULT '' AFTER `id`",
+        'email' => "`email` VARCHAR(190) NOT NULL DEFAULT '' AFTER `name`",
+        'password' => "`password` VARCHAR(255) NOT NULL DEFAULT '' AFTER `email`",
+        'date_registered' => "`date_registered` INT NOT NULL DEFAULT 0 AFTER `password`",
+        'human_time' => "`human_time` VARCHAR(100) NOT NULL DEFAULT '' AFTER `date_registered`",
+        'kyc_level' => "`kyc_level` TINYINT UNSIGNED NOT NULL DEFAULT 1 AFTER `human_time`",
+        'profile_picture' => "`profile_picture` VARCHAR(255) DEFAULT NULL AFTER `kyc_level`",
+        'last_active' => "`last_active` INT DEFAULT NULL AFTER `profile_picture`",
+        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `last_active`",
+    ],
+    'accounts' => [
+        'account_type' => "`account_type` VARCHAR(100) NOT NULL DEFAULT '' AFTER `id`",
+        'user_name' => "`user_name` VARCHAR(150) NOT NULL DEFAULT '' AFTER `account_type`",
+        'user_email' => "`user_email` VARCHAR(190) NOT NULL DEFAULT '' AFTER `user_name`",
+        'currency' => "`currency` VARCHAR(20) NOT NULL DEFAULT 'USD' AFTER `user_email`",
+        'account_number' => "`account_number` BIGINT NOT NULL DEFAULT 0 AFTER `currency`",
+        'account_status' => "`account_status` VARCHAR(50) NOT NULL DEFAULT 'Active' AFTER `account_number`",
+        'creation_time' => "`creation_time` INT NOT NULL DEFAULT 0 AFTER `account_status`",
+        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `creation_time`",
+    ],
+    'transactions' => [
+        'type' => "`type` VARCHAR(80) NOT NULL DEFAULT '' AFTER `id`",
+        'transaction_id' => "`transaction_id` VARCHAR(40) NOT NULL DEFAULT '' AFTER `type`",
+        'user_email' => "`user_email` VARCHAR(190) NOT NULL DEFAULT '' AFTER `transaction_id`",
+        'account_number' => "`account_number` BIGINT NOT NULL DEFAULT 0 AFTER `user_email`",
+        'amount' => "`amount` DECIMAL(18,2) NOT NULL DEFAULT 0.00 AFTER `account_number`",
+        'currency' => "`currency` VARCHAR(20) NOT NULL DEFAULT 'USD' AFTER `amount`",
+        'description' => "`description` TEXT AFTER `currency`",
+        'status' => "`status` VARCHAR(40) NOT NULL DEFAULT 'Pending' AFTER `description`",
+        'time' => "`time` INT NOT NULL DEFAULT 0 AFTER `status`",
+        'to_bank_name' => "`to_bank_name` VARCHAR(190) DEFAULT NULL AFTER `time`",
+        'to_account_type' => "`to_account_type` VARCHAR(100) DEFAULT NULL AFTER `to_bank_name`",
+        'to_account_number' => "`to_account_number` VARCHAR(50) DEFAULT NULL AFTER `to_account_type`",
+        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `to_account_number`",
+    ],
+    'kyc_data' => [
+        'first_name' => "`first_name` VARCHAR(120) NOT NULL DEFAULT '' AFTER `id`",
+        'middle_name' => "`middle_name` VARCHAR(120) DEFAULT NULL AFTER `first_name`",
+        'last_name' => "`last_name` VARCHAR(120) NOT NULL DEFAULT '' AFTER `middle_name`",
+        'suffix' => "`suffix` VARCHAR(50) DEFAULT NULL AFTER `last_name`",
+        'gender' => "`gender` VARCHAR(30) DEFAULT NULL AFTER `suffix`",
+        'address1' => "`address1` VARCHAR(255) NOT NULL DEFAULT '' AFTER `gender`",
+        'address2' => "`address2` VARCHAR(255) DEFAULT NULL AFTER `address1`",
+        'apartment_no' => "`apartment_no` VARCHAR(80) DEFAULT NULL AFTER `address2`",
+        'city' => "`city` VARCHAR(120) NOT NULL DEFAULT '' AFTER `apartment_no`",
+        'state' => "`state` VARCHAR(120) NOT NULL DEFAULT '' AFTER `city`",
+        'phone_number' => "`phone_number` VARCHAR(40) NOT NULL DEFAULT '' AFTER `state`",
+        'date_of_birth' => "`date_of_birth` VARCHAR(30) NOT NULL DEFAULT '' AFTER `phone_number`",
+        'zip_code' => "`zip_code` VARCHAR(30) NOT NULL DEFAULT '' AFTER `date_of_birth`",
+        'us_citizen' => "`us_citizen` VARCHAR(30) DEFAULT NULL AFTER `zip_code`",
+        'dual_citizenship' => "`dual_citizenship` VARCHAR(100) DEFAULT NULL AFTER `us_citizen`",
+        'country_of_residence' => "`country_of_residence` VARCHAR(120) NOT NULL DEFAULT '' AFTER `dual_citizenship`",
+        'source_of_income' => "`source_of_income` VARCHAR(120) NOT NULL DEFAULT '' AFTER `country_of_residence`",
+        'nationality' => "`nationality` VARCHAR(120) NOT NULL DEFAULT '' AFTER `source_of_income`",
+        'email' => "`email` VARCHAR(190) NOT NULL DEFAULT '' AFTER `nationality`",
+        'status' => "`status` VARCHAR(30) NOT NULL DEFAULT 'Pending' AFTER `email`",
+        'description' => "`description` TEXT AFTER `status`",
+        'time_uploaded' => "`time_uploaded` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `description`",
+        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `time_uploaded`",
+    ],
+    'dynamic_data' => [
+        'name' => "`name` VARCHAR(100) NOT NULL DEFAULT '' AFTER `id`",
+        'value' => "`value` TEXT DEFAULT NULL AFTER `name`",
+        'updated_at' => "`updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `value`",
+    ],
 ];
+
+foreach ($columnMigrations as $table => $columns) {
+    foreach ($columns as $column => $definition) {
+        addColumnIfMissing($db, $table, $column, $definition, $errors);
+    }
+}
+
+$indexMigrations = [
+    ['users', 'email', 'UNIQUE INDEX `email` (`email`)'],
+    ['accounts', 'account_number', 'UNIQUE INDEX `account_number` (`account_number`)'],
+    ['accounts', 'idx_accounts_user_email', 'INDEX `idx_accounts_user_email` (`user_email`)'],
+    ['accounts', 'idx_accounts_creation_time', 'INDEX `idx_accounts_creation_time` (`creation_time`)'],
+    ['transactions', 'transaction_id', 'UNIQUE INDEX `transaction_id` (`transaction_id`)'],
+    ['transactions', 'idx_transactions_user_email', 'INDEX `idx_transactions_user_email` (`user_email`)'],
+    ['transactions', 'idx_transactions_account_number', 'INDEX `idx_transactions_account_number` (`account_number`)'],
+    ['transactions', 'idx_transactions_time', 'INDEX `idx_transactions_time` (`time`)'],
+    ['kyc_data', 'idx_kyc_email', 'INDEX `idx_kyc_email` (`email`)'],
+    ['kyc_data', 'idx_kyc_status', 'INDEX `idx_kyc_status` (`status`)'],
+    ['dynamic_data', 'name', 'UNIQUE INDEX `name` (`name`)'],
+];
+
+foreach ($indexMigrations as [$table, $index, $definition]) {
+    addIndexIfMissing($db, $table, $index, $definition, $errors);
+}
 
 $seedStmt = $db->prepare('INSERT IGNORE INTO dynamic_data (`name`, `value`) VALUES (?, ?)');
 if ($seedStmt) {
-    foreach ($seedData as [$name, $value]) {
+    foreach (getDefaultDynamicData() as $name => $value) {
         $seedStmt->bind_param('ss', $name, $value);
         $seedStmt->execute();
     }
@@ -3378,6 +3508,7 @@ if ($seedStmt) {
 header('Content-Type: text/plain');
 if (empty($errors)) {
     echo "Success: database tables are ready.\n";
+    echo "Tables managed: users, accounts, transactions, kyc_data, dynamic_data.\n";
 } else {
     echo "Finished with errors:\n- " . implode("\n- ", $errors) . "\n";
 }
