@@ -12,7 +12,7 @@ date_default_timezone_set('America/New_York');
 
 // Database connection function
 function connectToDatabase() {
-    $servername = getenv('DB_HOST') ?: 'sql309.byethost7.com';
+    $servername = getenv('DB_HOST') ?: 'localhost';
     $dbusername = getenv('DB_USER') ?: 'rjhzxfeknu_user';
     $dbpassword = getenv('DB_PASS') ?: 'Wateva06@';
     $dbname = getenv('DB_NAME') ?: 'rjhzxfeknu_db';
