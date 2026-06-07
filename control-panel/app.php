@@ -91,12 +91,19 @@ if (isset($_POST['update_support_phone'])) {
 
     if ($supportPhone !== '') {
         $db = connectToDatabase();
-        $stmt = $db->prepare("INSERT INTO dynamic_data (`name`, `value`) VALUES ('phone_number', ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)");
 
-        if ($stmt) {
-            $stmt->bind_param('s', $supportPhone);
-            $stmt->execute();
-            $stmt->close();
+        try {
+            if (ensureDynamicDataTable($db)) {
+                $stmt = $db->prepare("INSERT INTO dynamic_data (`name`, `value`) VALUES ('phone_number', ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)");
+
+                if ($stmt) {
+                    $stmt->bind_param('s', $supportPhone);
+                    $stmt->execute();
+                    $stmt->close();
+                }
+            }
+        } catch (mysqli_sql_exception $exception) {
+            error_log('Unable to update support phone number: ' . $exception->getMessage());
         }
 
         $db->close();
