@@ -50,12 +50,19 @@ foreach ($paths as $path) {
 
 // Database connection function
 function connectToDatabase() {
-    $socket   = getenv('DB_SOCKET') ?: '/home/runner/mysql-run/mysql.sock';
-    $host     = getenv('DB_HOST')   ?: '127.0.0.1';
-    $port     = (int)(getenv('DB_PORT') ?: 3306);
-    $username = getenv('DB_USER')   ?: 'velmora_user';
-    $password = getenv('DB_PASS')   ?: 'VelmoraPass2024!';
-    $dbname   = getenv('DB_NAME')   ?: 'velmora_db';
+    // Load production config file if present (used on shared hosting with no env vars)
+    $configFile = __DIR__ . '/../db-config.php';
+    if (!defined('DB_CONFIG') && file_exists($configFile)) {
+        require_once $configFile;
+    }
+    $cfg = defined('DB_CONFIG') ? DB_CONFIG : [];
+
+    $socket   = getenv('DB_SOCKET') ?: ($cfg['socket'] ?? '');
+    $host     = getenv('DB_HOST')   ?: ($cfg['host']   ?? 'localhost');
+    $port     = (int)(getenv('DB_PORT') ?: ($cfg['port'] ?? 3306));
+    $username = getenv('DB_USER')   ?: ($cfg['user']   ?? '');
+    $password = getenv('DB_PASS')   ?: ($cfg['password'] ?? '');
+    $dbname   = getenv('DB_NAME')   ?: ($cfg['name']   ?? '');
 
     // Use null host to trigger Unix socket mode in mysqli
     if ($socket && file_exists($socket)) {
