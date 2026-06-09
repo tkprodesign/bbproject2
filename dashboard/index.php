@@ -171,7 +171,7 @@ unset($row);
             <div class="bar account hero-balance">
                 <p class="title">Available Balance</p>
                 <h1 class="figure">$<?php echo htmlspecialchars($user_balance); ?></h1>
-                <span class="month">Based on <?php echo (int)$transaction_count; ?> transactions</span>
+                <span class="month"><?php echo int($transactionCount) . ' ' . (int($transactionCount) == 1 ? 'transaction' : 'transactions'); ?></span>
             </div>
             <div class="bar">
                 <p class="title">Total Credits</p>
