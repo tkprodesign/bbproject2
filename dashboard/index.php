@@ -176,7 +176,7 @@ unset($row);
             <div class="bar">
                 <p class="title">Total Credits</p>
                 <h1 class="figure text-green">$<?php echo number_format($totalCredits, 2); ?></h1>
-                <span class="month"><?php echo $creditCount; ?> transactions</span>
+                <span class="month"><?php echo $creditCount.' '. if($totalCredits > 1){echo 'transactions'}else{echo 'transaction'}; ?> </span>
             </div>
             <div class="bar">
                 <p class="title">Total Debits</p>
