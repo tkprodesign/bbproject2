@@ -180,7 +180,7 @@ unset($row);
             <div class="bar">
                 <p class="title">Total Debits</p>
                 <h1 class="figure text-red">$<?php echo number_format($totalDebits, 2); ?></h1>
-                <span class="month"><?php echo $debitCount; ?> transactions</span>
+                <span class="month"><?php echo $debitCount . ' ' . ($debitCount == 1 ? 'transaction' : 'transactions'); ?></span>
             </div>
         </div>
 
