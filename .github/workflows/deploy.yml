@@ -21,7 +21,7 @@ jobs:
 
       - name: Upload changed site files
         env:
-          FTP_SERVER: 66.29.148.167
+          FTP_SERVER: server54.shared.spaceship.host
           FTP_USERNAME: github-deploy@velmorabank.us
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           REMOTE_DIR: /
@@ -63,6 +63,7 @@ jobs:
 
             echo "Uploading: $relative_path -> $remote_path"
             if ! upload_output="$(curl --silent --show-error --fail \
+              --ssl-reqd \
               --user "$FTP_LOGIN:$FTP_PASSWORD" \
               --ftp-create-dirs \
               -T "$relative_path" \
