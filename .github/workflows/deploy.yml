@@ -22,7 +22,7 @@ jobs:
       - name: Upload changed site files
         env:
           FTP_SERVER: server54.shared.spaceship.host
-          FTP_USERNAME: rjhzxfeknu
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           REMOTE_DIR: /velmorabank.us
         run: |
@@ -60,10 +60,17 @@ jobs:
             remote_dir="$(dirname "$remote_path")"
 
             echo "Uploading: $relative_path -> $remote_path"
-            curl --silent --show-error --fail \
+            if ! upload_output="$(curl --silent --show-error --fail \
               --ssl-reqd \
               --user "$FTP_USERNAME:$FTP_PASSWORD" \
               --ftp-create-dirs \
               -T "$relative_path" \
-              "ftp://$FTP_SERVER$remote_dir/"
+              "ftp://$FTP_SERVER$remote_dir/" 2>&1)"; then
+              if echo "$upload_output" | grep -q "530"; then
+                echo "Spaceship rejected the FTP login. Refresh FTP_USERNAME/FTP_PASSWORD in GitHub Actions secrets."
+              else
+                echo "$upload_output"
+              fi
+              exit 1
+            fi
           done <<< "$changed_files"
