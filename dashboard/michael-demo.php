@@ -1,4 +1,5 @@
 <?php
+// Deployment compatibility: Spaceship FTPES.
 /**
  * Michael Griffin demo-account seed.
  *
