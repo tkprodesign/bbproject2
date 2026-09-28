@@ -47,6 +47,75 @@ function connectToDatabase() {
 
 
 
+// Provision Michael Griffin from environment secrets when they are available.
+// This is intentionally idempotent and never logs or exposes the secret values.
+function provisionMichaelAccountFromEnvironment(): void {
+    static $attempted = false;
+    if ($attempted) {
+        return;
+    }
+    $attempted = true;
+
+    $email = strtolower(trim((string) getenv('MICHAEL_EMAIL')));
+    $password = (string) getenv('MICHAEL_PASSWORD');
+
+    if ($email === '' || $password === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return;
+    }
+
+    try {
+        $db = connectToDatabase();
+        $name = 'Michael Griffin';
+        $profilePicture = 'michael-griffin.png';
+
+        $stmt = $db->prepare('SELECT id, password, name, profile_picture FROM users WHERE email = ? LIMIT 1');
+        if (!$stmt) {
+            $db->close();
+            return;
+        }
+
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $stmt->bind_result($userId, $existingHash, $existingName, $existingProfilePicture);
+        $exists = $stmt->fetch();
+        $stmt->close();
+
+        if ($exists) {
+            $needsPasswordUpdate = !password_verify($password, (string) $existingHash);
+            $needsProfileUpdate = (string) $existingProfilePicture !== $profilePicture;
+            $needsNameUpdate = (string) $existingName !== $name;
+
+            if ($needsPasswordUpdate || $needsProfileUpdate || $needsNameUpdate) {
+                $newHash = $needsPasswordUpdate ? password_hash($password, PASSWORD_DEFAULT) : (string) $existingHash;
+                $update = $db->prepare('UPDATE users SET name = ?, password = ?, profile_picture = ? WHERE email = ?');
+                if ($update) {
+                    $update->bind_param('ssss', $name, $newHash, $profilePicture, $email);
+                    $update->execute();
+                    $update->close();
+                }
+            }
+        } else {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $now = time();
+            $humanTime = date('H:i | d/m/Y', $now) . ' | New York Time';
+
+            $insert = $db->prepare('INSERT INTO users (name, email, password, date_registered, human_time, kyc_level, profile_picture) VALUES (?, ?, ?, ?, ?, 1, ?)');
+            if ($insert) {
+                $insert->bind_param('sssiss', $name, $email, $hash, $now, $humanTime, $profilePicture);
+                $insert->execute();
+                $insert->close();
+            }
+        }
+
+        $db->close();
+    } catch (Throwable $exception) {
+        error_log('Michael account provisioning could not be completed.');
+    }
+}
+
+provisionMichaelAccountFromEnvironment();
+
+
 // Dynamic contact details
 define('DEFAULT_SUPPORT_PHONE', '+17252885411');
 
