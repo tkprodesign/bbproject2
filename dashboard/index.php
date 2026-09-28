@@ -151,6 +151,11 @@ unset($row);
 </head>
 <body>
 <?php include('../common-sections/dashboard-header.html')?>
+<?php if (!empty($is_demo_account)): ?>
+<div style="background:#fff3cd;border-bottom:1px solid #f0d98a;color:#664d03;padding:10px 16px;text-align:center;font-weight:700;font-size:14px;">
+    DEMO ACCOUNT — Simulated data for presentation and testing only
+</div>
+<?php endif; ?>
 <section class="account-info reference-dashboard">
     <div class="container">
         <div class="cta-sec">
