@@ -24,7 +24,7 @@ jobs:
           FTP_SERVER: server54.shared.spaceship.host
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          REMOTE_DIR: /velmorabank.us
+          REMOTE_DIR: /
         run: |
           set -euo pipefail
 
