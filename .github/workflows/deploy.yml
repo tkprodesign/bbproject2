@@ -22,8 +22,8 @@ jobs:
       - name: Upload changed site files
         env:
           FTP_SERVER: server54.shared.spaceship.host
-          FTP_USERNAME: github-deploy@velmorabank.us
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_USERNAME: ${{ secrets.SUPPORT_EMAIL }}
+          FTP_PASSWORD: ${{ secrets.SUPPORT_EMAIL_PASSWORD }}
           REMOTE_DIR: /
         run: |
           set -euo pipefail
