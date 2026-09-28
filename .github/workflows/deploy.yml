@@ -61,6 +61,7 @@ jobs:
 
             echo "Uploading: $relative_path -> $remote_path"
             curl --silent --show-error --fail \
+              --ssl-reqd \
               --user "$FTP_USERNAME:$FTP_PASSWORD" \
               --ftp-create-dirs \
               -T "$relative_path" \
