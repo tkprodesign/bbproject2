@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /
 
-# ftp-login-check-3
+# ftp-ip-check
