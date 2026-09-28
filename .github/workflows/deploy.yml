@@ -28,6 +28,11 @@ jobs:
         run: |
           set -euo pipefail
 
+          FTP_LOGIN="$FTP_USERNAME"
+          if [[ "$FTP_LOGIN" != *"@"* ]]; then
+            FTP_LOGIN="$FTP_LOGIN@velmorabank.us"
+          fi
+
           if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ]; then
             echo "Missing FTP secrets"
             exit 1
@@ -62,7 +67,7 @@ jobs:
             echo "Uploading: $relative_path -> $remote_path"
             if ! upload_output="$(curl --silent --show-error --fail \
               --ssl-reqd \
-              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --user "$FTP_LOGIN:$FTP_PASSWORD" \
               --ftp-create-dirs \
               -T "$relative_path" \
               "ftp://$FTP_SERVER$remote_dir/" 2>&1)"; then
