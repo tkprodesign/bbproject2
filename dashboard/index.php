@@ -12,6 +12,7 @@ $dashboardMeta = [
     'date_of_birth' => 'Not available',
     'account_number' => 'Not available',
     'account_type' => 'Primary',
+    'profession' => !empty($is_demo_account) ? 'Doctor' : 'Not available',
 ];
 
 $dbMetrics = connectToDatabase();
@@ -196,6 +197,9 @@ unset($row);
                 <div><span>Date of Birth</span><strong><?php echo htmlspecialchars($dashboardMeta['date_of_birth']); ?></strong></div>
                 <div><span>Account Number</span><strong><?php echo htmlspecialchars($dashboardMeta['account_number']); ?></strong></div>
                 <div><span>Account Type</span><strong><?php echo htmlspecialchars($dashboardMeta['account_type']); ?></strong></div>
+                <?php if (!empty($is_demo_account)): ?>
+                <div><span>Profession</span><strong><?php echo htmlspecialchars($dashboardMeta['profession']); ?></strong></div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -215,6 +219,7 @@ unset($row);
                         <th>Date</th>
                         <th>Description</th>
                         <th>Category</th>
+                        <th>Status</th>
                         <th>Amount</th>
                         <th>Balance</th>
                     </tr>
@@ -228,6 +233,7 @@ unset($row);
                             <td><?php echo htmlspecialchars($row['date']); ?></td>
                             <td><?php echo htmlspecialchars($row['description']); ?></td>
                             <td><span class="tx-category"><?php echo htmlspecialchars($row['category']); ?></span></td>
+                            <td><span class="tx-category"><?php echo htmlspecialchars($row['status']); ?></span></td>
                             <td class="<?php echo $isCredit ? 'amount-credit' : 'amount-debit'; ?>">
                                 <?php echo $isCredit ? '+' : '-'; ?>$<?php echo number_format(abs($amount), 2); ?>
                             </td>
