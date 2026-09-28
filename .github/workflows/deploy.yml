@@ -30,8 +30,16 @@ jobs:
 
           FTP_LOGIN="$FTP_USERNAME"
 
-          if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ]; then
-            echo "Missing FTP secrets"
+          if [ -z "$FTP_SERVER" ]; then
+            echo "FTP_SERVER is missing"
+            exit 1
+          fi
+          if [ -z "$FTP_USERNAME" ]; then
+            echo "SUPPORT_EMAIL secret is missing or empty"
+            exit 1
+          fi
+          if [ -z "$FTP_PASSWORD" ]; then
+            echo "SUPPORT_EMAIL_PASSWORD secret is missing or empty"
             exit 1
           fi
 
