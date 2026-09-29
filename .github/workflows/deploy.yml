@@ -52,10 +52,35 @@ jobs:
           else
             printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/github-deploy
           fi
+
+          while [ -s ~/.ssh/github-deploy ] && [ -z "$(head -n 1 ~/.ssh/github-deploy | tr -d '[:space:]')" ]; do
+            sed -i '1d' ~/.ssh/github-deploy
+          done
+
+          first_line="$(head -n 1 ~/.ssh/github-deploy)"
+          last_line="$(tail -n 1 ~/.ssh/github-deploy)"
+          if [[ "$first_line" == '"-----BEGIN '* ]] && [[ "$last_line" == *'-----"' ]]; then
+            sed -i '1s/^"//' ~/.ssh/github-deploy
+            sed -i '$s/"$//' ~/.ssh/github-deploy
+          fi
+
+          if ! head -n 1 ~/.ssh/github-deploy | grep -Eq '^-----BEGIN (OPENSSH |RSA |EC |DSA )?PRIVATE KEY-----$'; then
+            compact="$(tr -d '[:space:]' < ~/.ssh/github-deploy)"
+            if [[ "$compact" == b3BlbnNzaC1rZXktdjE* ]]; then
+              {
+                echo '-----BEGIN OPENSSH PRIVATE KEY-----'
+                printf '%s' "$compact" | fold -w 70
+                echo
+                echo '-----END OPENSSH PRIVATE KEY-----'
+              } > ~/.ssh/github-deploy.normalized
+              mv ~/.ssh/github-deploy.normalized ~/.ssh/github-deploy
+            fi
+          fi
+
           chmod 600 ~/.ssh/github-deploy
 
           if ! head -n 1 ~/.ssh/github-deploy | grep -Eq '^-----BEGIN (OPENSSH |RSA |EC |DSA )?PRIVATE KEY-----$'; then
-            echo "SSH_PRIVATE_KEY is not in a recognized private-key format."
+            echo "SSH_PRIVATE_KEY is not in a recognized private-key format. Re-save the complete private key, including BEGIN and END lines."
             exit 1
           fi
 
