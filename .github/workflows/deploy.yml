@@ -32,8 +32,6 @@ jobs:
             exit 1
           fi
 
-          mkdir -p ~/.ssh
-
           case "$SSH_PRIVATE_KEY" in
             ssh-rsa*|ssh-ed25519*|ecdsa-*)
               echo "SSH_PRIVATE_KEY contains a PUBLIC key. GitHub needs the PRIVATE key."
@@ -41,59 +39,17 @@ jobs:
               ;;
           esac
 
-          # Accept either real multiline secrets or secrets pasted with literal \\n characters.
+          mkdir -p ~/.ssh
+
           if [[ "$SSH_PRIVATE_KEY" == *'\\n'* ]]; then
             printf '%b' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/github-deploy
           else
             printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/github-deploy
           fi
+
           chmod 600 ~/.ssh/github-deploy
 
-          if ! grep -Eq '^-----BEGIN (OPENSSH |RSA |EC |DSA )?PRIVATE KEY-----
-
-      - name: Test SSH connection
-        env:
-          SSH_HOST: 66.29.148.167
-          SSH_PORT: "21098"
-          SSH_USER: mvlgebybsy
-        run: |
-          set -euo pipefail
-          ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST"             'echo "SSH connection successful"'
-
-      - name: Upload changed site files
-        env:
-          SSH_HOST: 66.29.148.167
-          SSH_PORT: "21098"
-          SSH_USER: mvlgebybsy
-          REMOTE_DIR: /home/mvlgebybsy/velmorabank.us
-        run: |
-          set -euo pipefail
-
-          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
-            base_sha="${{ github.event.before }}"
-          else
-            base_sha="HEAD^"
-          fi
-
-          changed_files="$(git diff --name-only --diff-filter=ACMRT "$base_sha" "$GITHUB_SHA" --             ':(exclude).git/**'             ':(exclude).github/**'             ':(exclude).vscode/**'             ':(exclude)node_modules/**'             ':(exclude)archive/**')"
-
-          if [ -z "$changed_files" ]; then
-            echo "No changed deployable files to upload."
-            exit 0
-          fi
-
-          while IFS= read -r relative_path; do
-            [ -z "$relative_path" ] && continue
-            [ -f "$relative_path" ] || continue
-
-            remote_path="$REMOTE_DIR/$relative_path"
-            remote_dir="$(dirname "$remote_path")"
-
-            echo "Uploading: $relative_path -> $remote_path"
-            ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" "$SSH_USER@$SSH_HOST"               "mkdir -p \"$remote_dir\""
-            scp -q -i ~/.ssh/github-deploy -P "$SSH_PORT"               "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path"
-          done <<< "$changed_files"
- ~/.ssh/github-deploy; then
+          if ! head -n 1 ~/.ssh/github-deploy | grep -Eq '^-----BEGIN (OPENSSH |RSA |EC |DSA )?PRIVATE KEY-----$'; then
             echo "SSH_PRIVATE_KEY is not in a recognized private-key format."
             exit 1
           fi
@@ -113,7 +69,7 @@ jobs:
           SSH_USER: mvlgebybsy
         run: |
           set -euo pipefail
-          ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST"             'echo "SSH connection successful"'
+          ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'echo "SSH connection successful"'
 
       - name: Upload changed site files
         env:
@@ -130,7 +86,12 @@ jobs:
             base_sha="HEAD^"
           fi
 
-          changed_files="$(git diff --name-only --diff-filter=ACMRT "$base_sha" "$GITHUB_SHA" --             ':(exclude).git/**'             ':(exclude).github/**'             ':(exclude).vscode/**'             ':(exclude)node_modules/**'             ':(exclude)archive/**')"
+          changed_files="$(git diff --name-only --diff-filter=ACMRT "$base_sha" "$GITHUB_SHA" -- \
+            ':(exclude).git/**' \
+            ':(exclude).github/**' \
+            ':(exclude).vscode/**' \
+            ':(exclude)node_modules/**' \
+            ':(exclude)archive/**')"
 
           if [ -z "$changed_files" ]; then
             echo "No changed deployable files to upload."
@@ -145,6 +106,6 @@ jobs:
             remote_dir="$(dirname "$remote_path")"
 
             echo "Uploading: $relative_path -> $remote_path"
-            ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" "$SSH_USER@$SSH_HOST"               "mkdir -p \"$remote_dir\""
-            scp -q -i ~/.ssh/github-deploy -P "$SSH_PORT"               "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path"
+            ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "mkdir -p \"$remote_dir\""
+            scp -q -i ~/.ssh/github-deploy -P "$SSH_PORT" "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path"
           done <<< "$changed_files"
