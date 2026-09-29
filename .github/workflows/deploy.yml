@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  ftp-upload-site:
+  ssh-upload-site:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,29 +19,44 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Upload changed site files
+      - name: Configure SSH
         env:
-          FTP_SERVER: server54.shared.spaceship.host
-          FTP_USERNAME: github-deploy@velmorabank.us
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          REMOTE_DIR: /
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: 66.29.148.167
+          SSH_PORT: "21098"
         run: |
           set -euo pipefail
 
-          FTP_LOGIN="$FTP_USERNAME"
+          if [ -z "$SSH_PRIVATE_KEY" ]; then
+            echo "SSH_PRIVATE_KEY secret is missing or empty"
+            exit 1
+          fi
 
-          if [ -z "$FTP_SERVER" ]; then
-            echo "FTP_SERVER is missing"
-            exit 1
-          fi
-          if [ -z "$FTP_USERNAME" ]; then
-            echo "SUPPORT_EMAIL secret is missing or empty"
-            exit 1
-          fi
-          if [ -z "$FTP_PASSWORD" ]; then
-            echo "SUPPORT_EMAIL_PASSWORD secret is missing or empty"
-            exit 1
-          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/github-deploy
+          chmod 600 ~/.ssh/github-deploy
+
+          ssh-keygen -y -f ~/.ssh/github-deploy >/dev/null
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        env:
+          SSH_HOST: 66.29.148.167
+          SSH_PORT: "21098"
+          SSH_USER: mvlgebybsy
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST"             'echo "SSH connection successful"'
+
+      - name: Upload changed site files
+        env:
+          SSH_HOST: 66.29.148.167
+          SSH_PORT: "21098"
+          SSH_USER: mvlgebybsy
+          REMOTE_DIR: /home/mvlgebybsy/velmorabank.us
+        run: |
+          set -euo pipefail
 
           if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
             base_sha="${{ github.event.before }}"
@@ -49,19 +64,13 @@ jobs:
             base_sha="HEAD^"
           fi
 
-          changed_files="$(git diff --name-only --diff-filter=ACMRT "$base_sha" "$GITHUB_SHA" -- \
-            ':(exclude).git/**' \
-            ':(exclude).github/**' \
-            ':(exclude).vscode/**' \
-            ':(exclude)node_modules/**' \
-            ':(exclude)archive/**')"
+          changed_files="$(git diff --name-only --diff-filter=ACMRT "$base_sha" "$GITHUB_SHA" --             ':(exclude).git/**'             ':(exclude).github/**'             ':(exclude).vscode/**'             ':(exclude)node_modules/**'             ':(exclude)archive/**')"
 
           if [ -z "$changed_files" ]; then
             echo "No changed deployable files to upload."
             exit 0
           fi
 
-          echo "Uploading changed files to ftp://$FTP_SERVER$REMOTE_DIR/"
           while IFS= read -r relative_path; do
             [ -z "$relative_path" ] && continue
             [ -f "$relative_path" ] || continue
@@ -70,17 +79,6 @@ jobs:
             remote_dir="$(dirname "$remote_path")"
 
             echo "Uploading: $relative_path -> $remote_path"
-            if ! upload_output="$(curl --silent --show-error --fail \
-              --ssl-reqd \
-              --user "$FTP_LOGIN:$FTP_PASSWORD" \
-              --ftp-create-dirs \
-              -T "$relative_path" \
-              "ftp://$FTP_SERVER$remote_dir/" 2>&1)"; then
-              if echo "$upload_output" | grep -q "530"; then
-                echo "Spaceship rejected the FTP login. Refresh FTP_USERNAME/FTP_PASSWORD in GitHub Actions secrets."
-              else
-                echo "$upload_output"
-              fi
-              exit 1
-            fi
+            ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" "$SSH_USER@$SSH_HOST"               "mkdir -p \"$remote_dir\""
+            scp -q -i ~/.ssh/github-deploy -P "$SSH_PORT"               "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path"
           done <<< "$changed_files"
