@@ -64,10 +64,7 @@ jobs:
           echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
 
           ASKPASS="$RUNNER_TEMP/ssh-askpass.sh"
-          cat > "$ASKPASS" <<'EOF'
-#!/usr/bin/env bash
-printf '%s\n' "$SSH_PASSPHRASE"
-EOF
+          printf '%s\n' '#!/usr/bin/env bash' 'printf "%s\\n" "$SSH_PASSPHRASE"' > "$ASKPASS"
           chmod 700 "$ASKPASS"
 
           SSH_ASKPASS="$ASKPASS" SSH_ASKPASS_REQUIRE=force DISPLAY=:0 ssh-add ~/.ssh/github-deploy </dev/null
