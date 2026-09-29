@@ -12,6 +12,11 @@ permissions:
 jobs:
   ssh-upload-site:
     runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USERNAME }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      REMOTE_DIR: ${{ secrets.SSH_DEPLOY_PATH }}
 
     steps:
       - name: Checkout repo
@@ -19,34 +24,34 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure SSH
+      - name: Configure encrypted SSH key
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_HOST: 66.29.148.167
-          SSH_PORT: "21098"
+          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
         run: |
           set -euo pipefail
 
-          if [ -z "$SSH_PRIVATE_KEY" ]; then
-            echo "SSH_PRIVATE_KEY secret is missing or empty"
-            exit 1
-          fi
+          for name in SSH_PRIVATE_KEY SSH_HOST SSH_USER SSH_PORT REMOTE_DIR; do
+            if [ -z "${!name:-}" ]; then
+              echo "Required SSH setting is missing: $name"
+              exit 1
+            fi
+          done
 
           case "$SSH_PRIVATE_KEY" in
             ssh-rsa*|ssh-ed25519*|ecdsa-*)
-              echo "SSH_PRIVATE_KEY contains a PUBLIC key. GitHub needs the PRIVATE key."
+              echo "SSH_PRIVATE_KEY contains a public key; the private key is required."
               exit 1
               ;;
           esac
 
           mkdir -p ~/.ssh
 
-          if [[ "$SSH_PRIVATE_KEY" == *'\\n'* ]]; then
+          if [[ "$SSH_PRIVATE_KEY" == *'\n'* ]]; then
             printf '%b' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/github-deploy
           else
             printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/github-deploy
           fi
-
           chmod 600 ~/.ssh/github-deploy
 
           if ! head -n 1 ~/.ssh/github-deploy | grep -Eq '^-----BEGIN (OPENSSH |RSA |EC |DSA )?PRIVATE KEY-----$'; then
@@ -54,29 +59,30 @@ jobs:
             exit 1
           fi
 
-          if ! ssh-keygen -y -f ~/.ssh/github-deploy >/dev/null 2>&1; then
-            echo "SSH_PRIVATE_KEY is present but malformed or not a usable OpenSSH private key."
-            exit 1
-          fi
+          eval "$(ssh-agent -s)" >/dev/null
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+          ASKPASS="$RUNNER_TEMP/ssh-askpass.sh"
+          cat > "$ASKPASS" <<'EOF'
+#!/usr/bin/env bash
+printf '%s\n' "$SSH_PASSPHRASE"
+EOF
+          chmod 700 "$ASKPASS"
+
+          SSH_ASKPASS="$ASKPASS" SSH_ASKPASS_REQUIRE=force DISPLAY=:0 ssh-add ~/.ssh/github-deploy </dev/null
+          ssh-add -l >/dev/null
 
           ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Test SSH connection
-        env:
-          SSH_HOST: 66.29.148.167
-          SSH_PORT: "21098"
-          SSH_USER: mvlgebybsy
+      - name: Test SSH connection and deploy path
         run: |
           set -euo pipefail
-          ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'echo "SSH connection successful"'
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" \
+            "test -d \"$REMOTE_DIR\" && test -w \"$REMOTE_DIR\" && echo 'SSH connection and deploy path verified'"
 
       - name: Upload changed site files
-        env:
-          SSH_HOST: 66.29.148.167
-          SSH_PORT: "21098"
-          SSH_USER: mvlgebybsy
-          REMOTE_DIR: /home/mvlgebybsy/velmorabank.us
         run: |
           set -euo pipefail
 
@@ -103,9 +109,9 @@ jobs:
             [ -f "$relative_path" ] || continue
 
             remote_path="$REMOTE_DIR/$relative_path"
-            remote_dir="$(dirname "$remote_path")"
+            remote_parent="$(dirname "$remote_path")"
 
-            echo "Uploading: $relative_path -> $remote_path"
-            ssh -i ~/.ssh/github-deploy -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "mkdir -p \"$remote_dir\""
-            scp -q -i ~/.ssh/github-deploy -P "$SSH_PORT" "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path"
+            echo "Uploading: $relative_path"
+            ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "mkdir -p \"$remote_parent\""
+            scp -q -P "$SSH_PORT" "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path"
           done <<< "$changed_files"
