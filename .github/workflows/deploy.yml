@@ -112,6 +112,11 @@ jobs:
           scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-count.php" "$SSH_USER@$SSH_HOST:velmora-count.php"
           ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'APP_FILE=$(find "$HOME" -maxdepth 6 -type f -path "*/common-sections/app.php" 2>/dev/null | head -n 1); APP_ROOT=${APP_FILE%/common-sections/app.php}; cd "$APP_ROOT"; php "$HOME/velmora-count.php"; rm -f "$HOME/velmora-count.php"'
 
+      - name: Locate private environment files
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'find "$HOME" -maxdepth 4 -type f \( -name ".env" -o -name "*.env" \) -printf "%p\n" 2>/dev/null | sed "s#^$HOME#~#"'
+
       - name: Upload changed site files
         run: |
           set -euo pipefail
