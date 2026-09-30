@@ -108,6 +108,32 @@ jobs:
             uapi --output=jsonpretty Mysql list_users 2>/dev/null | sed -n "1,160p"
           '
 
+      - name: Test live config password against cPanel Velmora database
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" '
+            APP_FILE=$(find "$HOME" -maxdepth 6 -type f -path "*/common-sections/app.php" 2>/dev/null | head -n 1)
+            APP_ROOT=${APP_FILE%/common-sections/app.php}
+            CFG="$APP_ROOT/db-config.php"
+            DB_NAME=$(uapi --output=json Mysql list_databases 2>/dev/null | php -r '"'"'$j=json_decode(stream_get_contents(STDIN),true); echo $j["result"]["data"][0]["database"] ?? "";'"'"')
+            DB_USER=$(uapi --output=json Mysql list_users 2>/dev/null | php -r '"'"'$j=json_decode(stream_get_contents(STDIN),true); echo $j["result"]["data"][0]["user"] ?? "";'"'"')
+            php -r '"'"'
+              $cfgFile=$argv[1]; $dbName=$argv[2]; $dbUser=$argv[3];
+              require $cfgFile;
+              $cfg=defined("DB_CONFIG") ? DB_CONFIG : [];
+              echo "CONFIG_USER=".($cfg["user"]??"").PHP_EOL;
+              echo "CONFIG_DB=".($cfg["name"]??"").PHP_EOL;
+              $pass=$cfg["password"]??"";
+              try {
+                $db=new mysqli("localhost",$dbUser,$pass,$dbName);
+                echo "EXISTING_PASSWORD_WORKS_WITH_CPANEL_USER=YES".PHP_EOL;
+                $db->close();
+              } catch (Throwable $e) {
+                echo "EXISTING_PASSWORD_WORKS_WITH_CPANEL_USER=NO".PHP_EOL;
+              }
+            '"'"' "$CFG" "$DB_NAME" "$DB_USER"
+          '
+
       - name: Upload changed site files
         run: |
           set -euo pipefail
