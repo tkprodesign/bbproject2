@@ -98,6 +98,16 @@ jobs:
           ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           chmod 600 ~/.ssh/known_hosts
 
+      - name: Diagnose live database configuration
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" '
+            echo "=== MYSQL DATABASES ==="
+            uapi --output=jsonpretty Mysql list_databases 2>/dev/null | sed -n "1,160p"
+            echo "=== MYSQL USERS ==="
+            uapi --output=jsonpretty Mysql list_users 2>/dev/null | sed -n "1,160p"
+          '
+
       - name: Upload changed site files
         run: |
           set -euo pipefail
