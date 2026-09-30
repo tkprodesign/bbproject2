@@ -185,7 +185,7 @@ jobs:
           set -euo pipefail
           nonce="$(openssl rand -hex 24)"
           echo "::add-mask::$nonce"
-          reset_name=".velmora-opcache-$nonce.php"
+          reset_name="velmora-opcache-$nonce.php"
 
           cat > "$RUNNER_TEMP/velmora-opcache-reset.php" <<'PHP'
           <?php
