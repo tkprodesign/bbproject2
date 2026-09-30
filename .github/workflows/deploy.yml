@@ -16,7 +16,6 @@ jobs:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USERNAME }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
-      REMOTE_DIR: ${{ secrets.SSH_DEPLOY_PATH }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_USER_PASSWORD: ${{ secrets.DB_USER_PASSWORD }}
@@ -34,7 +33,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          for name in SSH_PRIVATE_KEY SSH_HOST SSH_USER SSH_PORT REMOTE_DIR; do
+          for name in SSH_PRIVATE_KEY SSH_HOST SSH_USER SSH_PORT; do
             if [ -z "${!name:-}" ]; then
               echo "Required SSH setting is missing: $name"
               exit 1
@@ -101,6 +100,17 @@ jobs:
           ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           chmod 600 ~/.ssh/known_hosts
 
+      - name: Discover live app root
+        run: |
+          set -euo pipefail
+          LIVE_APP_ROOT="$(ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'LOGIN_FILE=$(find "$HOME" -maxdepth 7 -type f -path "*/velmorabank.us/login/index.php" 2>/dev/null | head -n 1); [ -n "$LOGIN_FILE" ] || exit 1; printf "%s" "${LOGIN_FILE%/login/index.php}"')"
+          if [ -z "$LIVE_APP_ROOT" ]; then
+            echo "Could not locate the live Velmora application root."
+            exit 1
+          fi
+          echo "LIVE_APP_ROOT=$LIVE_APP_ROOT" >> "$GITHUB_ENV"
+          echo "LIVE_APP_ROOT_DISCOVERED=YES"
+
       - name: Sync live database config
         run: |
           set -euo pipefail
@@ -139,7 +149,7 @@ jobs:
           echo 'REGISTERED_USERS=' . $row['c'] . PHP_EOL;
           PHP
           scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-count.php" "$SSH_USER@$SSH_HOST:velmora-count.php"
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'APP_FILE=$(find "$HOME" -maxdepth 6 -type f -path "*/common-sections/app.php" 2>/dev/null | head -n 1); APP_ROOT=${APP_FILE%/common-sections/app.php}; cd "$APP_ROOT"; php "$HOME/velmora-count.php"; rm -f "$HOME/velmora-count.php"'
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd '$LIVE_APP_ROOT'; php '\$HOME/velmora-count.php'; rm -f '\$HOME/velmora-count.php'"
 
       - name: Locate private environment files
         run: |
@@ -172,7 +182,7 @@ jobs:
             [ -z "$relative_path" ] && continue
             [ -f "$relative_path" ] || continue
 
-            remote_path="$REMOTE_DIR/$relative_path"
+            remote_path="$LIVE_APP_ROOT/$relative_path"
             remote_parent="$(dirname "$remote_path")"
 
             echo "Uploading: $relative_path"
@@ -193,9 +203,9 @@ jobs:
           echo $ok ? 'OK' : 'FAIL';
           PHP
 
-          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-opcache-reset.php" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/login/$reset_name"
+          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-opcache-reset.php" "$SSH_USER@$SSH_HOST:$LIVE_APP_ROOT/login/$reset_name"
           result="$(curl -fsSL --max-time 30 "https://velmorabank.us/login/$reset_name?cb=$nonce")"
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "rm -f '$REMOTE_DIR/login/$reset_name'"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "rm -f '$LIVE_APP_ROOT/login/$reset_name'"
 
           if [ "$result" != "OK" ]; then
             echo "PHP web cache reset failed."
@@ -206,7 +216,7 @@ jobs:
       - name: Apply private server records
         run: |
           set -euo pipefail
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "APP_FILE=\$(find \"\$HOME\" -maxdepth 6 -type f -path '*/common-sections/app.php' 2>/dev/null | head -n 1); APP_ROOT=\${APP_FILE%/common-sections/app.php}; ENV_FILE=\$(find \"\$HOME\" -maxdepth 5 -type f -path '*/.gitignore/.env' 2>/dev/null | head -n 1); cd \"\$APP_ROOT\"; php -d display_errors=1 -d error_reporting=E_ALL '$REMOTE_DIR/tools/provision-demo-user-from-env.php' \"\$ENV_FILE\" 2>&1"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "ENV_FILE=\$(find \"\$HOME\" -maxdepth 5 -type f -path '*/.gitignore/.env' 2>/dev/null | head -n 1); cd '$LIVE_APP_ROOT'; php -d display_errors=1 -d error_reporting=E_ALL '$LIVE_APP_ROOT/tools/provision-demo-user-from-env.php' \"\$ENV_FILE\" 2>&1"
 
       - name: Verify live login page
         run: |

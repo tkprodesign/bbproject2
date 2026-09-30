@@ -12,6 +12,7 @@ date_default_timezone_set('America/New_York');
 
 
 // Database connection function
+// Live deployment root verified by workflow.
 function connectToDatabase() {
     // Production credentials live outside the public web root in a JSON file.
     // Reading JSON each request avoids stale PHP/opcache values after credential updates.
