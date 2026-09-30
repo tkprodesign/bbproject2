@@ -28,9 +28,9 @@
             </div>
             <div class="input-box">
                 <label>Currency Type</label>
-                <select name="currency">
-                    <option value disabled selected>Choose</option>
-                    <option value="USD">USD</option>
+                <select name="currency" required>
+                    <option value="" disabled selected>Choose</option>
+                    <?php echo velmoraCurrencyOptions('USD'); ?>
                 </select>
             </div>
             <div class="input-box">

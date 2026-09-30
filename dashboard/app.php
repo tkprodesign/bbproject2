@@ -251,7 +251,10 @@ function renderBankEmailTemplate($subject, $headline, $introHtml, $detailsHtml, 
 if (isset($_POST['create_account'])) {
     $user_name = $_POST['user_name'];
     $user_email = $user_email; 
-    $currency = $_POST['currency'];
+    $currency = strtoupper(trim((string)($_POST['currency'] ?? 'USD')));
+    if (!velmoraIsSupportedCurrency($currency)) {
+        $currency = 'USD';
+    }
     $account_type = $_POST['account_type'];
     $time = time();
 
@@ -545,101 +548,159 @@ if (isset($_POST['submit_kyc_data'])) {
 
 //2 funds/transfer
 if (isset($_POST['transfer_funds'])) {
-    // Collect and sanitize form data
-    $to_bank_name = htmlspecialchars($_POST['bank_name']);
-    $to_account_number = htmlspecialchars($_POST['account_number']);
-    $to_account_type = htmlspecialchars($_POST['account_type']);
-    $currency = htmlspecialchars($_POST['currency']);
-    $amount = htmlspecialchars($_POST['amount']);
-    $from_account = htmlspecialchars($_POST['from_account']);
-    list($from_account_number, $from_account_type) = explode('-', $from_account, 2);
-    // $user_email is expected to be defined from a session or user data lookup
-    // $user_name is expected to be defined from a session or user data lookup
+    $to_bank_name = trim((string)($_POST['bank_name'] ?? ''));
+    $to_account_number = trim((string)($_POST['account_number'] ?? ''));
+    $to_account_type = trim((string)($_POST['account_type'] ?? ''));
+    $recipient_currency = strtoupper(trim((string)($_POST['currency'] ?? '')));
+    $amount = filter_var($_POST['amount'] ?? null, FILTER_VALIDATE_FLOAT);
+    $from_account_number = (int) preg_replace('/\D+/', '', (string)($_POST['from_account'] ?? ''));
     $time = time();
 
-    // Database connection
-    $db = connectToDatabase(); // Call your defined function
-
-    // --- Insufficient Funds Check (Re-enable if needed) ---
-    // The original code had this commented out and hardcoded to 'false'.
-    // If you want to enable real fund checking, uncomment and implement the logic.
-    // Example of how it would look if enabled:
-    // $stmt = $db->prepare("SELECT SUM(amount) as balance FROM transactions WHERE account_number = ? AND status != 'Pending'");
-    // $stmt->bind_param("s", $from_account_number);
-    // $stmt->execute();
-    // $result = $stmt->get_result();
-    // $balance_data = $result->fetch_assoc();
-    // $available_balance = $balance_data['balance'];
-    //
-    // if (abs($amount) > $available_balance) {
-    //     $errors = 'Insufficient Funds on account';
-    //     // You might want to redirect or show an error message here
-    // } else {
-    //     // ... rest of the transfer logic
-    // }
-    // --- End Insufficient Funds Check ---
-
-    // Currently, it's hardcoded to always proceed as per your original code:
-    if (false) { // This condition will always be false, making the else block always execute
-        $errors = 'Insufficient Funds on account';
-        // echo 'Insufficient Funds on account'; // Consider redirecting or displaying a user-friendly error
-    } else {
-        // Generate a unique transaction ID
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $transaction_id = '';
-        for ($i = 0; $i < 15; $i++) {
-            $transaction_id .= $characters[mt_rand(0, strlen($characters) - 1)];
-        }
-
-        // Log the transaction into the transactions table
-        $stmt = $db->prepare("INSERT INTO transactions (transaction_id, `type`, user_email, account_number, amount, currency, `description`, `status`, `time`, to_bank_name, to_account_type, to_account_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        if (!$stmt) {
-            echo "Prepare failed: (" . $db->errno . ") " . $db->error;
-            exit();
-        }
-        $negative_amount = -abs($amount);
-        $status = 'Pending';
-        $type = 'Transfer';
-        $description = 'Transfer to ' . $to_bank_name . ' account number ' . $to_account_number;
-        $stmt->bind_param("sssidsssisss", $transaction_id, $type, $user_email, $from_account_number, $negative_amount, $currency, $description, $status, $time, $to_bank_name, $to_account_type, $to_account_number);
-
-        if (!$stmt->execute()) {
-            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-        } else {
-            // --- Send an email notification to the admin via SpaceMail SMTP ---
-            $admin_email_subject = 'New Transfer Attempt';
-            $admin_intro = '<p style="margin:0;">A new outbound transfer has been initiated by a client and is currently pending compliance review.</p>';
-            $admin_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($from_account, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Destination Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Destination Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($amount . ' ' . $currency, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#a16b00;font-weight:700;text-align:right;">Pending</td></tr>            </table>';
-            $admin_email_body = renderBankEmailTemplate($admin_email_subject, 'New Transfer Attempt', $admin_intro, $admin_details);
-
-            if (!sendSiteEmail('admin@velmorabank.us', $admin_email_subject, $admin_email_body)) {
-                error_log('Failed to send admin transfer notification via SMTP.');
-            }
-
-            // --- Send an email notification to the user via SpaceMail SMTP ---
-            $user_email_subject = 'New Transfer Initiated';
-            $user_intro = '<p style="margin:0;">Dear ' . htmlspecialchars($user_name, ENT_QUOTES, 'UTF-8') . ', your transfer request has been received and is now awaiting approval.</p>';
-            $user_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($from_account, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">To Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">To Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($amount . ' ' . $currency, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status</td><td style="padding:12px 16px;font-size:14px;color:#a16b00;font-weight:700;text-align:right;">Pending</td></tr>            </table>';
-            $user_email_body = renderBankEmailTemplate($user_email_subject, 'Transfer Initiated', $user_intro, $user_details, 'View Transactions', 'https://velmorabank.us/dashboard/accounts/transactions');
-
-            if (!sendSiteEmail($user_email, $user_email_subject, $user_email_body)) {
-                error_log('Failed to send user transfer notification via SMTP.');
-                header('location: /dashboard/accounts/transactions?email_failed=true');
-                exit();
-            }
-
-            header('location: /dashboard/accounts/transactions');
-            exit();
-        }
+    if ($to_bank_name === '' || $to_account_number === '' || $from_account_number <= 0
+        || $amount === false || $amount <= 0 || !velmoraIsSupportedCurrency($recipient_currency)) {
+        header('Location: /dashboard/fund/transfer?transfer=invalid');
+        exit();
     }
 
-    // Close the statement and database connection
-    // Ensure $stmt is defined before closing. It might not be if initial checks fail.
-    if (isset($stmt) && $stmt instanceof mysqli_stmt) {
-        $stmt->close();
-    }
-    if (isset($db) && $db instanceof mysqli) {
+    $db = connectToDatabase();
+
+    $accountStmt = $db->prepare("SELECT account_type, currency FROM accounts WHERE user_email = ? AND account_number = ? AND account_status = 'Active' LIMIT 1");
+    if (!$accountStmt) {
         $db->close();
+        header('Location: /dashboard/fund/transfer?transfer=failed');
+        exit();
     }
+    $accountStmt->bind_param('si', $user_email, $from_account_number);
+    $accountStmt->execute();
+    $accountStmt->bind_result($from_account_type, $source_currency);
+    $accountFound = $accountStmt->fetch();
+    $accountStmt->close();
+
+    if (!$accountFound || !velmoraIsSupportedCurrency((string)$source_currency)) {
+        $db->close();
+        header('Location: /dashboard/fund/transfer?transfer=account');
+        exit();
+    }
+
+    $source_currency = strtoupper((string)$source_currency);
+
+    $balanceStmt = $db->prepare("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE account_number = ? AND (status IS NULL OR LOWER(status) <> 'failed')");
+    $balanceStmt->bind_param('i', $from_account_number);
+    $balanceStmt->execute();
+    $balanceStmt->bind_result($available_balance);
+    $balanceStmt->fetch();
+    $balanceStmt->close();
+    $available_balance = (float)$available_balance;
+
+    if ((float)$amount > $available_balance) {
+        $db->close();
+        header('Location: /dashboard/fund/transfer?transfer=insufficient');
+        exit();
+    }
+
+    try {
+        $fx = velmoraFxQuote((float)$amount, $source_currency, $recipient_currency);
+    } catch (Throwable $e) {
+        $db->close();
+        header('Location: /dashboard/fund/transfer?transfer=fx');
+        exit();
+    }
+
+    $recipient_amount = (float)$fx['amount_out'];
+    $fx_rate = (float)$fx['customer_rate'];
+    $fx_spread_bps = (int)$fx['spread_bps'];
+
+    do {
+        $transaction_id = bin2hex(random_bytes(8));
+        $check = $db->prepare("SELECT COUNT(*) FROM transactions WHERE transaction_id = ?");
+        $check->bind_param('s', $transaction_id);
+        $check->execute();
+        $check->bind_result($existingCount);
+        $check->fetch();
+        $check->close();
+    } while ((int)$existingCount > 0);
+
+    $negative_amount = -abs((float)$amount);
+    $status = 'Pending';
+    $type = 'Transfer';
+    $description = 'Transfer to ' . $to_bank_name . ' account number ' . $to_account_number;
+    if ($source_currency !== $recipient_currency) {
+        $description .= ' • Recipient amount ' . velmoraFormatCurrency($recipient_amount, $recipient_currency);
+    }
+
+    $stmt = $db->prepare("INSERT INTO transactions
+        (transaction_id, `type`, user_email, account_number, amount, currency, `description`, `status`, `time`,
+         to_bank_name, to_account_type, to_account_number, counter_currency, counter_amount, fx_rate, fx_spread_bps)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    if (!$stmt) {
+        $db->close();
+        header('Location: /dashboard/fund/transfer?transfer=failed');
+        exit();
+    }
+
+    $stmt->bind_param(
+        "sssidsssissssddi",
+        $transaction_id,
+        $type,
+        $user_email,
+        $from_account_number,
+        $negative_amount,
+        $source_currency,
+        $description,
+        $status,
+        $time,
+        $to_bank_name,
+        $to_account_type,
+        $to_account_number,
+        $recipient_currency,
+        $recipient_amount,
+        $fx_rate,
+        $fx_spread_bps
+    );
+
+    if (!$stmt->execute()) {
+        error_log('Transfer insert failed: ' . $stmt->error);
+        $stmt->close();
+        $db->close();
+        header('Location: /dashboard/fund/transfer?transfer=failed');
+        exit();
+    }
+
+    $stmt->close();
+    $db->close();
+
+    $sourceDisplay = velmoraFormatCurrency((float)$amount, $source_currency);
+    $recipientDisplay = velmoraFormatCurrency($recipient_amount, $recipient_currency);
+    $rateDisplay = '1 ' . $source_currency . ' = ' . number_format($fx_rate, 6) . ' ' . $recipient_currency;
+    $spreadDisplay = number_format($fx_spread_bps / 100, 2) . '%';
+
+    $admin_email_subject = 'New Transfer Attempt';
+    $admin_intro = '<p style="margin:0;">A new outbound transfer has been initiated by a client and is currently pending compliance review.</p>';
+    $admin_details = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">From Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars((string)$from_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Destination Bank</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($to_bank_name, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Destination Account</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($to_account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Account Debit</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($sourceDisplay, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Recipient Gets</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($recipientDisplay, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Bank FX Rate</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($rateDisplay, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;">FX Margin</td><td style="padding:12px 16px;text-align:right;font-weight:700;">' . htmlspecialchars($spreadDisplay, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '</table>';
+    $admin_email_body = renderBankEmailTemplate($admin_email_subject, 'New Transfer Attempt', $admin_intro, $admin_details);
+    if (!sendSiteEmail('admin@velmorabank.us', $admin_email_subject, $admin_email_body)) {
+        error_log('Failed to send admin transfer notification via SMTP.');
+    }
+
+    $user_email_subject = 'New Transfer Initiated';
+    $user_intro = '<p style="margin:0;">Dear ' . htmlspecialchars($user_name, ENT_QUOTES, 'UTF-8') . ', your transfer request has been received and is now awaiting approval.</p>';
+    $user_details = $admin_details;
+    $user_email_body = renderBankEmailTemplate($user_email_subject, 'Transfer Initiated', $user_intro, $user_details, 'View Transactions', 'https://velmorabank.us/dashboard/accounts/transactions');
+    if (!sendSiteEmail($user_email, $user_email_subject, $user_email_body)) {
+        error_log('Failed to send user transfer notification via SMTP.');
+    }
+
+    header('Location: /dashboard/accounts/transactions?transfer=pending');
+    exit();
 }
+
 ?>
