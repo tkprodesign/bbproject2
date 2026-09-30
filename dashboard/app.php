@@ -95,6 +95,20 @@ $is_demo_account = seedMichaelDemoAccountData((string) $user_email, (string) $us
 if ($is_demo_account) {
     $user_name = 'Michael Griffin';
     $user_profile_picture = 'michael-griffin.png';
+} else {
+    // Any profile explicitly stored with KYC status "Demo" is also treated as a demo account.
+    $demoDb = connectToDatabase();
+    $demoStmt = $demoDb->prepare('SELECT status FROM kyc_data WHERE email = ? ORDER BY id DESC LIMIT 1');
+    if ($demoStmt) {
+        $demoStmt->bind_param('s', $user_email);
+        $demoStmt->execute();
+        $demoStmt->bind_result($demoKycStatus);
+        if ($demoStmt->fetch() && strcasecmp(trim((string)$demoKycStatus), 'Demo') === 0) {
+            $is_demo_account = true;
+        }
+        $demoStmt->close();
+    }
+    $demoDb->close();
 }
 
 
