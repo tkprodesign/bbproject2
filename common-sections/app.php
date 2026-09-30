@@ -20,12 +20,14 @@ function connectToDatabase() {
     }
     $cfg = defined('DB_CONFIG') ? DB_CONFIG : [];
 
-    $socket     = getenv('DB_SOCKET') ?: ($cfg['socket'] ?? '');
-    $host       = getenv('DB_HOST')   ?: ($cfg['host']   ?? 'localhost');
-    $port       = (int)(getenv('DB_PORT') ?: ($cfg['port'] ?? 3306));
-    $dbusername = getenv('DB_USER')   ?: ($cfg['user']   ?? '');
-    $dbpassword = getenv('DB_PASS')   ?: ($cfg['password'] ?? '');
-    $dbname     = getenv('DB_NAME')   ?: ($cfg['name']   ?? '');
+    // On shared hosting, the private db-config.php is authoritative.
+    // Environment variables are only fallbacks for local/dev environments.
+    $socket     = ($cfg['socket'] ?? '') ?: getenv('DB_SOCKET');
+    $host       = ($cfg['host']   ?? '') ?: (getenv('DB_HOST') ?: 'localhost');
+    $port       = (int)(($cfg['port'] ?? 0) ?: (getenv('DB_PORT') ?: 3306));
+    $dbusername = ($cfg['user']   ?? '') ?: getenv('DB_USER');
+    $dbpassword = ($cfg['password'] ?? '') ?: getenv('DB_PASS');
+    $dbname     = ($cfg['name']   ?? '') ?: getenv('DB_NAME');
 
     // Prefer Unix socket when socket file exists (null host triggers socket mode)
     if ($socket && file_exists($socket)) {
