@@ -190,6 +190,11 @@ jobs:
             scp -q -P "$SSH_PORT" "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path"
           done <<< "$changed_files"
 
+      - name: Run safe database migrations
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd '$LIVE_APP_ROOT'; php create_tables.php >/tmp/velmora-migrate.log 2>&1 || { cat /tmp/velmora-migrate.log; rm -f /tmp/velmora-migrate.log; exit 1; }; grep -E 'Success|Finished with errors' /tmp/velmora-migrate.log || true; rm -f /tmp/velmora-migrate.log"
+
       - name: Reset PHP web cache
         run: |
           set -euo pipefail
