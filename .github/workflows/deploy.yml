@@ -185,20 +185,17 @@ jobs:
           set -euo pipefail
           nonce="$(openssl rand -hex 24)"
           echo "::add-mask::$nonce"
+          reset_name=".velmora-opcache-$nonce.php"
 
-          cat > "$RUNNER_TEMP/velmora-opcache-reset.php" <<PHP
+          cat > "$RUNNER_TEMP/velmora-opcache-reset.php" <<'PHP'
           <?php
-          if (!hash_equals('$nonce', $_GET['token'] ?? '')) {
-              http_response_code(403);
-              exit('FORBIDDEN');
-          }
           $ok = function_exists('opcache_reset') ? opcache_reset() : true;
           echo $ok ? 'OK' : 'FAIL';
           PHP
 
-          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-opcache-reset.php" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/.velmora-opcache-reset.php"
-          result="$(curl -fsSL --max-time 30 "https://velmorabank.us/.velmora-opcache-reset.php?token=$nonce")"
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "rm -f '$REMOTE_DIR/.velmora-opcache-reset.php'"
+          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-opcache-reset.php" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/$reset_name"
+          result="$(curl -fsSL --max-time 30 "https://velmorabank.us/$reset_name")"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "rm -f '$REMOTE_DIR/$reset_name'"
 
           if [ "$result" != "OK" ]; then
             echo "PHP web cache reset failed."
