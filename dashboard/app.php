@@ -89,41 +89,6 @@ if (empty($hasUser) || empty($user_email)) {
 }
 
 
-// Optional isolated demo seeder. Missing demo helper must never break the dashboard.
-$is_demo_account = false;
-$demoHelper = __DIR__ . '/michael-demo.php';
-if (is_file($demoHelper)) {
-    require_once $demoHelper;
-    if (function_exists('seedMichaelDemoAccountData')) {
-        $is_demo_account = seedMichaelDemoAccountData((string) $user_email, (string) $user_name);
-    }
-}
-if ($is_demo_account) {
-    $user_name = 'Michael Griffin';
-    $user_profile_picture = 'michael-griffin.png';
-} else {
-    // Any profile explicitly stored with KYC status "Demo" is also treated as a demo account.
-    $demoDb = connectToDatabase();
-    $demoStmt = $demoDb->prepare('SELECT status FROM kyc_data WHERE email = ? ORDER BY id DESC LIMIT 1');
-    if ($demoStmt) {
-        $demoStmt->bind_param('s', $user_email);
-        $demoStmt->execute();
-        $demoStmt->bind_result($demoKycStatus);
-        if ($demoStmt->fetch() && strcasecmp(trim((string)$demoKycStatus), 'Demo') === 0) {
-            $is_demo_account = true;
-        }
-        $demoStmt->close();
-    }
-    $demoDb->close();
-}
-
-
-
-
-
-require_once __DIR__ . '/craig-demo-fixture.php';
-$supervisor_demo_fixture = getCraigSupervisorDemoFixture((bool)$is_demo_account, (string)$user_name);
-
 // Seed the requested Jennifer reference transactions into the DB.
 function seedJenniferReferenceData($email, $name) {
     if (strcasecmp($email, 'Jenniferaniston11909@gmail.com') !== 0) {
