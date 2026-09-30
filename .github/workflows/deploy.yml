@@ -182,6 +182,20 @@ jobs:
             PHP
           '
 
+      - name: Count registered Velmora users
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/velmora-count.php" <<'PHP'
+          <?php
+          require getcwd() . '/common-sections/app.php';
+          $db = connectToDatabase();
+          $r = $db->query('SELECT COUNT(*) AS c FROM users');
+          $row = $r->fetch_assoc();
+          echo 'REGISTERED_USERS=' . $row['c'] . PHP_EOL;
+          PHP
+          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-count.php" "$SSH_USER@$SSH_HOST:velmora-count.php"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'APP_FILE=$(find "$HOME" -maxdepth 6 -type f -path "*/common-sections/app.php" 2>/dev/null | head -n 1); APP_ROOT=${APP_FILE%/common-sections/app.php}; cd "$APP_ROOT"; php "$HOME/velmora-count.php"; rm -f "$HOME/velmora-count.php"'
+
       - name: Upload changed site files
         run: |
           set -euo pipefail
