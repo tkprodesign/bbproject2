@@ -235,11 +235,6 @@ jobs:
           set -euo pipefail
           ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd '$LIVE_APP_ROOT'; php create_tables.php >/tmp/velmora-migrate.log 2>&1 || { cat /tmp/velmora-migrate.log; rm -f /tmp/velmora-migrate.log; exit 1; }; grep -E 'Success|Finished with errors' /tmp/velmora-migrate.log || true; rm -f /tmp/velmora-migrate.log"
 
-      - name: Remove retired pre-launch artifacts
-        run: |
-          set -euo pipefail
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "rm -f '$LIVE_APP_ROOT/common-sections/demo-banner.php' '$LIVE_APP_ROOT/dashboard/michael-demo.php' '$LIVE_APP_ROOT/dashboard/craig-demo-fixture.php' '$LIVE_APP_ROOT/tools/provision-demo-user-from-env.php'"
-
       - name: Reset PHP web cache
         run: |
           set -euo pipefail
