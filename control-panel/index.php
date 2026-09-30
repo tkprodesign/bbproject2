@@ -1,4 +1,16 @@
-<?php include('app.php') ?>
+<?php
+include('app.php');
+$fxClientConfig = velmoraFxClientConfig();
+$velmoraAccountCurrencies = [];
+$fxAccountDb = connectToDatabase();
+$fxAccountResult = $fxAccountDb->query("SELECT account_number, currency FROM accounts");
+if ($fxAccountResult) {
+    while ($fxAccountRow = $fxAccountResult->fetch_assoc()) {
+        $velmoraAccountCurrencies[(string)$fxAccountRow['account_number']] = strtoupper((string)$fxAccountRow['currency']);
+    }
+}
+$fxAccountDb->close();
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -58,6 +70,7 @@ $controlPanelActionMessages = [
     'debit_user' => [
         'success' => ['type' => 'success', 'text' => 'Withdrawal recorded successfully.'],
         'invalid' => ['type' => 'error', 'text' => 'Withdrawal failed: invalid input values.'],
+        'insufficient' => ['type' => 'error', 'text' => 'Withdrawal failed: insufficient funds in the selected account.'],
         'failed' => ['type' => 'error', 'text' => 'Withdrawal failed due to a server/database error.'],
     ],
     'judge_withdrawal' => [
@@ -345,7 +358,7 @@ if (isset($_POST['delete_user_account'])) {
 </section>
 <section class="form deposit-user" name="Credit User">
     <div class="container">
-        <form action="" method="post">
+        <form action="" method="post" data-fx-form data-fx-mode="deposit">
             <h3>Deposit Into User Account</h3>
             <div class="input-box">
                 <label>User Email</label>
@@ -353,21 +366,31 @@ if (isset($_POST['delete_user_account'])) {
             </div>
             <div class="input-box">
                 <label>Account Number</label>
-                <input type="number" name="account_number" required>
+                <input type="number" name="account_number" data-fx-account-number required>
             </div>
             <div class="input-box">
-                <label>Amount ($)</label>
-                <input type="number" name="amount" required>
+                <label>Deposit Amount</label>
+                <input type="number" name="amount" min="0.01" step="0.01" data-fx-amount required>
             </div>
             <div class="input-box">
-                <label>Currency</label>
-                <select name="currency">
-                    <option value="USD">USD</option>
+                <label>Deposit Currency</label>
+                <select name="currency" data-fx-currency required>
+                    <?php echo velmoraCurrencyOptions('USD'); ?>
                 </select>
+            </div>
+            <div class="fx-quote-card is-waiting" data-fx-quote>
+                <div class="fx-title">Deposit conversion preview</div>
+                <div class="fx-quote-grid">
+                    <div><span>Deposit received</span><strong data-fx-send>—</strong></div>
+                    <div><span>Account credited</span><strong data-fx-receive>—</strong></div>
+                    <div><span>Bank rate</span><strong data-fx-rate>—</strong></div>
+                    <div><span>FX margin</span><strong data-fx-spread>—</strong></div>
+                </div>
+                <p class="fx-note">If the deposit currency differs from the account currency, the bank conversion rate is applied automatically. <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener nofollow">Rates by Exchange Rate API</a>.</p>
             </div>
             <div class="input-box">
                 <label>Description</label>
-                <textarea name="description" cols="10" rows="10"></textarea>
+                <textarea name="description" cols="10" rows="5"></textarea>
             </div>
             <div class="input-box">
                 <button type="submit" name="credit_user" value="1">Deposit</button>
@@ -377,7 +400,7 @@ if (isset($_POST['delete_user_account'])) {
 </section>
 <section class="form withdraw-from-user" name="Debit User" style="display: none;">
     <div class="container">
-        <form action="" method="post">
+        <form action="" method="post" data-fx-form data-fx-mode="withdrawal">
             <h3>Withdraw From User Account</h3>
             <div class="input-box">
                 <label>User Email</label>
@@ -385,21 +408,31 @@ if (isset($_POST['delete_user_account'])) {
             </div>
             <div class="input-box">
                 <label>Account Number</label>
-                <input type="number" name="account_number" required>
+                <input type="number" name="account_number" data-fx-account-number required>
             </div>
             <div class="input-box">
-                <label>Amount</label>
-                <input type="number" name="amount" required>
+                <label>Payout Amount</label>
+                <input type="number" name="amount" min="0.01" step="0.01" data-fx-amount required>
             </div>
             <div class="input-box">
-                <label>Currency</label>
-                <select name="currency">
-                    <option value="USD">USD</option>
+                <label>Payout Currency</label>
+                <select name="currency" data-fx-currency required>
+                    <?php echo velmoraCurrencyOptions('USD'); ?>
                 </select>
+            </div>
+            <div class="fx-quote-card is-waiting" data-fx-quote>
+                <div class="fx-title">Withdrawal conversion preview</div>
+                <div class="fx-quote-grid">
+                    <div><span>Account debited</span><strong data-fx-send>—</strong></div>
+                    <div><span>Payout amount</span><strong data-fx-receive>—</strong></div>
+                    <div><span>Bank rate</span><strong data-fx-rate>—</strong></div>
+                    <div><span>FX margin</span><strong data-fx-spread>—</strong></div>
+                </div>
+                <p class="fx-note">The payout is converted from the account currency using Velmora's bank rate and FX spread. <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener nofollow">Rates by Exchange Rate API</a>.</p>
             </div>
             <div class="input-box">
                 <label>Description</label>
-                <textarea name="description" cols="10" rows="10"></textarea>
+                <textarea name="description" cols="10" rows="5"></textarea>
             </div>
             <div class="input-box">
                 <button type="submit" name="debit_user" value="100">Withdraw</button>
@@ -563,6 +596,11 @@ if (isset($_POST['delete_user_account'])) {
         </form>
     </div>
 </section>
+<script>
+window.VelmoraFxConfig = <?php echo json_encode($fxClientConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
+window.VelmoraAccountCurrencies = <?php echo json_encode($velmoraAccountCurrencies, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
+</script>
+<script src="/assets/scripts/fx.js?v=<?php echo time(); ?>"></script>
 <script src="/assets/scripts/control-panel.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

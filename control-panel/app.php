@@ -114,179 +114,241 @@ if (isset($_POST['update_support_phone'])) {
 // Deposit into user account
 if (isset($_POST['credit_user'])) {
     $user_email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
-    $account_number = (int) preg_replace('/\D+/', '', $_POST['account_number'] ?? '');
-    $amount = filter_var($_POST['amount'] ?? null, FILTER_VALIDATE_FLOAT);
-    $currency = strtoupper(trim($_POST['currency'] ?? ''));
-    $description = trim($_POST['description'] ?? '');
+    $account_number = (int) preg_replace('/\D+/', '', (string)($_POST['account_number'] ?? ''));
+    $input_amount = filter_var($_POST['amount'] ?? null, FILTER_VALIDATE_FLOAT);
+    $input_currency = strtoupper(trim((string)($_POST['currency'] ?? '')));
+    $description = trim((string)($_POST['description'] ?? ''));
     $transaction_type = 'Deposit';
     $status = 'Successful';
     $time = time();
 
-    if (!$user_email || !$account_number || !is_numeric($amount) || $amount <= 0 || !$currency) {
+    if (!$user_email || !$account_number || $input_amount === false || $input_amount <= 0 || !velmoraIsSupportedCurrency($input_currency)) {
         header('Location: /control-panel?credit_user=invalid');
         exit;
     }
 
     $dbconn = connectToDatabase();
-
-    $accountStmt = $dbconn->prepare("SELECT id FROM accounts WHERE user_email = ? AND account_number = ? LIMIT 1");
+    $accountStmt = $dbconn->prepare("SELECT currency FROM accounts WHERE user_email = ? AND account_number = ? LIMIT 1");
     if (!$accountStmt) {
-        error_log("Prepare failed (account validation): (" . $dbconn->errno . ") " . $dbconn->error);
+        $dbconn->close();
         header('Location: /control-panel?credit_user=failed');
         exit;
     }
-    $accountStmt->bind_param("si", $user_email, $account_number);
+    $accountStmt->bind_param('si', $user_email, $account_number);
     $accountStmt->execute();
-    $accountResult = $accountStmt->get_result();
-    $accountExists = $accountResult && $accountResult->num_rows > 0;
+    $accountStmt->bind_result($account_currency);
+    $accountExists = $accountStmt->fetch();
     $accountStmt->close();
 
-    if (!$accountExists) {
+    if (!$accountExists || !velmoraIsSupportedCurrency((string)$account_currency)) {
         $dbconn->close();
         header('Location: /control-panel?credit_user=account_mismatch');
         exit;
     }
 
-    $formatted_time = date('H:i | d F Y /T', $time);
+    $account_currency = strtoupper((string)$account_currency);
+    try {
+        $fx = velmoraFxQuote((float)$input_amount, $input_currency, $account_currency);
+    } catch (Throwable $e) {
+        $dbconn->close();
+        header('Location: /control-panel?credit_user=invalid');
+        exit;
+    }
+
+    $credited_amount = (float)$fx['amount_out'];
+    $fx_rate = (float)$fx['customer_rate'];
+    $fx_spread_bps = (int)$fx['spread_bps'];
     $description = $description !== '' ? $description : 'Manual deposit by control panel';
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $transaction_id = '';
+
     do {
-        $transaction_id = '';
-        for ($i = 0; $i < 15; $i++) {
-            $transaction_id .= $characters[mt_rand(0, strlen($characters) - 1)];
-        }
+        $transaction_id = bin2hex(random_bytes(8));
         $stmtCheck = $dbconn->prepare("SELECT COUNT(*) FROM transactions WHERE transaction_id = ?");
-        if (!$stmtCheck) {
-            error_log("Prepare failed (transaction id check): (" . $dbconn->errno . ") " . $dbconn->error);
-            $dbconn->close();
-            header('Location: /control-panel?credit_user=failed');
-            exit;
-        }
-        $stmtCheck->bind_param("s", $transaction_id);
+        $stmtCheck->bind_param('s', $transaction_id);
         $stmtCheck->execute();
         $stmtCheck->bind_result($count);
         $stmtCheck->fetch();
         $stmtCheck->close();
-    } while ($count > 0);
+    } while ((int)$count > 0);
 
-    $stmt = $dbconn->prepare("INSERT INTO transactions (`type`, transaction_id, user_email, account_number, amount, currency, `description`, `status`, `time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $dbconn->prepare("INSERT INTO transactions
+        (`type`, transaction_id, user_email, account_number, amount, currency, `description`, `status`, `time`,
+         counter_currency, counter_amount, fx_rate, fx_spread_bps)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
     if (!$stmt) {
-        error_log("Prepare failed (deposit insert): (" . $dbconn->errno . ") " . $dbconn->error);
         $dbconn->close();
         header('Location: /control-panel?credit_user=failed');
         exit;
     }
 
-    $stmt->bind_param("sssidsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
-    if ($stmt->execute()) {
-        $display_amount = number_format($amount, 2);
-        $email_subject = 'Deposit Confirmation - Velmora Bank';
-        $introHtml = '<p style="margin:0;">Dear Valued Customer, a deposit has been posted to your account successfully.</p>';
-        $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $display_amount, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
-        $email_body = renderControlPanelBankEmail($email_subject, 'Deposit Confirmation', $introHtml, $detailsHtml);
+    $stmt->bind_param(
+        'sssidsssisddi',
+        $transaction_type,
+        $transaction_id,
+        $user_email,
+        $account_number,
+        $credited_amount,
+        $account_currency,
+        $description,
+        $status,
+        $time,
+        $input_currency,
+        $input_amount,
+        $fx_rate,
+        $fx_spread_bps
+    );
 
-        if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
-            error_log('Failed to send deposit confirmation email via SMTP.');
-        }
+    if (!$stmt->execute()) {
+        error_log('Deposit insert failed: ' . $stmt->error);
         $stmt->close();
         $dbconn->close();
-        header('Location: /control-panel?credit_user=success');
+        header('Location: /control-panel?credit_user=failed');
         exit;
     }
 
-    error_log("Error: Could not record deposit transaction. " . $stmt->error);
     $stmt->close();
     $dbconn->close();
-    header('Location: /control-panel?credit_user=failed');
+
+    $formatted_time = date('H:i | d F Y /T', $time);
+    $receivedDisplay = velmoraFormatCurrency((float)$input_amount, $input_currency);
+    $creditedDisplay = velmoraFormatCurrency($credited_amount, $account_currency);
+    $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Deposit Received</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($receivedDisplay, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Account Credited</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($creditedDisplay, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Bank FX Rate</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">1 ' . htmlspecialchars($input_currency, ENT_QUOTES, 'UTF-8') . ' = ' . htmlspecialchars(number_format($fx_rate, 6), ENT_QUOTES, 'UTF-8') . ' ' . htmlspecialchars($account_currency, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;">Status / Time</td><td style="padding:12px 16px;text-align:right;font-weight:700;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '</table>';
+    $email_subject = 'Deposit Confirmation - Velmora Bank';
+    $email_body = renderControlPanelBankEmail($email_subject, 'Deposit Confirmation', '<p style="margin:0;">A deposit has been posted to your account successfully.</p>', $detailsHtml);
+    if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+        error_log('Failed to send deposit confirmation email via SMTP.');
+    }
+
+    header('Location: /control-panel?credit_user=success');
     exit;
 }
 
 // Withdraw from user account
 if (isset($_POST['debit_user'])) {
-    // Collect and sanitize form data
-    $user_email = htmlspecialchars($_POST['email']);
-    $account_number = (int)($_POST['account_number'] ?? 0);
-    $amount = filter_var($_POST['amount'], FILTER_VALIDATE_FLOAT); // Sanitize as float
-    $amount = -abs($amount); // Ensure amount is negative for a debit
-    $currency = htmlspecialchars($_POST['currency']);
-    $description = htmlspecialchars($_POST['description']);
+    $user_email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+    $account_number = (int) preg_replace('/\D+/', '', (string)($_POST['account_number'] ?? ''));
+    $payout_amount = filter_var($_POST['amount'] ?? null, FILTER_VALIDATE_FLOAT);
+    $payout_currency = strtoupper(trim((string)($_POST['currency'] ?? '')));
+    $description = trim((string)($_POST['description'] ?? ''));
     $transaction_type = 'Withdrawal';
     $status = 'Successful';
-    $time = time(); // Current timestamp
+    $time = time();
 
-    // Basic validation for critical fields
-    if ($user_email && $account_number && is_numeric($amount) && $currency) {
-        $dbconn = connectToDatabase();
-        // Removed /E/ from date format as it may cause issues or be unnecessary depending on environment
-        $formatted_time = date('H:i | d F Y /T', $time);
-
-        // Generate a unique transaction ID
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $transaction_id = '';
-        do {
-            $transaction_id = '';
-            for ($i = 0; $i < 15; $i++) {
-                $transaction_id .= $characters[mt_rand(0, strlen($characters) - 1)];
-            }
-            $stmt = $dbconn->prepare("SELECT COUNT(*) FROM transactions WHERE transaction_id = ?");
-            if (!$stmt) {
-                error_log("Prepare failed: (" . $dbconn->errno . ") " . $dbconn->error);
-                // Handle error appropriately, e.g., display a user-friendly message and exit
-                die("An internal error occurred. Please try again later.");
-            }
-            $stmt->bind_param("s", $transaction_id);
-            $stmt->execute();
-            $stmt->bind_result($count);
-            $stmt->fetch();
-            $stmt->close(); // Close this statement before preparing a new one
-        } while ($count > 0);
-
-        // Insert the transaction into the database
-        $stmt = $dbconn->prepare("INSERT INTO transactions (`type`, transaction_id, user_email, account_number, amount, currency, `description`, `status`, `time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        if (!$stmt) {
-            error_log("Prepare failed: (" . $dbconn->errno . ") " . $dbconn->error);
-            die("An internal error occurred. Please try again later.");
-        }
-        // Use "d" for float/double for the amount to ensure precision
-        $stmt->bind_param("sssidsssi", $transaction_type, $transaction_id, $user_email, $account_number, $amount, $currency, $description, $status, $time);
-
-        if ($stmt->execute()) {
-            // --- Send Withdrawal Confirmation Email via SpaceMail SMTP ---
-            $email_subject = 'Withdrawal Confirmation - Velmora Bank';
-            // Use abs($amount) for display to show a positive withdrawal amount to the user
-            $display_amount = number_format(abs($amount), 2);
-            $introHtml = '<p style="margin:0;">Dear Valued Customer, your withdrawal has been processed successfully. The transaction summary is below.</p>';
-            $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Account Number</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($account_number, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($currency . ' ' . $display_amount, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#6f8199;">Description</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($description, ENT_QUOTES, 'UTF-8') . '</td></tr>                <tr><td style="padding:12px 16px;font-size:13px;color:#6f8199;">Status / Time</td><td style="padding:12px 16px;font-size:14px;color:#0f2742;font-weight:700;text-align:right;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>            </table>';
-            $email_body = renderControlPanelBankEmail($email_subject, 'Withdrawal Confirmation', $introHtml, $detailsHtml);
-
-            if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
-                error_log('Failed to send withdrawal confirmation email via SMTP.');
-            }
-            header('Location: /control-panel?debit_user=success');
-            exit;
-
-        } else {
-            // Transaction insertion failed
-            error_log("Error: Could not record the withdrawal transaction in the database. " . $stmt->error);
-            header('Location: /control-panel?debit_user=failed');
-            exit;
-        }
-
-        $stmt->close(); // Close the statement after use
-        $dbconn->close(); // Close the database connection
-    } else {
-        // Handle cases where required fields are missing or invalid
+    if (!$user_email || !$account_number || $payout_amount === false || $payout_amount <= 0 || !velmoraIsSupportedCurrency($payout_currency)) {
         header('Location: /control-panel?debit_user=invalid');
         exit;
     }
+
+    $dbconn = connectToDatabase();
+    $accountStmt = $dbconn->prepare("SELECT currency FROM accounts WHERE user_email = ? AND account_number = ? LIMIT 1");
+    $accountStmt->bind_param('si', $user_email, $account_number);
+    $accountStmt->execute();
+    $accountStmt->bind_result($account_currency);
+    $accountExists = $accountStmt->fetch();
+    $accountStmt->close();
+
+    if (!$accountExists || !velmoraIsSupportedCurrency((string)$account_currency)) {
+        $dbconn->close();
+        header('Location: /control-panel?debit_user=invalid');
+        exit;
+    }
+
+    $account_currency = strtoupper((string)$account_currency);
+    try {
+        $fx = velmoraFxRequiredSource((float)$payout_amount, $account_currency, $payout_currency);
+    } catch (Throwable $e) {
+        $dbconn->close();
+        header('Location: /control-panel?debit_user=invalid');
+        exit;
+    }
+
+    $debit_amount = (float)$fx['amount_in'];
+    $fx_rate = (float)$fx['customer_rate'];
+    $fx_spread_bps = (int)$fx['spread_bps'];
+
+    $balanceStmt = $dbconn->prepare("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE account_number = ? AND (status IS NULL OR LOWER(status) <> 'failed')");
+    $balanceStmt->bind_param('i', $account_number);
+    $balanceStmt->execute();
+    $balanceStmt->bind_result($available_balance);
+    $balanceStmt->fetch();
+    $balanceStmt->close();
+
+    if ($debit_amount > (float)$available_balance) {
+        $dbconn->close();
+        header('Location: /control-panel?debit_user=insufficient');
+        exit;
+    }
+
+    $description = $description !== '' ? $description : 'Manual withdrawal by control panel';
+
+    do {
+        $transaction_id = bin2hex(random_bytes(8));
+        $stmtCheck = $dbconn->prepare("SELECT COUNT(*) FROM transactions WHERE transaction_id = ?");
+        $stmtCheck->bind_param('s', $transaction_id);
+        $stmtCheck->execute();
+        $stmtCheck->bind_result($count);
+        $stmtCheck->fetch();
+        $stmtCheck->close();
+    } while ((int)$count > 0);
+
+    $negative_amount = -abs($debit_amount);
+    $stmt = $dbconn->prepare("INSERT INTO transactions
+        (`type`, transaction_id, user_email, account_number, amount, currency, `description`, `status`, `time`,
+         counter_currency, counter_amount, fx_rate, fx_spread_bps)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param(
+        'sssidsssisddi',
+        $transaction_type,
+        $transaction_id,
+        $user_email,
+        $account_number,
+        $negative_amount,
+        $account_currency,
+        $description,
+        $status,
+        $time,
+        $payout_currency,
+        $payout_amount,
+        $fx_rate,
+        $fx_spread_bps
+    );
+
+    if (!$stmt->execute()) {
+        error_log('Withdrawal insert failed: ' . $stmt->error);
+        $stmt->close();
+        $dbconn->close();
+        header('Location: /control-panel?debit_user=failed');
+        exit;
+    }
+
+    $stmt->close();
+    $dbconn->close();
+
+    $formatted_time = date('H:i | d F Y /T', $time);
+    $debitDisplay = velmoraFormatCurrency($debit_amount, $account_currency);
+    $payoutDisplay = velmoraFormatCurrency((float)$payout_amount, $payout_currency);
+    $detailsHtml = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Transaction ID</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($transaction_id, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Account Debited</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($debitDisplay, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Payout Amount</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">' . htmlspecialchars($payoutDisplay, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Bank FX Rate</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">1 ' . htmlspecialchars($account_currency, ENT_QUOTES, 'UTF-8') . ' = ' . htmlspecialchars(number_format($fx_rate, 6), ENT_QUOTES, 'UTF-8') . ' ' . htmlspecialchars($payout_currency, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '<tr><td style="padding:12px 16px;">Status / Time</td><td style="padding:12px 16px;text-align:right;font-weight:700;">' . htmlspecialchars($status . ' • ' . $formatted_time, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+        . '</table>';
+    $email_subject = 'Withdrawal Confirmation - Velmora Bank';
+    $email_body = renderControlPanelBankEmail($email_subject, 'Withdrawal Confirmation', '<p style="margin:0;">Your withdrawal has been processed successfully.</p>', $detailsHtml);
+    if (!sendSiteEmail($user_email, $email_subject, $email_body)) {
+        error_log('Failed to send withdrawal confirmation email via SMTP.');
+    }
+
+    header('Location: /control-panel?debit_user=success');
+    exit;
 }
-
-
-
-
-
-
 
 // Approve/Reject Withdrawal
 if (isset($_POST['judge_withdrawal'])) {
