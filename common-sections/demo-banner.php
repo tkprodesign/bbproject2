@@ -5,7 +5,7 @@ if (!defined('VELMORA_DEMO_BANNER_RENDERED')) {
 <div id="velmora-demo-banner" role="status" aria-label="Demo environment">DEMO</div>
 <style>
 #velmora-demo-banner{
-    position:fixed;top:14px;right:14px;z-index:2147483647;
+    position:fixed;left:14px;bottom:14px;z-index:2147483647;
     background:#ff001e;color:#fff;border:2px solid rgba(255,255,255,.95);
     border-radius:999px;padding:10px 18px;
     font:900 13px/1 Arial,Helvetica,sans-serif;letter-spacing:.18em;
@@ -13,7 +13,7 @@ if (!defined('VELMORA_DEMO_BANNER_RENDERED')) {
     pointer-events:none;user-select:none;
 }
 @media(max-width:720px){
-    #velmora-demo-banner{top:10px;right:10px;padding:9px 14px;font-size:12px}
+    #velmora-demo-banner{left:10px;bottom:10px;padding:9px 14px;font-size:12px}
 }
 </style>
 <?php } ?>
