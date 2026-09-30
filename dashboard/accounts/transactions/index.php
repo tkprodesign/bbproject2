@@ -2,11 +2,22 @@
 <?php
 $rows = [];
 $dbconn = connectToDatabase();
-$sql = "SELECT type, description, amount, status, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
+
+$currentBalances = [];
+$balanceStmt = $dbconn->prepare("SELECT account_number, COALESCE(SUM(CASE WHEN status IS NULL OR LOWER(status) <> 'failed' THEN amount ELSE 0 END), 0) AS balance FROM transactions WHERE user_email = ? GROUP BY account_number");
+$balanceStmt->bind_param('s', $user_email);
+$balanceStmt->execute();
+$balanceResult = $balanceStmt->get_result();
+while ($balanceRow = $balanceResult->fetch_assoc()) {
+    $currentBalances[(string)$balanceRow['account_number']] = (float)$balanceRow['balance'];
+}
+$balanceStmt->close();
+
+$sql = "SELECT account_number, type, description, amount, currency, counter_currency, counter_amount, fx_rate, fx_spread_bps, status, `time` FROM transactions WHERE user_email = ? ORDER BY time DESC";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
-$stmt->bind_result($type, $description, $amount, $status, $transaction_time);
+$stmt->bind_result($accountNumber, $type, $description, $amount, $currency, $counterCurrency, $counterAmount, $fxRate, $fxSpreadBps, $status, $transaction_time);
 
 while ($stmt->fetch()) {
     $normalizedStatus = strtolower(trim((string)$status));
@@ -15,7 +26,7 @@ while ($stmt->fetch()) {
     } elseif ($normalizedStatus === 'completed') {
         $normalizedStatus = 'successful';
     }
-    $normalizedStatus = ucwords(str_replace(['_', '-'], ' ', $normalizedStatus));
+    $normalizedStatusLabel = ucwords(str_replace(['_', '-'], ' ', $normalizedStatus));
 
     $normalizedType = strtolower(trim((string)$type));
     if ($normalizedType === '' || $normalizedType === 'current') {
@@ -27,26 +38,35 @@ while ($stmt->fetch()) {
     }
     $normalizedType = ucwords(str_replace(['_', '-'], ' ', $normalizedType));
 
+    $rowCurrency = strtoupper((string)$currency);
+    if (!velmoraIsSupportedCurrency($rowCurrency)) {
+        $rowCurrency = 'USD';
+    }
+
     $rows[] = [
         'date' => date('M d, Y', (int)$transaction_time),
         'description' => $description,
-        'status' => $normalizedStatus,
+        'status' => $normalizedStatusLabel,
+        'status_key' => $normalizedStatus,
         'category' => $normalizedType,
         'amount' => (float)$amount,
+        'currency' => $rowCurrency,
+        'counter_currency' => strtoupper((string)$counterCurrency),
+        'counter_amount' => $counterAmount !== null ? (float)$counterAmount : null,
+        'fx_rate' => $fxRate !== null ? (float)$fxRate : null,
+        'fx_spread_bps' => $fxSpreadBps !== null ? (int)$fxSpreadBps : null,
+        'account_number' => (string)$accountNumber,
+        'balance' => $currentBalances[(string)$accountNumber] ?? 0.0,
     ];
+
+    if ($normalizedStatus !== 'failed' && isset($currentBalances[(string)$accountNumber])) {
+        $currentBalances[(string)$accountNumber] -= (float)$amount;
+    }
 }
 $stmt->close();
 $dbconn->close();
-
-$runningBalance = (float)str_replace(',', '', $user_balance);
-foreach ($rows as &$row) {
-    $row['balance'] = $runningBalance;
-    if (strtolower((string)$row['status']) !== 'failed') {
-        $runningBalance -= (float)$row['amount'];
-    }
-}
-unset($row);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,8 +123,15 @@ unset($row);
                         <td><?php echo htmlspecialchars($row['date']); ?></td>
                         <td><?php echo htmlspecialchars($row['description']); ?></td>
                         <td><span class="tx-category"><?php echo htmlspecialchars($row['status']); ?></span></td>
-                        <td class="<?php echo $isCredit ? 'amount-credit' : 'amount-debit'; ?>"><?php echo $isCredit ? '+' : '-'; ?>$<?php echo number_format(abs($amount), 2); ?></td>
-                        <td><?php echo isset($row['balance']) ? '$' . number_format((float)$row['balance'], 2) : '-'; ?></td>
+                        <td class="<?php echo $isCredit ? 'amount-credit' : 'amount-debit'; ?>"><?php echo $isCredit ? '+' : '-'; ?><?php echo htmlspecialchars(velmoraFormatCurrency(abs($amount), $row['currency'])); ?>
+                            <?php if (!empty($row['counter_currency']) && $row['counter_amount'] !== null && $row['counter_currency'] !== $row['currency']): ?>
+                                <small style="display:block;color:#667991;font-weight:500;margin-top:3px;">Countervalue: <?php echo htmlspecialchars(velmoraFormatCurrency((float)$row['counter_amount'], $row['counter_currency'])); ?></small>
+                                <?php if (!empty($row['fx_rate'])): ?>
+                                    <small style="display:block;color:#7a8ba0;font-weight:500;">Rate: <?php echo number_format((float)$row['fx_rate'], 6); ?><?php if ($row['fx_spread_bps'] !== null): ?> · Margin <?php echo number_format($row['fx_spread_bps'] / 100, 2); ?>%<?php endif; ?></small>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                        <td><?php echo isset($row['balance']) ? htmlspecialchars(velmoraFormatCurrency((float)$row['balance'], $row['currency'])) : '-'; ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

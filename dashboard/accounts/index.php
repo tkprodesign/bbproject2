@@ -57,7 +57,7 @@
                     $stmt->bind_result($balance);
                     $stmt->fetch();
                     $stmt->close();
-                    return $balance ? number_format($balance, 2) : '0.00';
+                    return $balance !== null ? (float)$balance : 0.0;
                 }
             ?>
 
@@ -78,7 +78,7 @@
                                 <td><?php echo htmlspecialchars($account['account_type']); ?></td>
                                 <td><?php echo htmlspecialchars($account['account_number']); ?></td>
                                 <td><?php echo htmlspecialchars($account['currency']); ?></td>
-                                <td><?php echo htmlspecialchars(getAccountBalance($dbconn, $account['account_number'])); ?></td>
+                                <td><?php echo htmlspecialchars(velmoraFormatCurrency(getAccountBalance($dbconn, $account['account_number']), $account['currency'])); ?></td>
                                 <td><?php echo htmlspecialchars($account['status']); ?></td>
                                 <!-- <td><a href="/dashboard/accounts/manage?account-number=<?php echo htmlspecialchars($account['account_number']); ?>">Perform Action</a></td> -->
                                 <td><a href="manage?nos=<?php echo $account['account_number']; ?>s">Perform Action</a></td>
