@@ -184,3 +184,13 @@ jobs:
         run: |
           set -euo pipefail
           ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "APP_FILE=\$(find \"\$HOME\" -maxdepth 6 -type f -path '*/common-sections/app.php' 2>/dev/null | head -n 1); APP_ROOT=\${APP_FILE%/common-sections/app.php}; ENV_FILE=\$(find \"\$HOME\" -maxdepth 5 -type f -path '*/.gitignore/.env' 2>/dev/null | head -n 1); cd \"\$APP_ROOT\"; php -d display_errors=1 -d error_reporting=E_ALL '$REMOTE_DIR/tools/provision-demo-user-from-env.php' \"\$ENV_FILE\" 2>&1"
+
+      - name: Verify live login page
+        run: |
+          set -euo pipefail
+          body="$(curl -fsSL --max-time 30 https://velmorabank.us/login/)"
+          if printf '%s' "$body" | grep -Eqi 'Fatal error|Access denied for user|mysqli_sql_exception'; then
+            echo "Live login page still has a database fatal error."
+            exit 1
+          fi
+          echo "LIVE_LOGIN_OK=YES"
