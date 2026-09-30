@@ -193,9 +193,9 @@ jobs:
           echo $ok ? 'OK' : 'FAIL';
           PHP
 
-          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-opcache-reset.php" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/$reset_name"
-          result="$(curl -fsSL --max-time 30 "https://velmorabank.us/$reset_name")"
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "rm -f '$REMOTE_DIR/$reset_name'"
+          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-opcache-reset.php" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/login/$reset_name"
+          result="$(curl -fsSL --max-time 30 "https://velmorabank.us/login/$reset_name?cb=$nonce")"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "rm -f '$REMOTE_DIR/login/$reset_name'"
 
           if [ "$result" != "OK" ]; then
             echo "PHP web cache reset failed."
@@ -211,7 +211,8 @@ jobs:
       - name: Verify live login page
         run: |
           set -euo pipefail
-          body="$(curl -fsSL --max-time 30 https://velmorabank.us/login/)"
+          verify_nonce="$(date +%s%N)"
+          body="$(curl -fsSL --max-time 30 -H 'Cache-Control: no-cache' "https://velmorabank.us/login/?cb=$verify_nonce")"
           if printf '%s' "$body" | grep -Eqi 'Fatal error|Access denied for user|mysqli_sql_exception'; then
             echo "Live login page still has a database fatal error."
             exit 1
