@@ -120,12 +120,12 @@ jobs:
               "name" => getenv("DB_NAME"),
               "socket" => ""
             ];
-            file_put_contents($argv[1], "<?php\ndefine(\x27DB_CONFIG\x27, " . var_export($cfg, true) . ");\n");
-          ' "$RUNNER_TEMP/db-config.php"
+            file_put_contents($argv[1], json_encode($cfg, JSON_UNESCAPED_SLASHES));
+          ' "$RUNNER_TEMP/velmora-db.json"
 
-          chmod 600 "$RUNNER_TEMP/db-config.php"
-          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/db-config.php" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/db-config.php.tmp"
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "mv '$REMOTE_DIR/db-config.php.tmp' '$REMOTE_DIR/db-config.php' && chmod 600 '$REMOTE_DIR/db-config.php'"
+          chmod 600 "$RUNNER_TEMP/velmora-db.json"
+          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-db.json" "$SSH_USER@$SSH_HOST:.velmora-db.json.tmp"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'mv "$HOME/.velmora-db.json.tmp" "$HOME/.velmora-db.json" && chmod 600 "$HOME/.velmora-db.json"'
 
       - name: Count registered Velmora users
         run: |

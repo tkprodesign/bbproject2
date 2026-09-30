@@ -13,21 +13,32 @@ date_default_timezone_set('America/New_York');
 
 // Database connection function
 function connectToDatabase() {
-    // Load production config file if present (used on shared hosting with no env vars)
-    $configFile = __DIR__ . '/../db-config.php';
-    if (!defined('DB_CONFIG') && file_exists($configFile)) {
-        require_once $configFile;
+    // Production credentials live outside the public web root in a JSON file.
+    // Reading JSON each request avoids stale PHP/opcache values after credential updates.
+    $cfg = [];
+    $secretConfigFile = dirname(__DIR__, 2) . '/.velmora-db.json';
+    if (is_file($secretConfigFile)) {
+        $decoded = json_decode((string) file_get_contents($secretConfigFile), true);
+        if (is_array($decoded)) {
+            $cfg = $decoded;
+        }
     }
-    $cfg = defined('DB_CONFIG') ? DB_CONFIG : [];
 
-    // On shared hosting, the private db-config.php is authoritative.
-    // Environment variables are only fallbacks for local/dev environments.
+    // Legacy fallback for local/dev or older deployments.
+    if (!$cfg) {
+        $legacyConfigFile = __DIR__ . '/../db-config.php';
+        if (!defined('DB_CONFIG') && file_exists($legacyConfigFile)) {
+            require_once $legacyConfigFile;
+        }
+        $cfg = defined('DB_CONFIG') ? DB_CONFIG : [];
+    }
+
     $socket     = ($cfg['socket'] ?? '') ?: getenv('DB_SOCKET');
-    $host       = ($cfg['host']   ?? '') ?: (getenv('DB_HOST') ?: 'localhost');
+    $host       = ($cfg['host'] ?? '') ?: (getenv('DB_HOST') ?: 'localhost');
     $port       = (int)(($cfg['port'] ?? 0) ?: (getenv('DB_PORT') ?: 3306));
-    $dbusername = ($cfg['user']   ?? '') ?: getenv('DB_USER');
+    $dbusername = ($cfg['user'] ?? '') ?: getenv('DB_USER');
     $dbpassword = ($cfg['password'] ?? '') ?: getenv('DB_PASS');
-    $dbname     = ($cfg['name']   ?? '') ?: getenv('DB_NAME');
+    $dbname     = ($cfg['name'] ?? '') ?: getenv('DB_NAME');
 
     // Prefer Unix socket when socket file exists (null host triggers socket mode)
     if ($socket && file_exists($socket)) {
