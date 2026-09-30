@@ -435,3 +435,16 @@ section.profile-kyc .content { display: flex; flex-wrap: wrap; gap: 10px; }
 @media (max-width: 720px) {
   .currency-select-row, .fx-quote-grid { grid-template-columns: 1fr; }
 }
+
+/* Dashboard navigation visibility guard */
+.dashboard-header { display: block !important; }
+@media (min-width: 1001px) {
+  .dashboard-header .desktop-menu { display: flex !important; }
+  .dashboard-header .mobile-drawer,
+  .dashboard-header #menuToggle { display: none !important; }
+}
+@media (max-width: 1000px) {
+  .dashboard-header { min-height: 64px !important; }
+  .dashboard-header .desktop-menu { display: none !important; }
+  .dashboard-header #menuToggle { display: inline-flex !important; }
+}
