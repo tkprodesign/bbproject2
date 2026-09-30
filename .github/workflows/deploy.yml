@@ -201,6 +201,10 @@ jobs:
           set -euo pipefail
           core_files=(
             "common-sections/app.php"
+            "common-sections/demo-banner.php"
+            "common-sections/header.php"
+            "common-sections/dashboard-header.html"
+            "common-sections/control-panel-header.php"
             "common-sections/fx.php"
             "create_tables.php"
             "assets/scripts/fx.js"
@@ -208,6 +212,7 @@ jobs:
             "assets/stylesheets/control-panel.css"
             "dashboard/app.php"
             "dashboard/michael-demo.php"
+            "dashboard/craig-demo-fixture.php"
             "dashboard/fund/transfer/index.php"
             "dashboard/accounts/create/index.php"
             "dashboard/index.php"
