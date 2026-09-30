@@ -121,6 +121,9 @@ if ($is_demo_account) {
 
 
 
+require_once __DIR__ . '/craig-demo-fixture.php';
+$supervisor_demo_fixture = getCraigSupervisorDemoFixture((bool)$is_demo_account, (string)$user_name);
+
 // Seed the requested Jennifer reference transactions into the DB.
 function seedJenniferReferenceData($email, $name) {
     if (strcasecmp($email, 'Jenniferaniston11909@gmail.com') !== 0) {
