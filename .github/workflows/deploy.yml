@@ -156,6 +156,12 @@ jobs:
           set -euo pipefail
           ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'find "$HOME" -maxdepth 4 -type f \( -name ".env" -o -name "*.env" \) -printf "%p\n" 2>/dev/null | sed "s#^$HOME#~#"'
 
+      - name: Lint PHP files
+        run: |
+          set -euo pipefail
+          find . -path './archive' -prune -o -path './PHPMailer' -prune -o -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
+          echo "PHP_LINT_OK=YES"
+
       - name: Upload changed site files
         run: |
           set -euo pipefail
@@ -186,8 +192,8 @@ jobs:
             remote_parent="$(dirname "$remote_path")"
 
             echo "Uploading: $relative_path"
-            ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "mkdir -p \"$remote_parent\""
-            scp -q -P "$SSH_PORT" "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path"
+            ssh -n -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "mkdir -p \"$remote_parent\""
+            scp -q -P "$SSH_PORT" "$relative_path" "$SSH_USER@$SSH_HOST:$remote_path" </dev/null
           done <<< "$changed_files"
 
       - name: Run safe database migrations
