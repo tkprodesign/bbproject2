@@ -120,7 +120,7 @@ jobs:
       - name: Apply private server records
         run: |
           set -euo pipefail
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "php '$REMOTE_DIR/tools/provision-demo-user-from-env.php' '\$HOME/public_html/.gitignore/.env'"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "ENV_FILE=\$(find \"\$HOME\" -maxdepth 5 -type f -path '*/.gitignore/.env' 2>/dev/null | head -n 1); php '$REMOTE_DIR/tools/provision-demo-user-from-env.php' \"\$ENV_FILE\""
 
       - name: Upload changed site files
         run: |
