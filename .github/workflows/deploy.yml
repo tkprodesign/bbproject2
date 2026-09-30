@@ -207,6 +207,7 @@ jobs:
             "assets/stylesheets/dashboard.css"
             "assets/stylesheets/control-panel.css"
             "dashboard/app.php"
+            "dashboard/michael-demo.php"
             "dashboard/fund/transfer/index.php"
             "dashboard/accounts/create/index.php"
             "dashboard/index.php"

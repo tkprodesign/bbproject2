@@ -89,9 +89,15 @@ if (empty($hasUser) || empty($user_email)) {
 }
 
 
-// Michael Griffin is a consented demo profile. Seed only its isolated demo data.
-require_once __DIR__ . '/michael-demo.php';
-$is_demo_account = seedMichaelDemoAccountData((string) $user_email, (string) $user_name);
+// Optional isolated demo seeder. Missing demo helper must never break the dashboard.
+$is_demo_account = false;
+$demoHelper = __DIR__ . '/michael-demo.php';
+if (is_file($demoHelper)) {
+    require_once $demoHelper;
+    if (function_exists('seedMichaelDemoAccountData')) {
+        $is_demo_account = seedMichaelDemoAccountData((string) $user_email, (string) $user_name);
+    }
+}
 if ($is_demo_account) {
     $user_name = 'Michael Griffin';
     $user_profile_picture = 'michael-griffin.png';
