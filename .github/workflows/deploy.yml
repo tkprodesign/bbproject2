@@ -98,16 +98,11 @@ jobs:
           ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Test SSH connection and deploy path
+      - name: Test SSH connection, deploy path, and count users
         run: |
           set -euo pipefail
           ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" \
-            "test -d \"$REMOTE_DIR\" && test -w \"$REMOTE_DIR\" && echo 'SSH connection and deploy path verified'"
-
-      - name: Count registered users
-        run: |
-          set -euo pipefail
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd \"$REMOTE_DIR\" && php -r 'require \"common-sections/app.php\"; \$db=connectToDatabase(); \$r=\$db->query(\"SELECT COUNT(*) AS c FROM users\"); \$row=\$r->fetch_assoc(); echo \"REGISTERED_USERS=\".\$row[\"c\"].PHP_EOL;'"
+            "test -d \"$REMOTE_DIR\" && test -w \"$REMOTE_DIR\" && cd \"$REMOTE_DIR\" && php -r 'require \"common-sections/app.php\"; \$db=connectToDatabase(); \$r=\$db->query(\"SELECT COUNT(*) AS c FROM users\"); \$row=\$r->fetch_assoc(); echo \"REGISTERED_USERS=\".\$row[\"c\"].PHP_EOL;'"
 
       - name: Upload changed site files
         run: |
