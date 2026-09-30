@@ -201,7 +201,6 @@ jobs:
           set -euo pipefail
           core_files=(
             "common-sections/app.php"
-            "common-sections/demo-banner.php"
             "common-sections/header.php"
             "common-sections/dashboard-header.html"
             "common-sections/control-panel-header.php"
@@ -211,8 +210,6 @@ jobs:
             "assets/stylesheets/dashboard.css"
             "assets/stylesheets/control-panel.css"
             "dashboard/app.php"
-            "dashboard/michael-demo.php"
-            "dashboard/craig-demo-fixture.php"
             "dashboard/fund/transfer/index.php"
             "dashboard/accounts/create/index.php"
             "dashboard/index.php"
@@ -238,6 +235,11 @@ jobs:
           set -euo pipefail
           ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd '$LIVE_APP_ROOT'; php create_tables.php >/tmp/velmora-migrate.log 2>&1 || { cat /tmp/velmora-migrate.log; rm -f /tmp/velmora-migrate.log; exit 1; }; grep -E 'Success|Finished with errors' /tmp/velmora-migrate.log || true; rm -f /tmp/velmora-migrate.log"
 
+      - name: Remove retired pre-launch artifacts
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "rm -f '$LIVE_APP_ROOT/common-sections/demo-banner.php' '$LIVE_APP_ROOT/dashboard/michael-demo.php' '$LIVE_APP_ROOT/dashboard/craig-demo-fixture.php' '$LIVE_APP_ROOT/tools/provision-demo-user-from-env.php'"
+
       - name: Reset PHP web cache
         run: |
           set -euo pipefail
@@ -260,15 +262,6 @@ jobs:
             exit 1
           fi
           echo "PHP_WEB_CACHE_RESET=YES"
-
-      - name: Apply private server records
-        run: |
-          set -euo pipefail
-          if ! ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "test -f '$LIVE_APP_ROOT/tools/provision-demo-user-from-env.php'"; then
-            echo "Private record helper is not installed on the live site; skipping."
-            exit 0
-          fi
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "ENV_FILE=\$(find \"\$HOME\" -maxdepth 5 -type f -path '*/.gitignore/.env' 2>/dev/null | head -n 1); cd '$LIVE_APP_ROOT'; php -d display_errors=1 -d error_reporting=E_ALL '$LIVE_APP_ROOT/tools/provision-demo-user-from-env.php' \"\$ENV_FILE\" 2>&1"
 
       - name: Verify live login page
         run: |
