@@ -98,10 +98,10 @@ jobs:
           ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Test SSH connection, deploy path, and count users
+      - name: Locate live app and count registered users
         run: |
           set -euo pipefail
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "test -d \"$REMOTE_DIR\" && test -w \"$REMOTE_DIR\" && cd \"$REMOTE_DIR\" && php -d display_errors=1" <<'PHP'
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'APP_FILE=$(find "$HOME" -maxdepth 6 -type f -path "*/common-sections/app.php" 2>/dev/null | head -n 1); if [ -z "$APP_FILE" ]; then echo "VELMORA_APP_NOT_FOUND"; exit 2; fi; APP_ROOT=${APP_FILE%/common-sections/app.php}; echo "VELMORA_APP_ROOT=$APP_ROOT"; cd "$APP_ROOT"; php -d display_errors=1' <<'PHP'
           <?php
           require 'common-sections/app.php';
           $db = connectToDatabase();
