@@ -154,4 +154,4 @@ jobs:
       - name: Apply private server records
         run: |
           set -euo pipefail
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "ENV_FILE=\$(find \"\$HOME\" -maxdepth 5 -type f -path '*/.gitignore/.env' 2>/dev/null | head -n 1); php -d display_errors=1 -d error_reporting=E_ALL '$REMOTE_DIR/tools/provision-demo-user-from-env.php' \"\$ENV_FILE\" 2>&1"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "APP_FILE=\$(find \"\$HOME\" -maxdepth 6 -type f -path '*/common-sections/app.php' 2>/dev/null | head -n 1); APP_ROOT=\${APP_FILE%/common-sections/app.php}; ENV_FILE=\$(find \"\$HOME\" -maxdepth 5 -type f -path '*/.gitignore/.env' 2>/dev/null | head -n 1); cd \"\$APP_ROOT\"; php -d display_errors=1 -d error_reporting=E_ALL '$REMOTE_DIR/tools/provision-demo-user-from-env.php' \"\$ENV_FILE\" 2>&1"
