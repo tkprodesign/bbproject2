@@ -17,6 +17,9 @@ jobs:
       SSH_USER: ${{ secrets.SSH_USERNAME }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
       REMOTE_DIR: ${{ secrets.SSH_DEPLOY_PATH }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_USER_PASSWORD: ${{ secrets.DB_USER_PASSWORD }}
 
     steps:
       - name: Checkout repo
@@ -97,6 +100,32 @@ jobs:
 
           ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           chmod 600 ~/.ssh/known_hosts
+
+      - name: Sync live database config
+        run: |
+          set -euo pipefail
+          for name in DB_NAME DB_USERNAME DB_USER_PASSWORD; do
+            if [ -z "${!name:-}" ]; then
+              echo "Required database secret is missing: $name"
+              exit 1
+            fi
+          done
+
+          DB_NAME="$DB_NAME" DB_USERNAME="$DB_USERNAME" DB_USER_PASSWORD="$DB_USER_PASSWORD" php -r '
+            $cfg = [
+              "host" => "localhost",
+              "port" => 3306,
+              "user" => getenv("DB_USERNAME"),
+              "password" => getenv("DB_USER_PASSWORD"),
+              "name" => getenv("DB_NAME"),
+              "socket" => ""
+            ];
+            file_put_contents($argv[1], "<?php\ndefine(\x27DB_CONFIG\x27, " . var_export($cfg, true) . ");\n");
+          ' "$RUNNER_TEMP/db-config.php"
+
+          chmod 600 "$RUNNER_TEMP/db-config.php"
+          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/db-config.php" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/db-config.php.tmp"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "mv '$REMOTE_DIR/db-config.php.tmp' '$REMOTE_DIR/db-config.php' && chmod 600 '$REMOTE_DIR/db-config.php'"
 
       - name: Count registered Velmora users
         run: |
