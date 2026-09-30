@@ -12,9 +12,7 @@ $dashboardMeta = [
     'date_of_birth' => 'Not available',
     'account_number' => 'Not available',
     'account_type' => 'Primary',
-    'profession' => (!empty($is_demo_account) && strcasecmp(trim((string)$user_name), 'Craig Fisher') === 0)
-        ? 'Engineer'
-        : (!empty($is_demo_account) ? 'Doctor' : 'Not available'),
+    'profession' => 'Not available',
 ];
 
 $requestedDisplayCurrency = strtoupper(trim((string)($_GET['display_currency'] ?? '')));
@@ -202,18 +200,6 @@ while ($stmt->fetch()) {
 $stmt->close();
 $dbMetrics->close();
 
-// Presentation-only Craig demo override.
-if (!empty($supervisor_demo_fixture)) {
-    $displayCurrency = $supervisor_demo_fixture['currency'];
-    $_SESSION['display_currency'] = $displayCurrency;
-    $dashboardBalance = (float)$supervisor_demo_fixture['balance'];
-    $totalCredits = (float)$supervisor_demo_fixture['credits'];
-    $totalDebits = (float)$supervisor_demo_fixture['debits'];
-    $creditCount = (int)$supervisor_demo_fixture['credit_count'];
-    $debitCount = (int)$supervisor_demo_fixture['debit_count'];
-    $dashboardRows = $supervisor_demo_fixture['rows'];
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -234,11 +220,6 @@ if (!empty($supervisor_demo_fixture)) {
 </head>
 <body>
 <?php include('../common-sections/dashboard-header.html')?>
-<?php if (!empty($is_demo_account)): ?>
-<div style="background:#fff3cd;border-bottom:1px solid #f0d98a;color:#664d03;padding:10px 16px;text-align:center;font-weight:700;font-size:14px;">
-    DEMO ACCOUNT — Simulated data for presentation and testing only
-</div>
-<?php endif; ?>
 <section class="account-info reference-dashboard">
     <div class="container">
         <div class="cta-sec">
@@ -283,9 +264,6 @@ if (!empty($supervisor_demo_fixture)) {
                 <div><span>Date of Birth</span><strong><?php echo htmlspecialchars($dashboardMeta['date_of_birth']); ?></strong></div>
                 <div><span>Account Number</span><strong><?php echo htmlspecialchars($dashboardMeta['account_number']); ?></strong></div>
                 <div><span>Account Type</span><strong><?php echo htmlspecialchars($dashboardMeta['account_type']); ?></strong></div>
-                <?php if (!empty($is_demo_account)): ?>
-                <div><span>Profession</span><strong><?php echo htmlspecialchars($dashboardMeta['profession']); ?></strong></div>
-                <?php endif; ?>
             </div>
         </div>
     </div>
