@@ -1,0 +1,76 @@
+name: Check Velmora database
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/db-check.yml
+
+permissions:
+  contents: read
+
+jobs:
+  count-users:
+    runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USERNAME }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      REMOTE_DIR: ${{ secrets.SSH_DEPLOY_PATH }}
+
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+
+          if [[ "$SSH_PRIVATE_KEY" == *'\\n'* ]]; then
+            printf '%b' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/github-deploy
+          else
+            printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/github-deploy
+          fi
+
+          while [ -s ~/.ssh/github-deploy ] && [ -z "$(head -n 1 ~/.ssh/github-deploy | tr -d '[:space:]')" ]; do
+            sed -i '1d' ~/.ssh/github-deploy
+          done
+
+          first_line="$(head -n 1 ~/.ssh/github-deploy)"
+          last_line="$(tail -n 1 ~/.ssh/github-deploy)"
+          if [[ "$first_line" == '"-----BEGIN '* ]] && [[ "$last_line" == *'-----"' ]]; then
+            sed -i '1s/^"//' ~/.ssh/github-deploy
+            sed -i '$s/"$//' ~/.ssh/github-deploy
+          fi
+
+          if ! head -n 1 ~/.ssh/github-deploy | grep -Eq '^-----BEGIN (OPENSSH |RSA |EC |DSA )?PRIVATE KEY-----$'; then
+            compact="$(tr -d '[:space:]' < ~/.ssh/github-deploy)"
+            if [[ "$compact" == b3BlbnNzaC1rZXktdjE* ]]; then
+              {
+                echo '-----BEGIN OPENSSH PRIVATE KEY-----'
+                printf '%s' "$compact" | fold -w 70
+                echo
+                echo '-----END OPENSSH PRIVATE KEY-----'
+              } > ~/.ssh/github-deploy.normalized
+              mv ~/.ssh/github-deploy.normalized ~/.ssh/github-deploy
+            fi
+          fi
+
+          chmod 600 ~/.ssh/github-deploy
+          eval "$(ssh-agent -s)" >/dev/null
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+          ASKPASS="$RUNNER_TEMP/ssh-askpass.sh"
+          printf '%s\n' '#!/usr/bin/env bash' 'printf "%s\\n" "$SSH_PASSPHRASE"' > "$ASKPASS"
+          chmod 700 "$ASKPASS"
+
+          SSH_ASKPASS="$ASKPASS" SSH_ASKPASS_REQUIRE=force DISPLAY=:0 ssh-add ~/.ssh/github-deploy </dev/null
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Count registered users
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd \"$REMOTE_DIR\" && php -r 'require \"common-sections/app.php\"; \$db=connectToDatabase(); \$r=\$db->query(\"SELECT COUNT(*) AS c FROM users\"); \$row=\$r->fetch_assoc(); echo \"REGISTERED_USERS=\".\$row[\"c\"].PHP_EOL;'"
