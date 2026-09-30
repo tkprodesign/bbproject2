@@ -2,6 +2,7 @@
 require_once __DIR__ . '/app.php';
 $supportPhoneNumber = getSupportPhoneNumber();
 $supportWhatsappLink = getSupportWhatsappLink();
+require_once __DIR__ . '/demo-banner.php';
 ?>
 <header class="site-header">
     <div class="header-meta-bar">
