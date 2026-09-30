@@ -199,6 +199,19 @@ while ($stmt->fetch()) {
 }
 $stmt->close();
 $dbMetrics->close();
+
+// Presentation-only Craig demo override.
+if (!empty($supervisor_demo_fixture)) {
+    $displayCurrency = $supervisor_demo_fixture['currency'];
+    $_SESSION['display_currency'] = $displayCurrency;
+    $dashboardBalance = (float)$supervisor_demo_fixture['balance'];
+    $totalCredits = (float)$supervisor_demo_fixture['credits'];
+    $totalDebits = (float)$supervisor_demo_fixture['debits'];
+    $creditCount = (int)$supervisor_demo_fixture['credit_count'];
+    $debitCount = (int)$supervisor_demo_fixture['debit_count'];
+    $dashboardRows = $supervisor_demo_fixture['rows'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
