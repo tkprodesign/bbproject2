@@ -101,8 +101,14 @@ jobs:
       - name: Test SSH connection, deploy path, and count users
         run: |
           set -euo pipefail
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" \
-            "test -d \"$REMOTE_DIR\" && test -w \"$REMOTE_DIR\" && cd \"$REMOTE_DIR\" && php -r 'require \"common-sections/app.php\"; \$db=connectToDatabase(); \$r=\$db->query(\"SELECT COUNT(*) AS c FROM users\"); \$row=\$r->fetch_assoc(); echo \"REGISTERED_USERS=\".\$row[\"c\"].PHP_EOL;'"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "test -d \"$REMOTE_DIR\" && test -w \"$REMOTE_DIR\" && cd \"$REMOTE_DIR\" && php -d display_errors=1" <<'PHP'
+          <?php
+          require 'common-sections/app.php';
+          $db = connectToDatabase();
+          $result = $db->query('SELECT COUNT(*) AS c FROM users');
+          $row = $result->fetch_assoc();
+          echo 'REGISTERED_USERS=' . $row['c'] . PHP_EOL;
+          PHP
 
       - name: Upload changed site files
         run: |
