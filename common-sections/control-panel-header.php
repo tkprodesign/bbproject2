@@ -1,4 +1,3 @@
-<?php require_once __DIR__ . '/demo-banner.php'; ?>
 <header>
     <div class="container">
         <a href="/" id="logo">
