@@ -413,3 +413,25 @@ section.profile-kyc .content { display: flex; flex-wrap: wrap; gap: 10px; }
 }
 .amount-credit { color: #228b59; font-weight: 700; }
 .amount-debit { color: #b02446; font-weight: 700; }
+
+/* Multi-currency / FX quote components */
+.currency-select-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.fx-quote-card {
+  border: 1px solid var(--border, #dfe7f1);
+  border-radius: 14px;
+  background: #f8fbff;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+.fx-quote-card.is-ready { background: #f4fbf8; border-color: #cfe9dd; }
+.fx-quote-card .fx-title { font-weight: 700; color: #163555; }
+.fx-quote-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; }
+.fx-quote-grid span { display: block; font-size: 12px; color: #6b7d92; margin-bottom: 4px; }
+.fx-quote-grid strong { display: block; font-size: 15px; color: #152f4c; overflow-wrap: anywhere; }
+.fx-note { font-size: 12px; line-height: 1.5; color: #6b7d92; }
+.fx-note a { color: #315f8d; text-decoration: underline; }
+.currency-chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 8px; background: #eef4fb; color: #284b70; font-size: 12px; font-weight: 700; }
+@media (max-width: 720px) {
+  .currency-select-row, .fx-quote-grid { grid-template-columns: 1fr; }
+}

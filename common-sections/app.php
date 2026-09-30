@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-date_default_timezone_set('America/New_York');
+date_default_timezone_set('America/New_York');\n\nrequire_once __DIR__ . '/fx.php';
 
 
 
