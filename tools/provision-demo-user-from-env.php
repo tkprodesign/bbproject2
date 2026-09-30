@@ -52,7 +52,7 @@ foreach ($required as $key) {
     }
 }
 
-require_once __DIR__ . '/../common-sections/app.php';
+require_once getcwd() . '/common-sections/app.php';
 
 $email = strtolower(trim($vars['CRAIG_FISHER_EMAIL']));
 $password = (string)$vars['CRAIG_FISHER_PASSWORD'];
