@@ -12,7 +12,9 @@ $dashboardMeta = [
     'date_of_birth' => 'Not available',
     'account_number' => 'Not available',
     'account_type' => 'Primary',
-    'profession' => !empty($is_demo_account) ? 'Doctor' : 'Not available',
+    'profession' => (!empty($is_demo_account) && strcasecmp(trim((string)$user_name), 'Craig Fisher') === 0)
+        ? 'Engineer'
+        : (!empty($is_demo_account) ? 'Doctor' : 'Not available'),
 ];
 
 $requestedDisplayCurrency = strtoupper(trim((string)($_GET['display_currency'] ?? '')));
@@ -253,8 +255,6 @@ if (!empty($supervisor_demo_fixture)) {
             <div class="right profile-avatar-wrap">
                 <?php if ($user_profile_picture && $user_profile_picture !== 'nil'): ?>
                     <img src="/dashboard/security/complete-kyc/uploads/<?php echo htmlspecialchars($user_profile_picture); ?>" alt="<?php echo htmlspecialchars($dashboardMeta['account_holder']); ?> profile picture" class="dashboard-avatar">
-                <?php else: ?>
-                    <img src="/assets/images/placeholder-image.png" alt="Default profile picture" class="dashboard-avatar">
                 <?php endif; ?>
             </div>
         </div>

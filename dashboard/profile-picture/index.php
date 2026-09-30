@@ -26,8 +26,6 @@
         <div class="content">
             <?php if ($user_profile_picture && $user_profile_picture !== 'nil'): ?>
                 <img src="/assets/images/profile-pictures/<?php echo htmlspecialchars($user_profile_picture); ?>" alt="Current profile picture" class="profile-picture profile-picture-preview">
-            <?php else: ?>
-                <img src="/assets/images/placeholder-image.png" alt="Current profile picture" class="profile-picture profile-picture-preview">
             <?php endif; ?>
             <form action="" method="post" enctype="multipart/form-data">
                 <div class="input-box">
