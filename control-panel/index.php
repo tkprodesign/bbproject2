@@ -150,13 +150,22 @@ foreach ($controlPanelActionMessages as $actionKey => $actionStates) {
                             <td><?php echo htmlspecialchars($row['id']); ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
-                            <?php 
-                                $select_user_email = $row['email'];
-                                $su_query = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = '$select_user_email' AND status IN ('Successful', 'Pending')";
-                                $su_result = $db->query($su_query);
-                                $user_balance = $su_result->fetch_assoc()['user_balance'] ?? 0;
+                            <?php
+                                $portfolioBalances = [];
+                                $portfolioStmt = $db->prepare("SELECT currency, COALESCE(SUM(amount),0) AS balance FROM transactions WHERE user_email = ? AND status IN ('Successful','Pending') GROUP BY currency");
+                                $portfolioStmt->bind_param('s', $row['email']);
+                                $portfolioStmt->execute();
+                                $portfolioResult = $portfolioStmt->get_result();
+                                while ($portfolioRow = $portfolioResult->fetch_assoc()) {
+                                    $portfolioCurrency = strtoupper((string)$portfolioRow['currency']);
+                                    if (!velmoraIsSupportedCurrency($portfolioCurrency)) {
+                                        $portfolioCurrency = 'USD';
+                                    }
+                                    $portfolioBalances[] = velmoraFormatCurrency((float)$portfolioRow['balance'], $portfolioCurrency);
+                                }
+                                $portfolioStmt->close();
                             ?>
-                            <td>$<?php echo htmlspecialchars(number_format($user_balance, 2)); ?></td>
+                            <td><?php echo !empty($portfolioBalances) ? implode('<br>', array_map('htmlspecialchars', $portfolioBalances)) : htmlspecialchars(velmoraFormatCurrency(0, 'USD')); ?></td>
                             <td><?php echo htmlspecialchars($row['kyc_level']); ?></td>
                             <td><?php echo htmlspecialchars(date('d, F Y', $row['date_registered'])); ?></td>
                             <td><a href="/control-panel/profile-picture/?id=<?php echo htmlspecialchars($row['id']); ?>">View Profile Picture</td>
@@ -239,8 +248,9 @@ foreach ($controlPanelActionMessages as $actionKey => $actionStates) {
                                 $su_query = "SELECT SUM(amount) AS account_balance FROM transactions WHERE account_number = '$select_user_account' AND status IN ('Successful', 'Pending')";
                                 $su_result = $db->query($su_query);
                                 $account_balance = $su_result->fetch_assoc()['account_balance'] ?? 0;
+                                $account_currency = velmoraIsSupportedCurrency((string)$row['currency']) ? strtoupper((string)$row['currency']) : 'USD';
                                 ?>
-                            <td>$<?php echo htmlspecialchars(number_format($account_balance, 2)); ?></td>
+                            <td><?php echo htmlspecialchars(velmoraFormatCurrency((float)$account_balance, $account_currency)); ?></td>
                             <td><?php echo htmlspecialchars($row['account_status']); ?></td>
                             <td><?php echo htmlspecialchars(date('d, F Y', $row['creation_time'])); ?></td>
                         </tr>
@@ -472,7 +482,12 @@ if (isset($_POST['delete_user_account'])) {
                                 <td><?php echo htmlspecialchars($row['type']); ?></td>
                                 <td><?php echo htmlspecialchars($row['user_email']); ?></td>
                                 <td><?php echo htmlspecialchars($row['account_number']); ?></td>
-                                <td><?php echo htmlspecialchars(abs($row['amount'])); ?></td>
+                                <td>
+                                    <?php echo htmlspecialchars(velmoraFormatCurrency(abs((float)$row['amount']), velmoraIsSupportedCurrency((string)$row['currency']) ? strtoupper((string)$row['currency']) : 'USD')); ?>
+                                    <?php if (!empty($row['counter_currency']) && $row['counter_amount'] !== null && strtoupper((string)$row['counter_currency']) !== strtoupper((string)$row['currency'])): ?>
+                                        <small style="display:block;color:#667991;">Countervalue: <?php echo htmlspecialchars(velmoraFormatCurrency((float)$row['counter_amount'], strtoupper((string)$row['counter_currency']))); ?></small>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?php echo htmlspecialchars($row['status']); ?></td>
                                 <td><?php echo htmlspecialchars(date('d, F Y H:i:s /E/T', $row['time'])); ?></td>
                             </tr>

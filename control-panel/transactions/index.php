@@ -49,7 +49,13 @@
                                     <td><?php echo htmlspecialchars($row['type']); ?></td>
                                     <td><?php echo htmlspecialchars($row['user_email']); ?></td>
                                     <td><?php echo htmlspecialchars($row['account_number']); ?></td>
-                                    <td><?php echo htmlspecialchars(abs($row['amount'])); ?></td>
+                                    <td>
+                                    <?php echo htmlspecialchars(velmoraFormatCurrency(abs((float)$row['amount']), velmoraIsSupportedCurrency((string)$row['currency']) ? strtoupper((string)$row['currency']) : 'USD')); ?>
+                                    <?php if (!empty($row['counter_currency']) && $row['counter_amount'] !== null && strtoupper((string)$row['counter_currency']) !== strtoupper((string)$row['currency'])): ?>
+                                        <small style="display:block;color:#667991;">Countervalue: <?php echo htmlspecialchars(velmoraFormatCurrency((float)$row['counter_amount'], strtoupper((string)$row['counter_currency']))); ?></small>
+                                        <?php if (!empty($row['fx_rate'])): ?><small style="display:block;color:#7a8ba0;">Rate <?php echo number_format((float)$row['fx_rate'], 6); ?><?php if ($row['fx_spread_bps'] !== null): ?> · Margin <?php echo number_format(((int)$row['fx_spread_bps']) / 100, 2); ?>%<?php endif; ?></small><?php endif; ?>
+                                    <?php endif; ?>
+                                </td>
                                     <td><?php echo htmlspecialchars($row['status']); ?></td>
                                     <td><?php echo htmlspecialchars(date('d, F Y H:i:s /E/T', $row['time'])); ?></td>
                                 </tr>
