@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../_layout.php';
 $profile=v3Profile($user_email,$user_name);
 $ref=trim((string)($_GET['ref']??''));
 $db=connectToDatabase();
-$stmt=$db->prepare("SELECT transaction_id,type,description,amount,currency,status,time,account_number,to_bank_name,recipient_name,to_account_type,to_account_number,counter_currency,counter_amount,fx_rate,fx_spread_bps,channel,value_date,posted_at,created_at FROM transactions WHERE user_email=? AND transaction_id=? LIMIT 1");
+$stmt=$db->prepare("SELECT transaction_id,type,description,amount,currency,status,time,account_number,to_bank_name,recipient_name,to_account_type,to_account_number,counter_currency,counter_amount,fx_rate,fx_spread_bps,channel,value_date,posted_at,created_at FROM transactions WHERE user_email=? AND transaction_id=? AND (status IS NULL OR LOWER(status) <> 'archived') LIMIT 1");
 $stmt->bind_param('ss',$user_email,$ref);$stmt->execute();$tx=$stmt->get_result()->fetch_assoc()?:null;$stmt->close();$db->close();
 if(!$tx)v3Redirect('/dashboard/transactions/');
 
