@@ -1,68 +1,40 @@
-<?php include('app.php')?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
-    <title>Sign In | Velmora Bank</title>
-
-    <link rel="stylesheet" href="/assets/stylesheets/desktop/main.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/main.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/main.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="/assets/stylesheets/desktop/sign-in.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" media="screen and (max-width: 1000px)" href="/assets/stylesheets/tab/sign-in.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" media="screen and (max-width: 720px)" href="/assets/stylesheets/mobile/sign-in.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
-</head>
-<body>
-<?php include('../common-sections/header.php'); ?>
-<?php echo $_GET['alert_info_section']; ?>
-<section class="sign-in auth-page">
-    <div class="container">
-        <div class="content">
-            <aside class="auth-panel">
-                <img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank logo" class="brand-logo">
-                <h1>Secure online banking</h1>
-                <p>Access your accounts, monitor transactions, and manage cards with bank-grade protection.</p>
-                <ul>
-                    <li><span class="material-symbols-outlined filled">verified_user</span>256-bit encrypted sessions</li>
-                    <li><span class="material-symbols-outlined filled">shield_lock</span>Continuous fraud monitoring</li>
-                    <li><span class="material-symbols-outlined filled">support_agent</span>24/7 client support</li>
-                </ul>
-            </aside>
-            <form action="" method="post" class="auth-form">
-                <div class="logo">
-                    <h2>Welcome back</h2>
-                    <p>Sign in to continue to your dashboard.</p>
-                </div>
-                <div class="error" style="display: <?php echo (isset($_GET['error']) && $_GET['error'] == 'yes') ? 'block' : 'none'; ?>;">
-                    <p>Email or password is incorrect. Please try again.</p>
-                </div>
-                <div class="input">
-                    <label for="email">Email Address</label>
-                    <input id="email" type="email" name="email" placeholder="you@example.com" required>
-                </div>
-                <div class="input">
-                    <label for="password">Password</label>
-                    <input id="password" type="password" name="password" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" name="sign_in" value="sign-in">Sign In Securely</button>
-                <div class="checkbox">
-                    <label for="remember_me"><input id="remember_me" type="checkbox" name="remember_me" value="1"><span>Keep me signed in</span></label>
-                    <a href="#">Forgot password?</a>
-                </div>
-                <div class="footer">
-                    <span>Don&apos;t have an account? <a href="/signup">Create one</a></span>
-                </div>
-            </form>
-        </div>
+<?php
+define('VELMORA_LOGIN_TARGET','/dashboard/');
+define('VELMORA_CONTROL_PANEL_TARGET','/control-panel/');
+require_once('../login/app.php');
+?>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow"><title>Sign In | Velmora Bank</title>
+<link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,-50..200">
+<link rel="stylesheet" href="/assets/stylesheets/public-v2.css?v=<?php echo time(); ?>"></head><body>
+<div class="pv2-demo">DEMO ENVIRONMENT</div>
+<main class="pv2-auth-page">
+<section class="pv2-auth-side">
+  <a href="/"><img class="pv2-auth-brand" src="/assets/images/branding/logo.png" alt="Velmora Bank"></a>
+  <div class="pv2-auth-copy"><span class="pv2-eyebrow">SECURE ONLINE BANKING</span><h1>Welcome back to your banking workspace.</h1><p>Sign in to review your accounts, transactions, transfers, foreign-exchange activity, notifications and profile information.</p>
+    <div class="pv2-auth-points">
+      <div><span class="material-symbols-rounded">account_balance_wallet</span><div><strong>Account-level balances</strong><small>Each account keeps its actual currency and ledger activity.</small></div></div>
+      <div><span class="material-symbols-rounded">currency_exchange</span><div><strong>Reviewed money movement</strong><small>Transfers and FX use review steps before final execution.</small></div></div>
+      <div><span class="material-symbols-rounded">shield_lock</span><div><strong>Security visibility</strong><small>Profile and security activity remain part of the relationship.</small></div></div>
     </div>
+  </div>
+  <div class="pv2-auth-foot">Velmora Bank · Demo environment</div>
 </section>
-<?php include('../common-sections/footer.php'); ?>
-<?php include('../common-sections/smartsupp-live-chat.html'); ?>
-</body>
-</html>
+<section class="pv2-auth-main">
+  <div class="pv2-auth-card">
+    <a class="pv2-auth-home" href="/"><span class="material-symbols-rounded">arrow_back</span>Back to Velmora</a>
+    <h2>Sign in</h2><p>Use the email address and password registered with your Velmora profile.</p>
+    <?php if(isset($_GET['error'])&&$_GET['error']==='yes'): ?><div class="pv2-alert error">The email or password was not accepted. Check your details and try again.</div><?php endif; ?>
+    <form method="post" class="pv2-form">
+      <label><span>Email address</span><input type="email" name="email" autocomplete="username" required placeholder="you@example.com"></label>
+      <label><span>Password</span><input type="password" name="password" autocomplete="current-password" required placeholder="Enter your password"></label>
+      <div class="pv2-auth-row"><label class="pv2-auth-check"><input type="checkbox" name="remember_me" value="1">Keep me signed in</label><a class="pv2-auth-link" href="/forgot-password/">Forgot password?</a></div>
+      <button class="pv2-btn primary pv2-auth-submit" type="submit" name="sign_in" value="sign-in">Sign in securely</button>
+    </form>
+    <div class="pv2-auth-divider"></div>
+    <div class="pv2-auth-bottom">New to Velmora? <a href="/signup/">Open an account</a></div>
+  </div>
+</section>
+</main></body></html>
