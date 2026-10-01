@@ -10,7 +10,6 @@ function cpv2Start(string $title,string $active): void { ?>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,-50..200">
 <link rel="stylesheet" href="/assets/stylesheets/control-panel-v2.css?v=<?php echo time(); ?>"></head><body>
-<div class="op-demo">DEMO OPERATIONS</div>
 <div class="op-shell">
 <aside class="op-sidebar" id="opSidebar">
  <a class="op-brand" href="/"><img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank"></a>
