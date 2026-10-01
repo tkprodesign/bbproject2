@@ -37,4 +37,4 @@ require_once('../signup/app.php');
     <div class="pv2-auth-bottom">Already registered? <a href="/login/">Sign in</a></div>
   </div>
 </section>
-</main></body></html>
+</main><?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?></body></html>
