@@ -134,8 +134,9 @@ jobs:
           ' "$RUNNER_TEMP/velmora-db.json"
 
           chmod 600 "$RUNNER_TEMP/velmora-db.json"
-          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-db.json" "$SSH_USER@$SSH_HOST:.velmora-db.json.tmp"
-          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'mv "$HOME/.velmora-db.json.tmp" "$HOME/.velmora-db.json" && chmod 600 "$HOME/.velmora-db.json"'
+          remote_db_tmp=".velmora-db-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json.tmp"
+          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-db.json" "$SSH_USER@$SSH_HOST:$remote_db_tmp"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "mv \"\$HOME/$remote_db_tmp\" \"\$HOME/.velmora-db.json\" && chmod 600 \"\$HOME/.velmora-db.json\""
 
       - name: Count registered Velmora users
         run: |
@@ -159,7 +160,7 @@ jobs:
       - name: Lint PHP files
         run: |
           set -euo pipefail
-          find . -path './archive' -prune -o -path './PHPMailer' -prune -o -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
+          find . -path './archive' -prune -o -path './docs/archive' -prune -o -path './PHPMailer' -prune -o -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
           echo "PHP_LINT_OK=YES"
 
       - name: Upload changed site files
@@ -177,7 +178,8 @@ jobs:
             ':(exclude).github/**' \
             ':(exclude).vscode/**' \
             ':(exclude)node_modules/**' \
-            ':(exclude)archive/**')"
+            ':(exclude)archive/**' \
+            ':(exclude)docs/archive/**')"
 
           if [ -z "$changed_files" ]; then
             echo "No changed deployable files to upload."
