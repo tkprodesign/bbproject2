@@ -72,6 +72,11 @@ $queries = [
         kyc_level TINYINT UNSIGNED NOT NULL DEFAULT 1,
         profile_picture VARCHAR(255) DEFAULT NULL,
         last_active INT DEFAULT NULL,
+        customer_number VARCHAR(32) DEFAULT NULL UNIQUE,
+        user_status VARCHAR(32) NOT NULL DEFAULT 'Active',
+        last_login_at DATETIME DEFAULT NULL,
+        last_login_ip VARCHAR(45) DEFAULT NULL,
+        login_count INT UNSIGNED NOT NULL DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
@@ -84,6 +89,8 @@ $queries = [
         account_number BIGINT NOT NULL UNIQUE,
         account_status VARCHAR(50) NOT NULL DEFAULT 'Active',
         creation_time INT NOT NULL,
+        account_alias VARCHAR(100) DEFAULT NULL,
+        opened_at DATETIME DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_accounts_user_email (user_email),
         INDEX idx_accounts_creation_time (creation_time)
@@ -107,6 +114,9 @@ $queries = [
         counter_amount DECIMAL(18,2) DEFAULT NULL,
         fx_rate DECIMAL(20,8) DEFAULT NULL,
         fx_spread_bps INT DEFAULT NULL,
+        channel VARCHAR(60) NOT NULL DEFAULT 'Online Banking',
+        value_date DATE DEFAULT NULL,
+        posted_at DATETIME DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_transactions_user_email (user_email),
         INDEX idx_transactions_account_number (account_number),
@@ -131,6 +141,60 @@ $queries = [
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_fx_trades_user_email (user_email),
         INDEX idx_fx_trades_quoted_at (quoted_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+    "CREATE TABLE IF NOT EXISTS beneficiaries (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_email VARCHAR(190) NOT NULL,
+        nickname VARCHAR(100) DEFAULT NULL,
+        beneficiary_name VARCHAR(190) NOT NULL,
+        bank_name VARCHAR(190) NOT NULL,
+        account_number VARCHAR(80) NOT NULL,
+        account_type VARCHAR(100) DEFAULT NULL,
+        currency VARCHAR(20) NOT NULL,
+        status VARCHAR(30) NOT NULL DEFAULT 'Active',
+        last_used_at DATETIME DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_beneficiaries_user_email (user_email),
+        UNIQUE KEY uq_beneficiary_account (user_email, bank_name, account_number)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+    "CREATE TABLE IF NOT EXISTS notifications (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_email VARCHAR(190) NOT NULL,
+        title VARCHAR(190) NOT NULL,
+        body TEXT NOT NULL,
+        notification_type VARCHAR(60) NOT NULL DEFAULT 'General',
+        action_url VARCHAR(255) DEFAULT NULL,
+        is_read TINYINT(1) NOT NULL DEFAULT 0,
+        read_at DATETIME DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_notifications_user_email (user_email),
+        INDEX idx_notifications_unread (user_email, is_read)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+    "CREATE TABLE IF NOT EXISTS security_events (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_email VARCHAR(190) NOT NULL,
+        event_type VARCHAR(80) NOT NULL,
+        description VARCHAR(255) NOT NULL,
+        ip_address VARCHAR(45) DEFAULT NULL,
+        user_agent VARCHAR(500) DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_security_events_user_email (user_email),
+        INDEX idx_security_events_created_at (created_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+    "CREATE TABLE IF NOT EXISTS user_preferences (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_email VARCHAR(190) NOT NULL UNIQUE,
+        timezone VARCHAR(80) NOT NULL DEFAULT 'America/New_York',
+        language VARCHAR(12) NOT NULL DEFAULT 'en',
+        email_transaction_alerts TINYINT(1) NOT NULL DEFAULT 1,
+        email_security_alerts TINYINT(1) NOT NULL DEFAULT 1,
+        in_app_notifications TINYINT(1) NOT NULL DEFAULT 1,
+        statement_delivery VARCHAR(30) NOT NULL DEFAULT 'Digital',
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
     "CREATE TABLE IF NOT EXISTS kyc_data (
@@ -188,7 +252,12 @@ $columnMigrations = [
         'kyc_level' => "`kyc_level` TINYINT UNSIGNED NOT NULL DEFAULT 1 AFTER `human_time`",
         'profile_picture' => "`profile_picture` VARCHAR(255) DEFAULT NULL AFTER `kyc_level`",
         'last_active' => "`last_active` INT DEFAULT NULL AFTER `profile_picture`",
-        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `last_active`",
+        'customer_number' => "`customer_number` VARCHAR(32) DEFAULT NULL AFTER `last_active`",
+        'user_status' => "`user_status` VARCHAR(32) NOT NULL DEFAULT 'Active' AFTER `customer_number`",
+        'last_login_at' => "`last_login_at` DATETIME DEFAULT NULL AFTER `user_status`",
+        'last_login_ip' => "`last_login_ip` VARCHAR(45) DEFAULT NULL AFTER `last_login_at`",
+        'login_count' => "`login_count` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `last_login_ip`",
+        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `login_count`",
     ],
     'accounts' => [
         'account_type' => "`account_type` VARCHAR(100) NOT NULL DEFAULT '' AFTER `id`",
@@ -198,7 +267,9 @@ $columnMigrations = [
         'account_number' => "`account_number` BIGINT NOT NULL DEFAULT 0 AFTER `currency`",
         'account_status' => "`account_status` VARCHAR(50) NOT NULL DEFAULT 'Active' AFTER `account_number`",
         'creation_time' => "`creation_time` INT NOT NULL DEFAULT 0 AFTER `account_status`",
-        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `creation_time`",
+        'account_alias' => "`account_alias` VARCHAR(100) DEFAULT NULL AFTER `creation_time`",
+        'opened_at' => "`opened_at` DATETIME DEFAULT NULL AFTER `account_alias`",
+        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `opened_at`",
     ],
     'transactions' => [
         'type' => "`type` VARCHAR(80) NOT NULL DEFAULT '' AFTER `id`",
@@ -217,7 +288,10 @@ $columnMigrations = [
         'counter_amount' => "`counter_amount` DECIMAL(18,2) DEFAULT NULL AFTER `counter_currency`",
         'fx_rate' => "`fx_rate` DECIMAL(20,8) DEFAULT NULL AFTER `counter_amount`",
         'fx_spread_bps' => "`fx_spread_bps` INT DEFAULT NULL AFTER `fx_rate`",
-        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `fx_spread_bps`",
+        'channel' => "`channel` VARCHAR(60) NOT NULL DEFAULT 'Online Banking' AFTER `fx_spread_bps`",
+        'value_date' => "`value_date` DATE DEFAULT NULL AFTER `channel`",
+        'posted_at' => "`posted_at` DATETIME DEFAULT NULL AFTER `value_date`",
+        'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `posted_at`",
     ],
     'kyc_data' => [
         'first_name' => "`first_name` VARCHAR(120) NOT NULL DEFAULT '' AFTER `id`",
@@ -260,6 +334,7 @@ foreach ($columnMigrations as $table => $columns) {
 
 $indexMigrations = [
     ['users', 'email', 'UNIQUE INDEX `email` (`email`)'],
+    ['users', 'customer_number', 'UNIQUE INDEX `customer_number` (`customer_number`)'],
     ['accounts', 'account_number', 'UNIQUE INDEX `account_number` (`account_number`)'],
     ['accounts', 'idx_accounts_user_email', 'INDEX `idx_accounts_user_email` (`user_email`)'],
     ['accounts', 'idx_accounts_creation_time', 'INDEX `idx_accounts_creation_time` (`creation_time`)'],
@@ -279,6 +354,14 @@ foreach ($indexMigrations as [$table, $index, $definition]) {
     addIndexIfMissing($db, $table, $index, $definition, $errors);
 }
 
+$db->query("UPDATE users SET customer_number = CONCAT('VLM-', LPAD(id, 8, '0')) WHERE customer_number IS NULL OR customer_number = ''");
+$db->query("UPDATE users SET user_status = 'Active' WHERE user_status IS NULL OR user_status = ''");
+$db->query("UPDATE accounts SET opened_at = FROM_UNIXTIME(creation_time) WHERE opened_at IS NULL AND creation_time > 0");
+$db->query("UPDATE transactions SET channel = 'Online Banking' WHERE channel IS NULL OR channel = ''");
+$db->query("UPDATE transactions SET value_date = DATE(FROM_UNIXTIME(time)) WHERE value_date IS NULL AND time > 0");
+$db->query("UPDATE transactions SET posted_at = FROM_UNIXTIME(time) WHERE posted_at IS NULL AND time > 0");
+$db->query("INSERT IGNORE INTO user_preferences (user_email) SELECT email FROM users WHERE email <> ''");
+
 $seedStmt = $db->prepare('INSERT IGNORE INTO dynamic_data (`name`, `value`) VALUES (?, ?)');
 if ($seedStmt) {
     foreach (getDefaultDynamicData() as $name => $value) {
@@ -291,7 +374,7 @@ if ($seedStmt) {
 header('Content-Type: text/plain');
 if (empty($errors)) {
     echo "Success: database tables are ready.\n";
-    echo "Tables managed: users, accounts, transactions, fx_trades, kyc_data, dynamic_data.\n";
+    echo "Tables managed: users, accounts, transactions, fx_trades, beneficiaries, notifications, security_events, user_preferences, kyc_data, dynamic_data.\n";
 } else {
     echo "Finished with errors:\n- " . implode("\n- ", $errors) . "\n";
 }
