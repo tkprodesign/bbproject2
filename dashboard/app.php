@@ -177,7 +177,7 @@ $dbconn->close();
 
 //Sum up user's balance from transaction table
 $dbconn = connectToDatabase();
-$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND (status IS NULL OR LOWER(status) <> 'failed')";
+$sql = "SELECT SUM(amount) AS user_balance FROM transactions WHERE user_email = ? AND (status IS NULL OR LOWER(status) NOT IN ('failed','archived'))";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -194,7 +194,7 @@ $user_balance = $user_balance > 0 ? number_format($user_balance, 2) : '0.00';
 
 //Count how many transactions have been made
 $dbconn = connectToDatabase();
-$sql = "SELECT COUNT(*) FROM transactions WHERE user_email = ? AND (status IS NULL OR LOWER(status) <> 'failed')";
+$sql = "SELECT COUNT(*) FROM transactions WHERE user_email = ? AND (status IS NULL OR LOWER(status) NOT IN ('failed','archived'))";
 $stmt = $dbconn->prepare($sql);
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
@@ -560,7 +560,7 @@ if (isset($_POST['transfer_funds'])) {
 
     $source_currency = strtoupper((string)$source_currency);
 
-    $balanceStmt = $db->prepare("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE account_number = ? AND (status IS NULL OR LOWER(status) <> 'failed')");
+    $balanceStmt = $db->prepare("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE account_number = ? AND (status IS NULL OR LOWER(status) NOT IN ('failed','archived'))");
     $balanceStmt->bind_param('i', $from_account_number);
     $balanceStmt->execute();
     $balanceStmt->bind_result($available_balance);
