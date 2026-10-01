@@ -16,7 +16,7 @@ function cpv2Start(string $title,string $active): void { ?>
  <a class="op-brand" href="/"><img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank"></a>
  <div class="op-product"><span>VELMORA</span><strong>Operations Console</strong></div>
  <nav class="op-nav">
-  <p>OVERVIEW</p><?php echo cpv2Nav('/control-panel-v2/','dashboard','Overview',$active,'overview'); ?>
+  <p>OVERVIEW</p><?php echo cpv2Nav('/control-panel-v2/','dashboard','Overview',$active,'overview'); ?><?php echo cpv2Nav('/control-panel-v2/site-review/','fact_check','Site Review',$active,'review'); ?>
   <p>CUSTOMERS</p><?php echo cpv2Nav('/control-panel-v2/customers/','group','Customers',$active,'customers'); ?><?php echo cpv2Nav('/control-panel-v2/accounts/','account_balance','Accounts',$active,'accounts'); ?><?php echo cpv2Nav('/control-panel-v2/kyc/','badge','KYC Review',$active,'kyc'); ?>
   <p>MONEY MOVEMENT</p><?php echo cpv2Nav('/control-panel-v2/transactions/','receipt_long','Transactions',$active,'transactions'); ?><?php echo cpv2Nav('/control-panel-v2/transfers/','payments','Transfer Review',$active,'transfers'); ?><?php echo cpv2Nav('/control-panel-v2/fx/','currency_exchange','FX Trades',$active,'fx'); ?><?php echo cpv2Nav('/control-panel-v2/adjustments/','balance','Ledger Adjustments',$active,'adjustments'); ?>
   <p>OPERATIONS</p><?php echo cpv2Nav('/control-panel-v2/support-cases/','support_agent','Support Cases',$active,'support'); ?><?php echo cpv2Nav('/control-panel-v2/communications/','campaign','Communications',$active,'communications'); ?><?php echo cpv2Nav('/control-panel-v2/audit/','shield','Security & Audit',$active,'audit'); ?><?php echo cpv2Nav('/control-panel-v2/settings/','settings','Settings',$active,'settings'); ?>

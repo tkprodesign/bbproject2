@@ -17,3 +17,10 @@
 .op-case-meta{display:flex;flex-wrap:wrap;gap:6px}
 .op-case-meta span{border:1px solid var(--line);background:#f8fafb;border-radius:999px;padding:5px 7px;font-size:8px;color:var(--muted);font-weight:700}
 @media(max-width:560px){.op-message{max-width:94%}.op-case-head{display:block}}
+
+.op-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.op-review-card{display:grid;grid-template-columns:minmax(0,1fr) auto 22px;gap:10px;align-items:center;border:1px solid var(--line);background:#fafbfc;border-radius:11px;padding:12px;transition:.18s}
+.op-review-card:hover{background:#fff;box-shadow:var(--shadow);transform:translateY(-1px)}
+.op-review-card strong{display:block;font-size:10px}.op-review-card small{display:block;color:var(--muted);font-size:8px;margin-top:3px}
+.op-review-card>.material-symbols-rounded{font-size:17px;color:#6c8195}
+@media(max-width:700px){.op-review-grid{grid-template-columns:1fr}}
