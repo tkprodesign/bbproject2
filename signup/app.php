@@ -48,7 +48,32 @@ if (isset($_POST['sign_up'])) {
         // Bind parameters and execute statement
         $stmt->bind_param('sssis', $name, $email, $password, $date_registered, $human_time);
         $stmt->execute();
+        $newUserId = (int)$dbconn->insert_id;
         $stmt->close();
+
+        try {
+            $customerNumber = 'VLM-' . str_pad((string)$newUserId, 8, '0', STR_PAD_LEFT);
+            $metaStmt = $dbconn->prepare("UPDATE users SET customer_number=?, user_status='Active' WHERE id=?");
+            if ($metaStmt) {
+                $metaStmt->bind_param('si', $customerNumber, $newUserId);
+                $metaStmt->execute();
+                $metaStmt->close();
+            }
+            $prefStmt = $dbconn->prepare("INSERT IGNORE INTO user_preferences (user_email) VALUES (?)");
+            if ($prefStmt) {
+                $prefStmt->bind_param('s', $email);
+                $prefStmt->execute();
+                $prefStmt->close();
+            }
+            $eventType='Registration';
+            $eventDescription='Online banking profile created';
+            $ip=substr((string)($_SERVER['REMOTE_ADDR']??''),0,45);
+            $ua=substr((string)($_SERVER['HTTP_USER_AGENT']??''),0,500);
+            $eventStmt=$dbconn->prepare("INSERT INTO security_events (user_email,event_type,description,ip_address,user_agent) VALUES (?,?,?,?,?)");
+            if($eventStmt){$eventStmt->bind_param('sssss',$email,$eventType,$eventDescription,$ip,$ua);$eventStmt->execute();$eventStmt->close();}
+        } catch (Throwable $e) {
+            error_log('Registration metadata tracking skipped: ' . $e->getMessage());
+        }
         $dbconn->close();
 
         // Redirect to the requested onboarding experience when supplied.

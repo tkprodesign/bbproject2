@@ -3,6 +3,11 @@ require_once __DIR__ . '/../_app.php';
 require_once __DIR__ . '/../_layout.php';
 $profile=v3Profile($user_email,$user_name);
 $accounts=array_values(array_filter(v3Accounts($user_email),fn($a)=>$a['account_status']==='Active'));
+$beneficiaries=v3Beneficiaries($user_email,true);
+$selectedFrom=preg_replace('/\D+/','',(string)($_GET['from']??''));
+$selectedBeneficiaryId=(int)($_GET['beneficiary']??0);
+$selectedBeneficiary=null;
+foreach($beneficiaries as $candidate){if((int)$candidate['id']===$selectedBeneficiaryId){$selectedBeneficiary=$candidate;break;}}
 $quote=$_SESSION['v3_transfer_quote']??null;
 if(is_array($quote)&&time()>(int)$quote['expires_at']){unset($_SESSION['v3_transfer_quote']);$quote=null;}
 v3PageStart('Transfer Funds','transfer',$profile,$user_profile_picture);
@@ -16,9 +21,10 @@ v3FlashMessages();
     <div class="v3-section-head"><div><span class="v3-kicker">STEP 1</span><h2>Transfer details</h2></div><span class="v3-step">Prepare</span></div>
     <form method="post" class="v3-form">
         <?php echo v3CsrfInput(); ?>
-        <label><span>From account</span><select name="from_account" required><option value="">Choose account</option><?php foreach($accounts as $a): ?><option value="<?php echo htmlspecialchars($a['account_number']); ?>"><?php echo htmlspecialchars($a['currency'].' · •••• '.substr((string)$a['account_number'],-4).' · '.velmoraFormatCurrency($a['balance'],$a['currency'])); ?></option><?php endforeach; ?></select></label>
-        <div class="v3-form-row"><label><span>Recipient bank</span><input type="text" name="bank_name" required></label><label><span>Recipient account</span><input type="text" name="account_number" required></label></div>
-        <div class="v3-form-row"><label><span>Account type</span><select name="account_type"><option>Savings</option><option>Current</option><option>Not Sure</option></select></label><label><span>Recipient currency</span><select name="currency" required><?php echo velmoraCurrencyOptions('USD'); ?></select></label></div>
+        <label><span>From account</span><select name="from_account" required><option value="">Choose account</option><?php foreach($accounts as $a): ?><option value="<?php echo htmlspecialchars($a['account_number']); ?>" <?php echo $selectedFrom===(string)$a['account_number']?'selected':''; ?>><?php echo htmlspecialchars($a['currency'].' · •••• '.substr((string)$a['account_number'],-4).' · '.velmoraFormatCurrency($a['balance'],$a['currency'])); ?></option><?php endforeach; ?></select></label>
+        <?php if(!empty($beneficiaries)): ?><label><span>Saved beneficiary</span><select onchange="if(this.value)window.location='/dashboard-v3/transfer/?beneficiary='+encodeURIComponent(this.value)+'<?php echo $selectedFrom!==''?'&from='.urlencode($selectedFrom):''; ?>'"><option value="">Enter recipient manually</option><?php foreach($beneficiaries as $b): ?><option value="<?php echo (int)$b['id']; ?>" <?php echo $selectedBeneficiaryId===(int)$b['id']?'selected':''; ?>><?php echo htmlspecialchars($b['beneficiary_name'].' · '.$b['bank_name'].' · •••• '.substr((string)$b['account_number'],-4)); ?></option><?php endforeach; ?></select></label><?php endif; ?>
+        <div class="v3-form-row"><label><span>Recipient bank</span><input type="text" name="bank_name" required value="<?php echo htmlspecialchars($selectedBeneficiary['bank_name']??''); ?>"></label><label><span>Recipient account</span><input type="text" name="account_number" required value="<?php echo htmlspecialchars($selectedBeneficiary['account_number']??''); ?>"></label></div>
+        <div class="v3-form-row"><label><span>Account type</span><select name="account_type"><?php foreach(['Savings','Current','Not Sure'] as $type): ?><option value="<?php echo $type; ?>" <?php echo (($selectedBeneficiary['account_type']??'')===$type)?'selected':''; ?>><?php echo $type; ?></option><?php endforeach; ?></select></label><label><span>Recipient currency</span><select name="currency" required><?php echo velmoraCurrencyOptions($selectedBeneficiary['currency']??'USD'); ?></select></label></div>
         <label><span>Amount to debit from your account</span><input type="number" min="0.01" step="0.01" name="amount" required></label>
         <button type="submit" name="v3_quote_transfer" value="1" class="v3-primary-btn">Review transfer</button>
     </form>

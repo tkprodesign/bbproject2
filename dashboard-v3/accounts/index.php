@@ -18,11 +18,13 @@ v3FlashMessages();
             <article>
                 <div class="v3-account-ident">
                     <span class="material-symbols-rounded">account_balance</span>
-                    <div><strong><?php echo htmlspecialchars($account['account_type']); ?></strong><small><?php echo htmlspecialchars($account['account_number']); ?></small></div>
+                    <div><strong><?php echo htmlspecialchars(!empty($account['account_alias'])?$account['account_alias']:$account['account_type']); ?></strong><small><?php echo htmlspecialchars($account['account_type'].' · '.$account['account_number']); ?></small></div>
                 </div>
                 <div><span>Currency</span><strong><?php echo htmlspecialchars($account['currency']); ?></strong></div>
                 <div><span>Available balance</span><strong><?php echo htmlspecialchars(velmoraFormatCurrency($account['balance'],$account['currency'])); ?></strong></div>
+                <div><span>Opened</span><strong><?php echo !empty($account['opened_at'])?htmlspecialchars(date('M d, Y',strtotime((string)$account['opened_at']))):htmlspecialchars(date('M d, Y',(int)$account['creation_time'])); ?></strong></div>
                 <div><span>Status</span><strong class="v3-verified"><?php echo htmlspecialchars($account['account_status']); ?></strong></div>
+                <div class="v3-list-actions"><a href="/dashboard-v3/accounts/detail/?account=<?php echo urlencode((string)$account['account_number']); ?>">View</a></div>
             </article>
             <?php endforeach; ?>
             <?php if(empty($accounts)): ?><div class="v3-empty">No accounts have been opened.</div><?php endif; ?>
@@ -34,6 +36,7 @@ v3FlashMessages();
         <p class="v3-form-note">An account’s currency does not change after creation. To hold another currency, open the appropriate account and use Currency Exchange.</p>
         <form method="post" class="v3-form">
             <?php echo v3CsrfInput(); ?>
+            <label><span>Account nickname <small>(optional)</small></span><input type="text" name="account_alias" maxlength="100" placeholder="e.g. Everyday EUR"></label>
             <label><span>Account type</span><select name="account_type" required><option value="Personal Checking">Personal Checking</option><option value="Savings">Savings</option><option value="Current">Current</option><option value="Fixed">Fixed</option></select></label>
             <label><span>Currency</span><select name="currency" required><?php echo velmoraCurrencyOptions('USD'); ?></select></label>
             <button type="submit" name="v3_create_account" value="1" class="v3-primary-btn">Open account</button>
