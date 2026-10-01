@@ -325,3 +325,16 @@ Added a common customer-access restriction workflow to Support, Admin and Master
 - Redirected retired *-v2 and predecessor dashboard/control-panel routes to canonical routes.
 - Added deployment smoke tests for canonical review routes and customer-auth schema.
 - SpaceMail/Spaceship mailbox provisioning for security@velmorabank.us remains provider-side; application support is complete and support@ fallback remains active until the mailbox credential exists.
+
+
+### 2026-10-01 — Resend + single SpaceMail mailbox architecture
+
+- SpaceMail is treated as one physical receiving mailbox: `support@velmorabank.us`.
+- Alias identities no longer require individual SMTP passwords in application code.
+- Outbound application email is Resend-first using `RESEND_API_KEY`.
+- Approved Resend sender identities are `support@`, `security@`, `no-reply@` and `admin@velmorabank.us`.
+- `security@velmorabank.us` becomes the preferred account-restriction/security sender when Resend is configured.
+- If Resend is unavailable or not configured, the application falls back to SpaceMail SMTP through the physical Support mailbox.
+- Public/customer pages now load the same private mail environment used by deployment/backend runtime.
+- Deployment now syncs `RESEND_API_KEY` from the private environment and checks whether the Resend HTTP runtime is available.
+- Provider-side remaining work: verify `velmorabank.us` in Resend, publish the DNS records Resend provides, create the `security@` inbound alias in SpaceMail pointing to Support, and store `RESEND_API_KEY` in the private environment.
