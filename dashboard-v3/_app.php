@@ -1,4 +1,6 @@
 <?php
+if (!defined('VELMORA_LOGIN_ROUTE')) define('VELMORA_LOGIN_ROUTE','/login-v2/');
+if (!defined('VELMORA_CONTROL_PANEL_ROUTE')) define('VELMORA_CONTROL_PANEL_ROUTE','/control-panel-v2/');
 require_once __DIR__ . '/../dashboard/app.php';
 
 if (session_status() === PHP_SESSION_NONE) {
