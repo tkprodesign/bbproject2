@@ -10,8 +10,8 @@ $supportWhatsappLink = getSupportWhatsappLink();
       <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><span class="material-symbols-rounded">call</span><?php echo htmlspecialchars($supportPhoneNumber); ?></a>
     </div>
     <div>
-      <a href="/atm-and-bank-locations/"><span class="material-symbols-rounded">location_on</span>ATM &amp; locations</a>
-      <a href="/contact/"><span class="material-symbols-rounded">support_agent</span>Support</a>
+      <a href="/locations-v2/"><span class="material-symbols-rounded">location_on</span>ATM &amp; locations</a>
+      <a href="/contact-v2/"><span class="material-symbols-rounded">support_agent</span>Support</a>
     </div>
   </div>
 </div>
@@ -26,7 +26,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
       <a href="/credit-card-v2/">Cards</a>
       <a href="/loan-v2/">Loans</a>
       <a href="/international-v2/">International</a>
-      <a href="/about-us/">About</a>
+      <a href="/about-v2/">About</a>
     </nav>
     <div class="pv2-header-actions">
       <a class="pv2-signin" href="/login/"><span class="material-symbols-rounded">lock</span>Sign in</a>
@@ -43,8 +43,8 @@ $supportWhatsappLink = getSupportWhatsappLink();
     <a href="/loan-v2/">Loans &amp; Financing</a>
     <a href="/international-v2/">International &amp; FX</a>
     <a href="/online-banking-v2/">Online Banking</a>
-    <a href="/about-us/">About Velmora</a>
-    <a href="/contact/">Support</a>
+    <a href="/about-v2/">About Velmora</a>
+    <a href="/contact-v2/">Support</a>
     <div>
       <a class="pv2-signin" href="/login/">Sign in</a>
       <a class="pv2-open" href="/signup/">Open an account</a>
