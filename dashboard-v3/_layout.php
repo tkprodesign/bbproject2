@@ -38,6 +38,7 @@ function v3PageStart(string $title, string $active, array $profile, ?string $pro
             <?php echo v3NavItem('/dashboard-v3/accounts/','account_balance_wallet','Accounts',$active,'accounts'); ?>
             <?php echo v3NavItem('/dashboard-v3/beneficiaries/','group','Beneficiaries',$active,'beneficiaries'); ?>
             <?php echo v3NavItem('/dashboard-v3/statements/','description','Statements',$active,'statements'); ?>
+            <?php echo v3NavItem('/dashboard-v3/support/','support_agent','Support messages',$active,'support'); ?>
             <p>PROFILE</p>
             <?php echo v3NavItem('/dashboard-v3/profile/','person','Profile',$active,'profile'); ?>
             <?php echo v3NavItem('/dashboard-v3/identity/','badge','Identity & KYC',$active,'identity'); ?>
