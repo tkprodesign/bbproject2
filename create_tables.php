@@ -113,6 +113,26 @@ $queries = [
         INDEX idx_transactions_time (time)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
+    "CREATE TABLE IF NOT EXISTS fx_trades (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        trade_id VARCHAR(48) NOT NULL UNIQUE,
+        user_email VARCHAR(190) NOT NULL,
+        from_account_number BIGINT NOT NULL,
+        to_account_number BIGINT NOT NULL,
+        source_currency VARCHAR(20) NOT NULL,
+        target_currency VARCHAR(20) NOT NULL,
+        source_amount DECIMAL(18,2) NOT NULL,
+        target_amount DECIMAL(18,2) NOT NULL,
+        customer_rate DECIMAL(20,8) NOT NULL,
+        fx_spread_bps INT NOT NULL DEFAULT 0,
+        status VARCHAR(40) NOT NULL DEFAULT 'Quoted',
+        quoted_at INT NOT NULL,
+        executed_at INT DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_fx_trades_user_email (user_email),
+        INDEX idx_fx_trades_quoted_at (quoted_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
     "CREATE TABLE IF NOT EXISTS kyc_data (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         first_name VARCHAR(120) NOT NULL,
@@ -247,6 +267,9 @@ $indexMigrations = [
     ['transactions', 'idx_transactions_user_email', 'INDEX `idx_transactions_user_email` (`user_email`)'],
     ['transactions', 'idx_transactions_account_number', 'INDEX `idx_transactions_account_number` (`account_number`)'],
     ['transactions', 'idx_transactions_time', 'INDEX `idx_transactions_time` (`time`)'],
+    ['fx_trades', 'trade_id', 'UNIQUE INDEX `trade_id` (`trade_id`)'],
+    ['fx_trades', 'idx_fx_trades_user_email', 'INDEX `idx_fx_trades_user_email` (`user_email`)'],
+    ['fx_trades', 'idx_fx_trades_quoted_at', 'INDEX `idx_fx_trades_quoted_at` (`quoted_at`)'],
     ['kyc_data', 'idx_kyc_email', 'INDEX `idx_kyc_email` (`email`)'],
     ['kyc_data', 'idx_kyc_status', 'INDEX `idx_kyc_status` (`status`)'],
     ['dynamic_data', 'name', 'UNIQUE INDEX `name` (`name`)'],
@@ -268,7 +291,7 @@ if ($seedStmt) {
 header('Content-Type: text/plain');
 if (empty($errors)) {
     echo "Success: database tables are ready.\n";
-    echo "Tables managed: users, accounts, transactions, kyc_data, dynamic_data.\n";
+    echo "Tables managed: users, accounts, transactions, fx_trades, kyc_data, dynamic_data.\n";
 } else {
     echo "Finished with errors:\n- " . implode("\n- ", $errors) . "\n";
 }
