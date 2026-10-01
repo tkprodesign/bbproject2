@@ -42,14 +42,18 @@
             if ($stmt->fetch()) {
                 if (password_verify($password, $hashed_password)) {
                     $accountAllowed = true;
+                    $accountStatus = 'Active';
                     try {
                         $statusStmt = $dbconn->prepare("SELECT user_status FROM users WHERE email = ? LIMIT 1");
                         if ($statusStmt) {
                             $statusStmt->bind_param('s', $email);
                             $statusStmt->execute();
                             $statusStmt->bind_result($userStatus);
-                            if ($statusStmt->fetch() && !in_array(strtolower(trim((string)$userStatus)), ['active','enabled'], true)) {
-                                $accountAllowed = false;
+                            if ($statusStmt->fetch()) {
+                                $accountStatus = trim((string)$userStatus);
+                                if (!in_array(strtolower($accountStatus), ['active','enabled'], true)) {
+                                    $accountAllowed = false;
+                                }
                             }
                             $statusStmt->close();
                         }
@@ -59,7 +63,11 @@
 
                     if (!$accountAllowed) {
                         $_GET['alert_time'] = time();
-                        $_GET['error'] = 'yes';
+                        if (in_array(strtolower($accountStatus), ['restricted','archived','suspended'], true)) {
+                            $_GET['restricted'] = 'yes';
+                        } else {
+                            $_GET['error'] = 'yes';
+                        }
                         $dbconn->close();
                     } else {
                     $cookie_timeout = $remember_me == 1 ? 30 * 24 * 60 * 60 : 1 * 60 * 60;
