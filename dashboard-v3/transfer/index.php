@@ -3,6 +3,8 @@ require_once __DIR__ . '/../_app.php';
 require_once __DIR__ . '/../_layout.php';
 $profile=v3Profile($user_email,$user_name);
 $accounts=array_values(array_filter(v3Accounts($user_email),fn($a)=>$a['account_status']==='Active'));
+$beneficiaries=v3Beneficiaries($user_email,true);
+$selectedBeneficiaryId=(int)($_GET['beneficiary']??0);
 $quote=$_SESSION['v3_transfer_quote']??null;
 if(is_array($quote)&&time()>(int)$quote['expires_at']){unset($_SESSION['v3_transfer_quote']);$quote=null;}
 v3PageStart('Transfer Funds','transfer',$profile,$user_profile_picture);
@@ -17,17 +19,40 @@ v3FlashMessages();
     <form method="post" class="v3-form">
         <?php echo v3CsrfInput(); ?>
         <label><span>From account</span><select name="from_account" required><option value="">Choose account</option><?php foreach($accounts as $a): ?><option value="<?php echo htmlspecialchars($a['account_number']); ?>"><?php echo htmlspecialchars($a['currency'].' · •••• '.substr((string)$a['account_number'],-4).' · '.velmoraFormatCurrency($a['balance'],$a['currency'])); ?></option><?php endforeach; ?></select></label>
-        <div class="v3-form-row"><label><span>Recipient bank</span><input type="text" name="bank_name" required></label><label><span>Recipient account</span><input type="text" name="account_number" required></label></div>
-        <div class="v3-form-row"><label><span>Account type</span><select name="account_type"><option>Savings</option><option>Current</option><option>Not Sure</option></select></label><label><span>Recipient currency</span><select name="currency" required><?php echo velmoraCurrencyOptions('USD'); ?></select></label></div>
+
+        <?php if(!empty($beneficiaries)): ?>
+        <label><span>Saved beneficiary</span>
+            <select id="v3BeneficiarySelect">
+                <option value="">Enter recipient manually</option>
+                <?php foreach($beneficiaries as $b): ?>
+                    <option value="<?php echo (int)$b['id']; ?>"
+                        data-name="<?php echo htmlspecialchars($b['beneficiary_name'],ENT_QUOTES); ?>"
+                        data-bank="<?php echo htmlspecialchars($b['bank_name'],ENT_QUOTES); ?>"
+                        data-account="<?php echo htmlspecialchars($b['account_number'],ENT_QUOTES); ?>"
+                        data-type="<?php echo htmlspecialchars($b['account_type'],ENT_QUOTES); ?>"
+                        data-currency="<?php echo htmlspecialchars($b['currency'],ENT_QUOTES); ?>"
+                        <?php echo $selectedBeneficiaryId===(int)$b['id']?'selected':''; ?>>
+                        <?php echo htmlspecialchars($b['beneficiary_name'].' · '.$b['bank_name'].' · •••• '.substr((string)$b['account_number'],-4)); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </label>
+        <?php endif; ?>
+
+        <label><span>Recipient name</span><input id="v3BeneficiaryName" type="text" name="beneficiary_name" required></label>
+        <div class="v3-form-row"><label><span>Recipient bank</span><input id="v3RecipientBank" type="text" name="bank_name" required></label><label><span>Recipient account</span><input id="v3RecipientAccount" type="text" name="account_number" required></label></div>
+        <div class="v3-form-row"><label><span>Account type</span><select id="v3RecipientType" name="account_type"><option>Savings</option><option>Current</option><option>Not Sure</option></select></label><label><span>Recipient currency</span><select id="v3RecipientCurrency" name="currency" required><?php echo velmoraCurrencyOptions('USD'); ?></select></label></div>
         <label><span>Amount to debit from your account</span><input type="number" min="0.01" step="0.01" name="amount" required></label>
+        <label class="v3-check"><input type="checkbox" name="save_beneficiary" value="1"><span>Save this recipient as a beneficiary</span></label>
         <button type="submit" name="v3_quote_transfer" value="1" class="v3-primary-btn">Review transfer</button>
+        <a class="v3-inline-link" href="/dashboard-v3/beneficiaries/">Manage beneficiaries</a>
     </form>
 </section>
 <section class="v3-panel v3-review-card">
     <div class="v3-section-head"><div><span class="v3-kicker">STEP 2</span><h2>Review & submit</h2></div><span class="v3-step"><?php echo $quote?'Ready':'Waiting'; ?></span></div>
     <?php if($quote): ?>
         <div class="v3-transfer-summary">
-            <div><span>Recipient</span><strong><?php echo htmlspecialchars($quote['bank_name']); ?></strong><small><?php echo htmlspecialchars($quote['recipient_account']); ?></small></div>
+            <div><span>Recipient</span><strong><?php echo htmlspecialchars($quote['beneficiary_name']); ?></strong><small><?php echo htmlspecialchars($quote['bank_name'].' · '.$quote['recipient_account']); ?></small></div>
             <div><span>You send</span><strong><?php echo htmlspecialchars(velmoraFormatCurrency((float)$quote['amount'],$quote['source_currency'])); ?></strong></div>
             <div><span>Recipient receives</span><strong><?php echo htmlspecialchars(velmoraFormatCurrency((float)$quote['recipient_amount'],$quote['recipient_currency'])); ?></strong></div>
         </div>
