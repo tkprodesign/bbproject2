@@ -33,4 +33,23 @@
     filterButtons.forEach(b=>b.classList.toggle('active',b===btn));
     apply();
   }));
+
+  const beneficiarySelect=document.getElementById('v3BeneficiarySelect');
+  const beneficiaryName=document.getElementById('v3BeneficiaryName');
+  const recipientBank=document.getElementById('v3RecipientBank');
+  const recipientAccount=document.getElementById('v3RecipientAccount');
+  const recipientType=document.getElementById('v3RecipientType');
+  const recipientCurrency=document.getElementById('v3RecipientCurrency');
+  const fillBeneficiary=()=>{
+    if(!beneficiarySelect)return;
+    const option=beneficiarySelect.options[beneficiarySelect.selectedIndex];
+    if(!option||!option.value)return;
+    if(beneficiaryName)beneficiaryName.value=option.dataset.name||'';
+    if(recipientBank)recipientBank.value=option.dataset.bank||'';
+    if(recipientAccount)recipientAccount.value=option.dataset.account||'';
+    if(recipientType&&option.dataset.type)recipientType.value=option.dataset.type;
+    if(recipientCurrency&&option.dataset.currency)recipientCurrency.value=option.dataset.currency;
+  };
+  beneficiarySelect?.addEventListener('change',fillBeneficiary);
+  if(beneficiarySelect?.value)fillBeneficiary();
 })();
