@@ -21,7 +21,7 @@ function cpv2Start(string $title,string $active): void { ?>
   <p>MONEY MOVEMENT</p><?php echo cpv2Nav('/control-panel-v2/transactions/','receipt_long','Transactions',$active,'transactions'); ?><?php echo cpv2Nav('/control-panel-v2/transfers/','payments','Transfer Review',$active,'transfers'); ?><?php echo cpv2Nav('/control-panel-v2/fx/','currency_exchange','FX Trades',$active,'fx'); ?><?php echo cpv2Nav('/control-panel-v2/adjustments/','balance','Ledger Adjustments',$active,'adjustments'); ?>
   <p>OPERATIONS</p><?php echo cpv2Nav('/control-panel-v2/support-cases/','support_agent','Support Cases',$active,'support'); ?><?php echo cpv2Nav('/control-panel-v2/communications/','campaign','Communications',$active,'communications'); ?><?php echo cpv2Nav('/control-panel-v2/audit/','shield','Security & Audit',$active,'audit'); ?><?php echo cpv2Nav('/control-panel-v2/settings/','settings','Settings',$active,'settings'); ?>
  </nav>
- <div class="op-bottom"><a href="/dashboard-v3/"><span class="material-symbols-rounded">account_circle</span>Customer dashboard</a><a href="/login/?logout=1"><span class="material-symbols-rounded">logout</span>Sign out</a></div>
+ <div class="op-bottom"><a href="/dashboard-v3/"><span class="material-symbols-rounded">account_circle</span>Customer dashboard</a><a href="/control-panel-v2/logout/"><span class="material-symbols-rounded">logout</span>Sign out</a></div>
 </aside>
 <div class="op-overlay" id="opOverlay"></div>
 <main class="op-main">
