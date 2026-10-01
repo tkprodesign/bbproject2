@@ -16,6 +16,58 @@ ini_set('display_startup_errors', $velmoraDebug ? '1' : '0');
 error_reporting(E_ALL);
 date_default_timezone_set('America/New_York');
 
+function velmoraLoadPrivateEnvironment(): void {
+    static $loaded = false;
+    if ($loaded) {
+        return;
+    }
+    $loaded = true;
+
+    $paths = [
+        dirname(__DIR__, 2) . '/.velmora-backend.env',
+        dirname(__DIR__) . '/.env',
+    ];
+
+    foreach ($paths as $path) {
+        if (!is_file($path) || !is_readable($path)) {
+            continue;
+        }
+        $lines = @file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if (!is_array($lines)) {
+            continue;
+        }
+
+        foreach ($lines as $line) {
+            $line = trim((string)$line);
+            if ($line === '' || str_starts_with($line, '#')) {
+                continue;
+            }
+            if (!preg_match('/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/s', $line, $match)) {
+                continue;
+            }
+
+            $key = $match[1];
+            $value = trim($match[2]);
+            if (strlen($value) >= 2) {
+                $first = $value[0];
+                $last = $value[strlen($value) - 1];
+                if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
+                    $value = substr($value, 1, -1);
+                }
+            }
+
+            $existing = getenv($key);
+            if ($existing === false || $existing === '') {
+                putenv($key.'='.$value);
+                $_ENV[$key] = $value;
+            }
+        }
+        break;
+    }
+}
+
+velmoraLoadPrivateEnvironment();
+
 require_once __DIR__ . '/fx.php';
 
 
