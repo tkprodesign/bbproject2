@@ -433,7 +433,6 @@ $db->query("UPDATE accounts SET opened_at = FROM_UNIXTIME(creation_time) WHERE o
 $db->query("UPDATE transactions SET channel = 'Online Banking' WHERE channel IS NULL OR channel = ''");
 $db->query("UPDATE transactions SET value_date = DATE(FROM_UNIXTIME(time)) WHERE value_date IS NULL AND time > 0");
 $db->query("UPDATE transactions SET posted_at = FROM_UNIXTIME(time) WHERE posted_at IS NULL AND time > 0");
-$db->query("UPDATE transactions SET recipient_name = 'Skyline Construction', to_bank_name = NULL WHERE user_email = 'craigfisher405@gmail.com' AND to_bank_name = 'Skyline Construction'");
 $db->query("INSERT IGNORE INTO user_preferences (user_email) SELECT email FROM users WHERE email <> ''");
 
 $seedStmt = $db->prepare('INSERT IGNORE INTO dynamic_data (`name`, `value`) VALUES (?, ?)');
