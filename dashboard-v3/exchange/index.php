@@ -4,6 +4,7 @@ require_once __DIR__ . '/../_layout.php';
 $profile=v3Profile($user_email,$user_name);
 $accounts=v3Accounts($user_email);
 $active=array_values(array_filter($accounts,fn($a)=>$a['account_status']==='Active'));
+$selectedFrom=preg_replace('/\D+/','',(string)($_GET['from']??''));
 $quote=$_SESSION['v3_fx_quote']??null;
 if(is_array($quote) && time()>(int)$quote['expires_at']){unset($_SESSION['v3_fx_quote']);$quote=null;}
 
@@ -31,7 +32,7 @@ v3FlashMessages();
             <label><span>Sell from account</span>
                 <select name="from_account" required <?php echo count($active)<2?'disabled':''; ?>>
                     <option value="">Choose source account</option>
-                    <?php foreach($active as $a): ?><option value="<?php echo htmlspecialchars($a['account_number']); ?>"><?php echo htmlspecialchars($a['currency'].' · '.$a['account_type'].' · •••• '.substr((string)$a['account_number'],-4).' · '.velmoraFormatCurrency($a['balance'],$a['currency'])); ?></option><?php endforeach; ?>
+                    <?php foreach($active as $a): ?><option value="<?php echo htmlspecialchars($a['account_number']); ?>" <?php echo $selectedFrom===(string)$a['account_number']?'selected':''; ?>><?php echo htmlspecialchars($a['currency'].' · '.$a['account_type'].' · •••• '.substr((string)$a['account_number'],-4).' · '.velmoraFormatCurrency($a['balance'],$a['currency'])); ?></option><?php endforeach; ?>
                 </select>
             </label>
             <label><span>Buy into account</span>
