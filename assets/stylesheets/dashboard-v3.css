@@ -264,3 +264,5 @@ button{cursor:pointer}
 @media(max-width:900px){.v3-statement-months{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.v3-meta-grid,.v3-detail-grid,.v3-statement-months{grid-template-columns:1fr}.v3-detail-grid .wide{grid-column:auto}.v3-list-item{grid-template-columns:38px minmax(0,1fr)}.v3-list-actions{grid-column:2}.v3-notification-list article{grid-template-columns:36px minmax(0,1fr)}.v3-notification-list article>a{display:none}.v3-receipt-head{display:block}.v3-security-events article{grid-template-columns:35px minmax(0,1fr)}.v3-security-events time{grid-column:2}}
 @media print{.v3-sidebar,.v3-topbar,.v3-demo,.v3-receipt-actions{display:none!important}.v3-shell{display:block}.v3-page{padding:0}.v3-panel{box-shadow:none;border:0}}
+
+.v3-nav a{position:relative}.v3-nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:inline-grid;place-items:center;background:#dce8f3;color:#183957;font-size:9px;font-weight:800}.v3-nav a.active .v3-nav-badge{background:#e9eef4;color:var(--navy)}
