@@ -185,10 +185,19 @@ function getEmailPasswordForSender(string $fromEmail): string {
     $passwordsBySender = [
         'admin@velmorabank.us' => getenv('ADMIN_EMAIL_PASSWORD') ?: '',
         'support@velmorabank.us' => getenv('SUPPORT_EMAIL_PASSWORD') ?: '',
+        'security@velmorabank.us' => getenv('SECURITY_EMAIL_PASSWORD') ?: '',
         'no-reply@velmorabank.us' => getenv('NOREPLY_EMAIL_PASSWORD') ?: '',
     ];
 
     return getenv('SMTP_PASSWORD') ?: ($passwordsBySender[strtolower($fromEmail)] ?? '');
+}
+
+function getSecurityNoticeSender(): array {
+    $securityPassword = (string)(getenv('SECURITY_EMAIL_PASSWORD') ?: '');
+    if ($securityPassword !== '') {
+        return ['email' => 'security@velmorabank.us', 'name' => 'Velmora Bank Security'];
+    }
+    return ['email' => 'support@velmorabank.us', 'name' => 'Velmora Bank Support'];
 }
 
 function sendSiteEmail(string $to, string $subject, string $htmlBody, string $fromEmail = 'no-reply@velmorabank.us', string $fromName = 'Velmora Bank Notifications'): bool {
