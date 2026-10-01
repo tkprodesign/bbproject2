@@ -100,7 +100,8 @@
 
                     // Redirect based on control panel allow-list
                     if (in_array(strtolower($email), $controlPanelAllowedEmails, true)) {
-                        header("Location: /control-panel");
+                        $controlPanelTarget = defined('VELMORA_CONTROL_PANEL_TARGET') ? VELMORA_CONTROL_PANEL_TARGET : '/control-panel';
+                        header("Location: " . $controlPanelTarget);
                     } else {
                         $loginTarget = defined('VELMORA_LOGIN_TARGET') ? VELMORA_LOGIN_TARGET : '/dashboard';
                         header("Location: " . $loginTarget);
