@@ -250,14 +250,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_exchange']
         $stmt = $db->prepare("INSERT INTO transactions
             (transaction_id,type,user_email,account_number,amount,currency,description,status,time,counter_currency,counter_amount,fx_rate,fx_spread_bps)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $counterAmount = $targetAmount;
-        $stmt->bind_param('sssidsssisd di', $debitId, $type, $user_email, $sourceAccount, $sourceAmount, $sourceCurrency, $sourceDesc, $status, $now, $targetCurrency, $counterAmount, $rate, $spread);
-        // mysqli type strings cannot contain spaces; rebind below with the valid signature.
-        $stmt->close();
-
-        $stmt = $db->prepare("INSERT INTO transactions
-            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,counter_currency,counter_amount,fx_rate,fx_spread_bps)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stmt->bind_param('sssidsssisddi', $debitId, $type, $user_email, $sourceAccount, $sourceAmount, $sourceCurrency, $sourceDesc, $status, $now, $targetCurrency, $targetAmount, $rate, $spread);
         $stmt->execute();
         $stmt->close();
@@ -272,12 +264,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_exchange']
 
         $tradeStatus = 'Executed';
         $quotedAt = (int)$quote['quoted_at'];
-        $stmt = $db->prepare("INSERT INTO fx_trades
-            (trade_id,user_email,from_account_number,to_account_number,source_currency,target_currency,source_amount,target_amount,customer_rate,fx_spread_bps,status,quoted_at,executed_at)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $sourcePositive = abs((float)$quote['source_amount']);
-        $stmt->bind_param('sssss sdddisii', $tradeId, $user_email, $sourceAccount, $targetAccount, $sourceCurrency, $targetCurrency, $sourcePositive, $targetAmount, $rate, $spread, $tradeStatus, $quotedAt, $now);
-        $stmt->close();
 
         $stmt = $db->prepare("INSERT INTO fx_trades
             (trade_id,user_email,from_account_number,to_account_number,source_currency,target_currency,source_amount,target_amount,customer_rate,fx_spread_bps,status,quoted_at,executed_at)
