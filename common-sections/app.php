@@ -228,6 +228,18 @@ function sendSiteEmail(string $to, string $subject, string $htmlBody, string $fr
 
 function createUserNotification(mysqli $db, string $email, string $title, string $body, string $type = 'General', ?string $actionUrl = null): void {
     try {
+        $prefStmt = $db->prepare("SELECT in_app_notifications FROM user_preferences WHERE user_email = ? LIMIT 1");
+        if ($prefStmt) {
+            $prefStmt->bind_param('s', $email);
+            $prefStmt->execute();
+            $prefStmt->bind_result($enabled);
+            if ($prefStmt->fetch() && (int)$enabled === 0) {
+                $prefStmt->close();
+                return;
+            }
+            $prefStmt->close();
+        }
+
         $stmt = $db->prepare("INSERT INTO notifications (user_email, title, body, notification_type, action_url) VALUES (?, ?, ?, ?, ?)");
         if (!$stmt) return;
         $stmt->bind_param('sssss', $email, $title, $body, $type, $actionUrl);
@@ -236,6 +248,26 @@ function createUserNotification(mysqli $db, string $email, string $title, string
     } catch (Throwable $e) {
         error_log('Notification record skipped: ' . $e->getMessage());
     }
+}
+
+function userWantsEmailAlert(string $email, string $kind = 'transaction'): bool {
+    $column = strtolower($kind) === 'security' ? 'email_security_alerts' : 'email_transaction_alerts';
+    $db = connectToDatabase();
+    $enabled = 1;
+    try {
+        $stmt = $db->prepare("SELECT " . $column . " FROM user_preferences WHERE user_email = ? LIMIT 1");
+        if ($stmt) {
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $stmt->bind_result($stored);
+            if ($stmt->fetch()) $enabled = (int)$stored;
+            $stmt->close();
+        }
+    } catch (Throwable $e) {
+        error_log('Email preference lookup skipped: ' . $e->getMessage());
+    }
+    $db->close();
+    return $enabled !== 0;
 }
 
 function recordSecurityEvent(mysqli $db, string $email, string $eventType, string $description, ?string $ipAddress = null, ?string $userAgent = null): void {
