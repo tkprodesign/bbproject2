@@ -68,7 +68,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
 
 //Get user data from users table
 $dbconn = connectToDatabase();
-$sql = "SELECT `name`, email, kyc_level, profile_picture, last_active FROM users WHERE email = ?";
+$sql = "SELECT `name`, email, kyc_level, profile_picture, last_active, user_status FROM users WHERE email = ?";
 $stmt = $dbconn->prepare($sql);
 $hasUser = false;
 
@@ -76,7 +76,7 @@ $hasUser = false;
 if ($stmt) {
     $stmt->bind_param('s', $session_email);
     $stmt->execute();
-    $stmt->bind_result($user_name, $user_email, $user_kyc_level, $user_profile_picture, $user_last_active);
+    $stmt->bind_result($user_name, $user_email, $user_kyc_level, $user_profile_picture, $user_last_active, $user_status);
     $hasUser = $stmt->fetch();
     $stmt->close();
 }
@@ -87,6 +87,20 @@ if (empty($hasUser) || empty($user_email)) {
     session_unset();
     session_destroy();
     header('Location: ' . $dashboardLoginRoute);
+    exit;
+}
+
+if (!in_array(strtolower(trim((string)$user_status)), ['active','enabled'], true)) {
+    setcookie('login_email', '', [
+        'expires' => time() - 3600,
+        'path' => '/',
+        'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_unset();
+    session_destroy();
+    header('Location: ' . $dashboardLoginRoute . '?restricted=yes');
     exit;
 }
 
