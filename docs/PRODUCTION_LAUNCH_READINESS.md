@@ -1,8 +1,8 @@
 # Velmora Production Launch Readiness
 
 **Started:** 2026-10-01  
-**Current state:** DEMO / pre-launch  
-**Rule:** The DEMO presentation and search-engine blocking stay in place until the P0 launch gates below are cleared.
+**Current state:** Management review / pre-launch  
+**Rule:** Visible demo presentation has been removed for management review. Search-engine blocking remains in place until external/public launch approval.
 
 ## Launch principle
 
@@ -105,11 +105,11 @@ Before launch verify:
 
 ### Search/indexing
 
-Current protections intentionally remain:
+Current review protections intentionally remain:
 - Root homepage uses `noindex, nofollow, noarchive`.
 - `robots.txt` currently contains `Disallow: /`.
 - Customer/dashboard/backend pages remain `noindex,nofollow`.
-- DEMO markers remain visible on canonical customer/public surfaces.
+- Visible DEMO markers have been removed from canonical public, customer and backend surfaces.
 
 At launch:
 - Public marketing/legal/resource pages may become indexable.
@@ -309,3 +309,19 @@ Added a common customer-access restriction workflow to Support, Admin and Master
 - Customer financial records remain intact.
 - Preferred security-notice sender is `security@velmorabank.us`.
 - **Launch task:** provision the `security@velmorabank.us` SpaceMail mailbox/alias and `SECURITY_EMAIL_PASSWORD`. Until then, notices fall back to Support.
+
+
+### 2026-10-01 — Management review conversion
+
+- Removed visible DEMO ENVIRONMENT / DEMO OPERATIONS presentation from canonical public, authentication, customer and staff surfaces.
+- Kept robots/noindex protections active so management can review by direct link without accidentally opening public indexing.
+- Replaced browser-email authentication trust with server-side session authentication.
+- Added revocable opaque remember-me tokens stored server-side as hashes.
+- Added customer session-version revocation for restrictions, suspensions, password changes and password resets.
+- Removed hardcoded Jennifer customer/account/transaction seeding from the production dashboard path.
+- Replaced demo lending calculator content, fabricated branch listings, provisional rates content and invented card product names with conservative service information.
+- Reworked Legal, Privacy, Terms, Cookies, Documents and Accessibility pages to remove demo/review language without inventing regulatory claims.
+- Removed unverified physical address/service hours from customer-facing Contact and notification email templates.
+- Redirected retired *-v2 and predecessor dashboard/control-panel routes to canonical routes.
+- Added deployment smoke tests for canonical review routes and customer-auth schema.
+- SpaceMail/Spaceship mailbox provisioning for security@velmorabank.us remains provider-side; application support is complete and support@ fallback remains active until the mailbox credential exists.
