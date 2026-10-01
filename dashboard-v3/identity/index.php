@@ -58,6 +58,8 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_identity_save'])){
     }
     $stmt->execute();$stmt->close();
     $stmt=$db->prepare("UPDATE users SET kyc_level=2 WHERE email=?");$stmt->bind_param('s',$user_email);$stmt->execute();$stmt->close();
+    recordSecurityEvent($db,$user_email,'KYC Submitted','Identity and profile information submitted for review');
+    createUserNotification($db,$user_email,'Identity information received','Your identity and profile information has been submitted for review.','KYC','/dashboard-v3/identity/');
     $db->close();
     v3PostMessage('success','Identity information submitted for review.');
     v3Redirect('/dashboard-v3/identity/');
