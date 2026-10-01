@@ -34,7 +34,8 @@ A restricted customer:
 
 - is denied new online-banking sign-in;
 - sees a short readable notice that access is restricted and is directed to contact Velmora Bank;
-- has any existing customer session/access terminated on the next authenticated request;
+- has all persistent remember-me tokens revoked when restriction is applied;
+- has the customer session version incremented, invalidating previously issued customer sessions on their next request;
 - cannot continue using the customer dashboard while the relationship is restricted.
 
 ### Email sender
