@@ -67,6 +67,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_restrict_customer']))
     $status='Restricted';
     $stmt=$db->prepare("UPDATE users SET user_status=?,restriction_reason=?,restricted_by=?,restricted_at=NOW() WHERE id=?");
     $stmt->bind_param('sssi',$status,$reason,$operator,$id);$stmt->execute();$stmt->close();
+    velmoraRevokeCustomerSessions($db,(string)$user['email']);
     recordSecurityEvent($db,(string)$user['email'],'Customer Access Restricted','Customer access restricted by '.$operator.'. Reason: '.$reason);
     $sender=getSecurityNoticeSender();
     $subject='Account Access Restricted - Velmora Bank';
@@ -110,7 +111,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_restore_customer'])){
 if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_customer_status'])){
     cpv2Verify();$id=(int)($_POST['customer_id']??0);$status=(string)($_POST['status']??'');
     if($id<=0||!in_array($status,['Active','Suspended'],true)){cpv2Flash('error','Invalid customer status.');cpv2Go('/master-control-panel/customers/');}
-    $db=connectToDatabase();$stmt=$db->prepare("UPDATE users SET user_status=? WHERE id=?");$stmt->bind_param('si',$status,$id);$stmt->execute();$stmt->close();$db->close();
+    $db=connectToDatabase();$stmt=$db->prepare("UPDATE users SET user_status=? WHERE id=?");$stmt->bind_param('si',$status,$id);$stmt->execute();$stmt->close();
+    if($status!=='Active'){$stmt=$db->prepare("SELECT email FROM users WHERE id=? LIMIT 1");$stmt->bind_param('i',$id);$stmt->execute();$stmt->bind_result($statusEmail);if($stmt->fetch()&&$statusEmail){$stmt->close();velmoraRevokeCustomerSessions($db,(string)$statusEmail);}else{$stmt->close();}}
+    $db->close();
     cpv2Flash('success','Customer relationship status updated.');cpv2Go('/master-control-panel/customers/detail/?id='.$id);
 }
 
