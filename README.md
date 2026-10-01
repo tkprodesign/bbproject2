@@ -6,6 +6,7 @@ Outbound mail is sent through the bundled PHPMailer library using SpaceMail SMTP
 
 - `NOREPLY_EMAIL_PASSWORD` for `no-reply@velmorabank.us`
 - `SUPPORT_EMAIL_PASSWORD` for `support@velmorabank.us`
+- `SECURITY_EMAIL_PASSWORD` for `security@velmorabank.us` (preferred sender for access-restriction/security notices; falls back to Support until provisioned)
 - `ADMIN_EMAIL_PASSWORD` for `admin@velmorabank.us`
 
 Default SpaceMail connection settings are:
