@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --brand-navy: #163555;
+  --brand-navy-dark: #102742;
+  --brand-accent: #f13223;
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --border: #e2eaf4;
+  --text: #132a45;
+  --muted: #687b94;
+  --shadow: 0 16px 36px rgba(14, 35, 66, 0.09);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; text-decoration: none; border: 0; outline: 0; color: inherit; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+.container { width: min(94%, 1240px); margin: 0 auto; }
+
+header {
+  background: rgba(255,255,255,.96);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 5px 20px rgba(18,40,66,.08);
+  position: sticky; top: 0; z-index: 30;
+}
+header .container {
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+}
+header #logo img { height: 48px !important; width: auto; }
+header nav ul { display: flex; flex-wrap: wrap; gap: 14px; font-weight: 600; color: var(--brand-navy); }
+header nav a { padding: 8px 10px; border-radius: 8px; }
+header nav a:hover { background: #edf3ff; }
+header #menuToggle { display: none; font-size: 34px; color: var(--brand-navy); }
+header #menuToggle .close { display: none; }
+header #menuToggle.active .open { display: none; }
+header #menuToggle.active .close { display: inline; }
+
+section { margin: 24px 0; }
+section .container { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); padding: 20px; }
+
+section.greetings .container {
+  background: linear-gradient(140deg, var(--brand-navy), #214e79);
+  color: #fff;
+}
+section.greetings h1 { font-size: 36px; margin-bottom: 8px; }
+section.greetings p { color: rgba(255,255,255,.9); line-height: 1.6; }
+
+h2, h3 { color: var(--brand-navy-dark); margin-bottom: 14px; }
+
+button, .cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; font-weight: 700;
+  border-radius: 10px; padding: 11px 16px;
+  background: var(--brand-accent); color: #fff; cursor: pointer;
+}
+
+form { display: grid; gap: 12px; }
+form .input-box label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c4566; }
+form .input-box input,
+form .input-box select,
+form .input-box textarea {
+  width: 100%; min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fbfdff;
+  padding: 10px 12px;
+}
+
+.table .container,
+.form .container { overflow: hidden; }
+.table .container > h2 { margin-bottom: 12px; }
+.table .container table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+}
+.table .container { overflow-x: auto; }
+table thead td,
+table thead th {
+  background: #f6f9ff;
+  color: #3d5678;
+  font-weight: 700;
+}
+table td, table th {
+  border-bottom: 1px solid #edf2f9;
+  padding: 11px 10px;
+  text-align: left;
+}
+table tbody tr:hover { background: #f9fbff; }
+
+a { color: var(--brand-navy); }
+a:hover { color: var(--brand-accent); }
+
+/* Multi-currency / FX quote components */
+.currency-select-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.fx-quote-card {
+  border: 1px solid var(--border, #dfe7f1);
+  border-radius: 14px;
+  background: #f8fbff;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+.fx-quote-card.is-ready { background: #f4fbf8; border-color: #cfe9dd; }
+.fx-quote-card .fx-title { font-weight: 700; color: #163555; }
+.fx-quote-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; }
+.fx-quote-grid span { display: block; font-size: 12px; color: #6b7d92; margin-bottom: 4px; }
+.fx-quote-grid strong { display: block; font-size: 15px; color: #152f4c; overflow-wrap: anywhere; }
+.fx-note { font-size: 12px; line-height: 1.5; color: #6b7d92; }
+.fx-note a { color: #315f8d; text-decoration: underline; }
+.currency-chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 8px; background: #eef4fb; color: #284b70; font-size: 12px; font-weight: 700; }
+@media (max-width: 720px) {
+  .currency-select-row, .fx-quote-grid { grid-template-columns: 1fr; }
+}
