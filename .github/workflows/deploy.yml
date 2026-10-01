@@ -157,6 +157,45 @@ jobs:
           set -euo pipefail
           ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" 'find "$HOME" -maxdepth 4 -type f \( -name ".env" -o -name "*.env" \) -printf "%p\n" 2>/dev/null | sed "s#^$HOME#~#"'
 
+      - name: Sync private staff mail environment
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" '
+            set -euo pipefail
+            ENV_FILE="$(find "$HOME" -maxdepth 5 -type f \( -name ".env" -o -name "*.env" \) 2>/dev/null | head -n 1)"
+            if [ -z "$ENV_FILE" ]; then
+              echo "PRIVATE_STAFF_ENV=NOT_FOUND"
+              exit 0
+            fi
+
+            tmp="$HOME/.velmora-backend.env.tmp"
+            awk -F= '"'"'
+              /^[[:space:]]*(SUPPORT_EMAIL|SUPPORT_EMAIL_PASSWORD|ADMIN_EMAIL|ADMIN_EMAIL_PASSWORD|DEVELOPER_EMAIL|DEVELOPER_EMAIL_PASSWORD|IMAP_HOST|IMAP_PORT|SMTP_HOST|SMTP_PORT|SMTP_ENCRYPTION)[[:space:]]*=/ {
+                key=$1
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "", key)
+                sub(/^[^=]*=/, "", $0)
+                print key "=" $0
+              }
+            '"'"' "$ENV_FILE" > "$tmp"
+
+            if [ ! -s "$tmp" ]; then
+              rm -f "$tmp"
+              echo "PRIVATE_STAFF_ENV=NO_MATCHING_KEYS"
+              exit 0
+            fi
+
+            mv "$tmp" "$HOME/.velmora-backend.env"
+            chmod 600 "$HOME/.velmora-backend.env"
+            echo "PRIVATE_STAFF_ENV=READY"
+          '
+
+      - name: Check staff mail runtime
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" '
+            php -r '"'"'echo function_exists("imap_open") ? "IMAP_RUNTIME=READY\n" : "IMAP_RUNTIME=MISSING\n";'"'"'
+          '
+
       - name: Lint PHP files
         run: |
           set -euo pipefail
