@@ -11,7 +11,7 @@
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
   <div><span class="pv2-eyebrow">INTERNATIONAL BANKING &amp; FX</span><h1>Different currencies should mean different accounts—and real exchange trades.</h1>
   <p>Hold supported currencies in separate accounts, review the source and destination amounts, receive a bank quote and confirm before an FX trade changes your balances.</p>
-  <div class="pv2-actions"><a class="pv2-btn primary" href="/online-banking-v2/">Explore digital FX</a><a class="pv2-btn secondary" href="/contact/">Speak to support</a></div></div>
+  <div class="pv2-actions"><a class="pv2-btn primary" href="/online-banking-v2/">Explore digital FX</a><a class="pv2-btn secondary" href="/contact-v2/">Speak to support</a></div></div>
   <div class="pv2-map-panel"><img src="/assets/images/home/world-map.png" alt="International banking map"><div class="pv2-map-card"><span class="material-symbols-rounded">currency_exchange</span><div><small>FX WORKFLOW</small><strong>Source account → Quote → Review → Confirm → Ledger</strong></div></div></div>
 </div></section>
 
@@ -52,6 +52,6 @@
   </div>
 </div></section>
 
-<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">INTERNATIONAL BANKING</span><h2>Handle multiple currencies with a process you can actually follow.</h2></div><div><a class="pv2-btn gold" href="/online-banking-v2/">Explore online banking</a><a class="pv2-btn secondary" href="/contact/">Contact support</a></div></div></section>
+<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">INTERNATIONAL BANKING</span><h2>Handle multiple currencies with a process you can actually follow.</h2></div><div><a class="pv2-btn gold" href="/online-banking-v2/">Explore online banking</a><a class="pv2-btn secondary" href="/contact-v2/">Contact support</a></div></div></section>
 </main>
 <?php include('../common-sections/public-v2-footer.php'); ?></body></html>
