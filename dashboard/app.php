@@ -9,34 +9,24 @@ require_once __DIR__ . '/../common-sections/app.php';
 
 
 
-// Retrieve email from cookie and session email variables
+// Customer identity is resolved from the server-side authenticated session.
 $controlPanelAllowedEmails = [
     'tkprodesign96@gmail.com',
     'support@velmorabank.us',
     'admin@velmorabank.us',
 ];
-$dashboardLoginRoute = defined('VELMORA_LOGIN_ROUTE') ? VELMORA_LOGIN_ROUTE : '/login';
-$dashboardControlPanelRoute = defined('VELMORA_CONTROL_PANEL_ROUTE') ? VELMORA_CONTROL_PANEL_ROUTE : '/control-panel';
+$dashboardLoginRoute = defined('VELMORA_LOGIN_ROUTE') ? VELMORA_LOGIN_ROUTE : '/login/';
+$dashboardControlPanelRoute = defined('VELMORA_CONTROL_PANEL_ROUTE') ? VELMORA_CONTROL_PANEL_ROUTE : '/control-panel/';
 
-if (isset($_COOKIE['login_email'])) {
-    $cookieEmail = strtolower(trim((string)$_COOKIE['login_email']));
-    if (!filter_var($cookieEmail, FILTER_VALIDATE_EMAIL)) {
-        setcookie('login_email', '', time() - 3600, '/');
-        session_unset();
-        session_destroy();
-        header('Location: ' . $dashboardLoginRoute);
-        exit;
-    }
-
-    $_SESSION['user_email'] = $cookieEmail;
-    $session_email = $_SESSION['user_email'];
-
-    if (in_array($session_email, $controlPanelAllowedEmails, true)) {
-        header('Location: ' . $dashboardControlPanelRoute);
-        exit;
-    }
-} else {
+$session_email = velmoraCurrentCustomerEmail();
+if ($session_email === null) {
     header('Location: ' . $dashboardLoginRoute);
+    exit;
+}
+$_SESSION['user_email'] = $session_email;
+
+if (in_array($session_email, $controlPanelAllowedEmails, true)) {
+    header('Location: ' . $dashboardControlPanelRoute);
     exit;
 }
 
@@ -46,24 +36,12 @@ normalizeLegacyTransactionStatuses();
 
 
 
-//Logout function
+// Legacy logout query support.
 if (isset($_GET['logout']) && $_GET['logout'] == 1) {
-    // Destroy the cookie
-    if (isset($_COOKIE['login_email'])) {
-        unset($_COOKIE['login_email']);
-        setcookie('login_email', '', time() - 3600, '/'); // set the expiration date to one hour ago
-    }
-    // End the session
-    session_unset();
-    session_destroy();
-    // Redirect to login page
+    velmoraLogoutCustomer(true);
     header('Location: ' . $dashboardLoginRoute);
-    exit();
+    exit;
 }
-
-
-
-
 
 
 //Get user data from users table
@@ -83,95 +61,21 @@ if ($stmt) {
 $dbconn->close();
 
 if (empty($hasUser) || empty($user_email)) {
-    setcookie('login_email', '', time() - 3600, '/');
-    session_unset();
-    session_destroy();
+    velmoraLogoutCustomer(true);
     header('Location: ' . $dashboardLoginRoute);
     exit;
 }
 
 if (!in_array(strtolower(trim((string)$user_status)), ['active','enabled'], true)) {
-    setcookie('login_email', '', [
-        'expires' => time() - 3600,
-        'path' => '/',
-        'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
-        'httponly' => true,
-        'samesite' => 'Lax',
-    ]);
-    session_unset();
-    session_destroy();
+    velmoraLogoutCustomer(true);
     header('Location: ' . $dashboardLoginRoute . '?restricted=yes');
     exit;
 }
 
 
-// Seed the requested Jennifer reference transactions into the DB.
-function seedJenniferReferenceData($email, $name) {
-    if (strcasecmp($email, 'Jenniferaniston11909@gmail.com') !== 0) {
-        return;
-    }
+// Production dashboard contains no customer-specific seed behavior.
 
-    $db = connectToDatabase();
-    $currency = 'USD';
-    $accountType = 'Premium Savings';
-    $accountNumber = 200007845;
 
-    $existingAccountNumber = null;
-    $stmt = $db->prepare('SELECT account_number FROM accounts WHERE user_email = ? ORDER BY id DESC LIMIT 1');
-    $stmt->bind_param('s', $email);
-    $stmt->execute();
-    $stmt->bind_result($existingAccountNumber);
-    if ($stmt->fetch() && !empty($existingAccountNumber)) {
-        $accountNumber = (int)$existingAccountNumber;
-    }
-    $stmt->close();
-
-    if (empty($existingAccountNumber)) {
-        $createdAt = time();
-        $active = 'Active';
-        $createAccount = $db->prepare('INSERT INTO accounts (account_type, user_name, user_email, currency, account_number, account_status, creation_time) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $createAccount->bind_param('ssssisi', $accountType, $name, $email, $currency, $accountNumber, $active, $createdAt);
-        $createAccount->execute();
-        $createAccount->close();
-    }
-
-    $referenceTransactions = [
-        ['id' => 'JENN-20240302-1', 'type' => 'Income', 'description' => 'Private Equity Distribution', 'amount' => 450000.00, 'date' => '2024-03-02 10:15:00'],
-        ['id' => 'JENN-20240319-1', 'type' => 'Income', 'description' => 'Real Estate Proceeds', 'amount' => 320000.00, 'date' => '2024-03-19 13:40:00'],
-        ['id' => 'JENN-20240404-1', 'type' => 'Income', 'description' => 'Consulting Retainer', 'amount' => 275000.00, 'date' => '2024-04-04 09:20:00'],
-        ['id' => 'JENN-20240428-1', 'type' => 'Income', 'description' => 'Portfolio Dividend Sweep', 'amount' => 210000.00, 'date' => '2024-04-28 15:05:00'],
-        ['id' => 'JENN-20240522-1', 'type' => 'Income', 'description' => 'Film Royalty Deposit', 'amount' => 180000.00, 'date' => '2024-05-22 11:30:00'],
-        ['id' => 'JENN-20240610-1', 'type' => 'Income', 'description' => 'Short-Term Treasury Coupon', 'amount' => 140000.00, 'date' => '2024-06-10 10:50:00'],
-        ['id' => 'JENN-20240708-1', 'type' => 'Income', 'description' => 'International Licensing Income', 'amount' => 94250.00, 'date' => '2024-07-08 16:35:00'],
-        ['id' => 'JENN-20240726-1', 'type' => 'Bills', 'description' => 'Estate Maintenance Payment', 'amount' => -120000.00, 'date' => '2024-07-26 08:55:00'],
-        ['id' => 'JENN-20240811-1', 'type' => 'Transfer', 'description' => 'Family Trust Transfer', 'amount' => -85000.00, 'date' => '2024-08-11 12:25:00'],
-        ['id' => 'JENN-20240903-1', 'type' => 'Luxury', 'description' => 'Custom Interior Design Installment', 'amount' => -58500.00, 'date' => '2024-09-03 14:10:00'],
-        ['id' => 'JENN-20240928-1', 'type' => 'Investment', 'description' => 'Investment Returns - Q3', 'amount' => 165385.50, 'date' => '2024-09-28 10:10:00'],
-        ['id' => 'JENN-20241115-1', 'type' => 'Transfer', 'description' => 'Charitable Donation', 'amount' => -25000.00, 'date' => '2024-11-15 09:30:00'],
-        ['id' => 'JENN-20250214-1', 'type' => 'Bills', 'description' => 'Property Tax Payment', 'amount' => -18250.00, 'date' => '2025-02-14 08:05:00'],
-        ['id' => 'JENN-20251228-1', 'type' => 'Income', 'description' => 'Year-End Bonus', 'amount' => 275000.00, 'date' => '2025-12-28 12:00:00'],
-        ['id' => 'JENN-20260310-1', 'type' => 'Luxury', 'description' => 'Art Collection Purchase', 'amount' => -278500.00, 'date' => '2026-03-10 10:45:00'],
-    ];
-
-    $insertStmt = $db->prepare('INSERT IGNORE INTO transactions (type, transaction_id, user_email, account_number, amount, currency, description, status, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-
-    foreach ($referenceTransactions as $transaction) {
-        $type = $transaction['type'];
-        $transactionId = $transaction['id'];
-        $amount = $transaction['amount'];
-        $description = $transaction['description'];
-        $status = 'Successful';
-        $timestamp = strtotime($transaction['date']);
-
-        $insertStmt->bind_param('sssidsssi', $type, $transactionId, $email, $accountNumber, $amount, $currency, $description, $status, $timestamp);
-        $insertStmt->execute();
-    }
-
-    $insertStmt->close();
-    $db->close();
-}
-
-seedJenniferReferenceData($user_email, $user_name);
 
 
 //Get user's number of accounts from accounts table
