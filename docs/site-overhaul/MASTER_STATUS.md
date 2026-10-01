@@ -18,36 +18,36 @@ No page should be promoted merely because an alternate version exists.
 | Final Page | Alternate Review Route | Status |
 |---|---|---|
 | Home | / | Approved and active |
-| Personal Banking | /personal-v2/ | Ready for review |
-| Business Banking | /business-v2/ | Ready for review |
-| Credit Cards | /credit-card-v2/ | Ready for review |
-| Loans & Financing | /loan-v2/ | Ready for review |
-| International Banking & FX | /international-v2/ | Ready for review |
-| Online Banking | /online-banking-v2/ | Ready for review |
-| About Velmora | /about-v2/ | Ready for review |
-| Support Center | /support-v2/ | Ready for review |
-| Security & Fraud Center | /security-v2/ | Ready for review |
-| ATM & Locations | /locations-v2/ | Ready for review |
-| Contact | /contact-v2/ | Ready for review |
-| Careers | /careers-v2/ | Ready for review |
-| Rates & Fees | /rates-v2/ | Ready for review |
-| Documents & Forms | /documents-v2/ | Ready for review |
-| Legal & Disclosures | /legal-v2/ | Ready for review |
-| Privacy Policy | /privacy-v2/ | Ready for review |
-| Terms of Use | /terms-v2/ | Ready for review |
-| Cookie Policy | /cookie-policy-v2/ | Ready for review |
-| Accessibility Statement | /accessibility-v2/ | Ready for review |
-| Page Not Found | /not-found-v2/ | Ready for review |
+| Personal Banking | /personal-v2/ | Approved and promoted |
+| Business Banking | /business-v2/ | Approved and promoted |
+| Credit Cards | /credit-card-v2/ | Approved and promoted |
+| Loans & Financing | /loan-v2/ | Approved and promoted |
+| International Banking & FX | /international-v2/ | Approved and promoted |
+| Online Banking | /online-banking-v2/ | Approved and promoted |
+| About Velmora | /about-v2/ | Approved and promoted |
+| Support Center | /support-v2/ | Approved and promoted |
+| Security & Fraud Center | /security-v2/ | Approved and promoted |
+| ATM & Locations | /locations-v2/ | Approved and promoted |
+| Contact | /contact-v2/ | Approved and promoted |
+| Careers | /careers-v2/ | Approved and promoted |
+| Rates & Fees | /rates-v2/ | Approved and promoted |
+| Documents & Forms | /documents-v2/ | Approved and promoted |
+| Legal & Disclosures | /legal-v2/ | Approved and promoted |
+| Privacy Policy | /privacy-v2/ | Approved and promoted |
+| Terms of Use | /terms-v2/ | Approved and promoted |
+| Cookie Policy | /cookie-policy-v2/ | Approved and promoted |
+| Accessibility Statement | /accessibility-v2/ | Approved and promoted |
+| Page Not Found | /not-found-v2/ | Approved and promoted |
 
 ## Authentication & Onboarding
 
 | Final Page | Alternate Review Route | Status |
 |---|---|---|
-| Sign In | /login-v2/ | Ready for review |
-| Open an Account | /signup-v2/ | Ready for review |
-| Onboarding / Next Steps | /onboarding-v2/ | Ready for review |
-| Forgot Password | /forgot-password-v2/ | Ready for review |
-| Reset Password | /reset-password-v2/ | Ready for review |
+| Sign In | /login-v2/ | Approved and promoted |
+| Open an Account | /signup-v2/ | Approved and promoted |
+| Onboarding / Next Steps | /onboarding-v2/ | Approved and promoted |
+| Forgot Password | /forgot-password-v2/ | Approved and promoted |
+| Reset Password | /reset-password-v2/ | Approved and promoted |
 
 Legacy /sign-up/ should eventually redirect to the canonical signup route after approval.
 
@@ -55,55 +55,56 @@ Legacy /sign-up/ should eventually redirect to the canonical signup route after 
 
 | Module | Review Route | Status |
 |---|---|---|
-| Dashboard Overview | /dashboard-v3/ | Ready for review |
-| Accounts | /dashboard-v3/accounts/ | Ready for review |
-| Account Detail | /dashboard-v3/accounts/detail/ | Ready for review |
-| Account Opened Confirmation | /dashboard-v3/accounts/opened/ | Ready for review |
-| Transactions | /dashboard-v3/transactions/ | Ready for review |
-| Transaction Detail / Receipt | /dashboard-v3/transactions/detail/ | Ready for review |
-| Transfer Funds | /dashboard-v3/transfer/ | Ready for review |
-| Beneficiaries | /dashboard-v3/beneficiaries/ | Ready for review |
-| Currency Exchange / FX | /dashboard-v3/exchange/ | Ready for review |
-| Statements | /dashboard-v3/statements/ | Ready for review |
-| Notifications | /dashboard-v3/notifications/ | Ready for review |
-| Profile | /dashboard-v3/profile/ | Ready for review |
-| Identity & KYC | /dashboard-v3/identity/ | Ready for review |
-| Security Center | /dashboard-v3/security/ | Ready for review |
-| Change Password | /dashboard-v3/security/change-password/ | Ready for review |
-| Preferences | /dashboard-v3/preferences/ | Ready for review |
-| Secure Support Messages | /dashboard-v3/support/ | Ready for review |
-| Support Case Detail | /dashboard-v3/support/detail/ | Ready for review |
+| Dashboard Overview | /dashboard-v3/ | Approved and promoted |
+| Accounts | /dashboard-v3/accounts/ | Approved and promoted |
+| Account Detail | /dashboard-v3/accounts/detail/ | Approved and promoted |
+| Account Opened Confirmation | /dashboard-v3/accounts/opened/ | Approved and promoted |
+| Transactions | /dashboard-v3/transactions/ | Approved and promoted |
+| Transaction Detail / Receipt | /dashboard-v3/transactions/detail/ | Approved and promoted |
+| Transfer Funds | /dashboard-v3/transfer/ | Approved and promoted |
+| Beneficiaries | /dashboard-v3/beneficiaries/ | Approved and promoted |
+| Currency Exchange / FX | /dashboard-v3/exchange/ | Approved and promoted |
+| Statements | /dashboard-v3/statements/ | Approved and promoted |
+| Notifications | /dashboard-v3/notifications/ | Approved and promoted |
+| Profile | /dashboard-v3/profile/ | Approved and promoted |
+| Identity & KYC | /dashboard-v3/identity/ | Approved and promoted |
+| Security Center | /dashboard-v3/security/ | Approved and promoted |
+| Change Password | /dashboard-v3/security/change-password/ | Approved and promoted |
+| Preferences | /dashboard-v3/preferences/ | Approved and promoted |
+| Secure Support Messages | /dashboard-v3/support/ | Approved and promoted |
+| Support Case Detail | /dashboard-v3/support/detail/ | Approved and promoted |
 
-After the full V3 family is approved, it can replace the legacy /dashboard/ family as one coordinated promotion.
+Dashboard V3 is approved and promoted into the canonical /dashboard/ family. The predecessor is preserved under docs/archive/dashboard-predecessor-2026-10-01/.
 
 ## Bank Operations — V2
 
 | Module | Review Route | Status |
 |---|---|---|
-| Operations Overview | /control-panel-v2/ | Ready for review |
-| Customers | /control-panel-v2/customers/ | Ready for review |
-| Customer Detail | /control-panel-v2/customers/detail/ | Ready for review |
-| Accounts | /control-panel-v2/accounts/ | Ready for review |
-| Transactions | /control-panel-v2/transactions/ | Ready for review |
-| Transfer Review | /control-panel-v2/transfers/ | Ready for review |
-| FX Trades | /control-panel-v2/fx/ | Ready for review |
-| Ledger Adjustments | /control-panel-v2/adjustments/ | Ready for review |
-| KYC Review Queue | /control-panel-v2/kyc/ | Ready for review |
-| KYC Detail | /control-panel-v2/kyc/detail/ | Ready for review |
-| Support Cases | /control-panel-v2/support-cases/ | Ready for review |
-| Support Case Detail | /control-panel-v2/support-cases/detail/ | Ready for review |
-| Communications | /control-panel-v2/communications/ | Ready for review |
-| Security & Audit | /control-panel-v2/audit/ | Ready for review |
-| Settings | /control-panel-v2/settings/ | Ready for review |
+| Operations Overview | /control-panel-v2/ | Approved and promoted |
+| Customers | /control-panel-v2/customers/ | Approved and promoted |
+| Customer Detail | /control-panel-v2/customers/detail/ | Approved and promoted |
+| Accounts | /control-panel-v2/accounts/ | Approved and promoted |
+| Transactions | /control-panel-v2/transactions/ | Approved and promoted |
+| Transfer Review | /control-panel-v2/transfers/ | Approved and promoted |
+| FX Trades | /control-panel-v2/fx/ | Approved and promoted |
+| Ledger Adjustments | /control-panel-v2/adjustments/ | Approved and promoted |
+| KYC Review Queue | /control-panel-v2/kyc/ | Approved and promoted |
+| KYC Detail | /control-panel-v2/kyc/detail/ | Approved and promoted |
+| Support Cases | /control-panel-v2/support-cases/ | Approved and promoted |
+| Support Case Detail | /control-panel-v2/support-cases/detail/ | Approved and promoted |
+| Communications | /control-panel-v2/communications/ | Approved and promoted |
+| Security & Audit | /control-panel-v2/audit/ | Approved and promoted |
+| Settings | /control-panel-v2/settings/ | Approved and promoted |
 
-The legacy control panel remains separate until explicit approval to replace it.
+Operations Console V2 is approved and promoted into the canonical /control-panel/ family. The predecessor is preserved under docs/archive/control-panel-predecessor-2026-10-01/.
 
-## Retire / Consolidate Later
+## Completed Retirement / Consolidation
 
-- /quick-links/ — distribute useful material into Support, Security, Legal and Documents.
-- /sign-up/ — redirect to the canonical signup route.
-- Old Dashboard V1 / V2 — archive after V3 promotion.
-- Old control-panel interface — archive after operations V2 promotion.
+- /quick-links/ now redirects to the canonical Support Center.
+- /sign-up/ now redirects to the canonical signup route.
+- The prior /dashboard/ implementation is archived in the museum snapshot before V3 promotion.
+- The prior /control-panel/ implementation is archived in the museum snapshot before Operations V2 promotion.
+- Legacy dashboard and control-panel subroutes now redirect into their approved canonical replacements where applicable.
 
 ## Supporting Product Infrastructure Already Added
 
