@@ -514,6 +514,22 @@ if (isset($_POST['submit_kyc_data'])) {
 
         if ($stmt->execute()) {
             $Update = 'successful';
+            createUserNotification(
+                $dbconn,
+                $user_email,
+                'KYC information received',
+                'Your identity and profile information has been recorded for banking verification.',
+                'KYC',
+                '/dashboard-v3/profile/'
+            );
+            recordSecurityEvent(
+                $dbconn,
+                $user_email,
+                'KYC Submitted',
+                'Identity and profile information submitted for verification',
+                (string)($_SERVER['REMOTE_ADDR'] ?? ''),
+                (string)($_SERVER['HTTP_USER_AGENT'] ?? '')
+            );
         } else {
             echo "Error executing query: (" . $stmt->errno . ") " . $stmt->error . "<br>";
         }
