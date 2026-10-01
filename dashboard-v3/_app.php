@@ -312,6 +312,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_exchange']
         $stmt->execute();
         $stmt->close();
 
+        $valueDate = date('Y-m-d', $now);
+        $postedAt = date('Y-m-d H:i:s', $now);
+        foreach ([$debitId, $creditId] as $entryId) {
+            $metaStmt = $db->prepare("UPDATE transactions SET channel='Online Banking', value_date=?, posted_at=? WHERE transaction_id=?");
+            if ($metaStmt) {
+                $metaStmt->bind_param('sss', $valueDate, $postedAt, $entryId);
+                $metaStmt->execute();
+                $metaStmt->close();
+            }
+        }
+
         $tradeStatus = 'Executed';
         $quotedAt = (int)$quote['quoted_at'];
         $sourcePositive = abs((float)$quote['source_amount']);
@@ -322,6 +333,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_exchange']
         $stmt->bind_param('ssssssdddisii', $tradeId, $user_email, $sourceAccount, $targetAccount, $sourceCurrency, $targetCurrency, $sourcePositive, $targetAmount, $rate, $spread, $tradeStatus, $quotedAt, $now);
         $stmt->execute();
         $stmt->close();
+
+        createUserNotification(
+            $db,
+            $user_email,
+            'Currency exchange completed',
+            velmoraFormatCurrency($sourcePositive, $sourceCurrency) . ' was exchanged for ' . velmoraFormatCurrency($targetAmount, $targetCurrency) . '. Trade ' . $tradeId . '.',
+            'FX Trade',
+            '/dashboard-v3/exchange/'
+        );
 
         $db->commit();
         unset($_SESSION['v3_fx_quote']);
@@ -422,6 +442,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_transfer']
         $stmt->bind_param('sssidsssissssddi', $txid, $type, $user_email, $sourceAccount, $amount, $sourceCurrency, $description, $status, $now, $bank, $acctType, $recipient, $recipientCurrency, $recipientAmount, $rate, $spread);
         $stmt->execute();
         $stmt->close();
+
+        $valueDate = date('Y-m-d', $now);
+        $postedAt = date('Y-m-d H:i:s', $now);
+        $metaStmt = $db->prepare("UPDATE transactions SET channel='Online Banking', value_date=?, posted_at=? WHERE transaction_id=?");
+        if ($metaStmt) {
+            $metaStmt->bind_param('sss', $valueDate, $postedAt, $txid);
+            $metaStmt->execute();
+            $metaStmt->close();
+        }
+
+        $beneficiaryStmt = $db->prepare("UPDATE beneficiaries SET last_used_at=NOW() WHERE user_email=? AND bank_name=? AND account_number=? AND status='Active'");
+        if ($beneficiaryStmt) {
+            $beneficiaryStmt->bind_param('sss', $user_email, $bank, $recipient);
+            $beneficiaryStmt->execute();
+            $beneficiaryStmt->close();
+        }
+
+        createUserNotification(
+            $db,
+            $user_email,
+            'Transfer submitted',
+            'Transfer ' . $txid . ' to ' . $bank . ' account ending ' . substr($recipient, -4) . ' has been submitted for processing.',
+            'Transfer',
+            '/dashboard-v3/transactions/detail/?ref=' . urlencode($txid)
+        );
         $db->close();
 
         unset($_SESSION['v3_transfer_quote']);
