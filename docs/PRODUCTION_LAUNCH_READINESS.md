@@ -239,3 +239,58 @@ The final launch step will be deliberately small after all gates pass:
 - Identified customer cookie-based identity as a P0 blocker.
 - Closed public web access to `create_tables.php`.
 - Removed migration routes from the public allow-list.
+
+
+## P0 — Product/content truth audit — OPEN
+
+A production launch cannot be completed by deleting DEMO labels. Canonical public pages must be reconciled against the products, pricing, legal position, support channels and physical presence that actually exist at launch.
+
+### Initial canonical-page audit — 2026-10-01
+
+| Page | Current launch status | Required action |
+| --- | --- | --- |
+| Personal Banking | Structurally usable | Verify every advertised account/payment capability against the final product. Replace generic product copy where actual product names, eligibility or terms exist. |
+| Business Banking | Structurally usable | Verify business account, payment, beneficiary and FX capabilities. Add actual product/service details where approved. |
+| Credit Cards | Incomplete product content | Current page intentionally avoids actual pricing, eligibility, limits and terms. Either supply approved card products/terms or keep cards unavailable from launch navigation. |
+| Loans & Financing | Demo logic present | Replace demo calculator assumptions, demo wording, eligibility logic, pricing/fees and application terms with approved lending data before launch. |
+| Online Banking | Demo/review wording remains | Rewrite demo-era explanatory copy into customer-facing production language after authentication and transaction workflows pass launch review. |
+| International Banking & FX | Structurally usable | Verify supported currencies, FX availability, fees/margins, transfer jurisdictions and operational limits before publication. |
+| About Velmora | Incomplete institutional content | Replace product-design philosophy copy with verified company/institution profile, history, ownership/leadership and approved institutional information where applicable. |
+| Contact | Requires verification | Verify support phone/email, physical address, service hours and escalation channels. Do not publish unverified premises or hours. |
+| ATM & Locations | BLOCKER | Current page explicitly states the directory is demo data. Every branch/ATM/address/hours entry must be verified, replaced, or removed. |
+| Careers | Structurally usable | Publish actual openings only when they exist. Verify career-contact workflow. |
+| Support Center | Demo-era wording remains | Remove references to the demo location directory and verify all support paths against production operations. |
+| Security & Fraud | Structurally usable | Verify incident-reporting channels and operational response instructions. |
+| Rates & Fees | BLOCKER | Current page explicitly has no approved production pricing. Publish approved fee/rate data or do not present the page as a pricing schedule. |
+| Documents & Forms | BLOCKER | Current page explicitly contains no approved downloads. Publish real approved forms/disclosures or hide unavailable categories. |
+| Legal & Disclosures | BLOCKER | Current page is written around demo status and intentionally avoids licensing/regulatory claims. Replace only after legal/regulatory facts are verified. |
+| Privacy Policy | BLOCKER | Current text explicitly says it is a review version requiring legal review. Production policy must match actual data handling, vendors, retention, rights and jurisdiction. |
+| Terms of Use | BLOCKER | Current terms explicitly govern a demo environment. Production terms require legal review and actual service/product terms. |
+| Accessibility | Pre-launch draft | Keep factual; complete accessibility testing and update known limitations before making stronger claims. |
+| Cookie Policy | Needs production update | Reconcile with the final authentication architecture, Smartsupp and every production third-party/analytics/marketing cookie. |
+
+### Content rule for launch
+
+For every public product or institutional page, choose one of three outcomes before launch:
+
+1. **Publish verified production content** — supported by real product, operational and legal data.
+2. **Keep the page but narrow the claims** — describe only capabilities that actually exist and are approved.
+3. **Hide/remove the product from launch navigation** — when the product, pricing, documents, location or legal basis is not ready.
+
+No page should be converted from demo to production by deleting warnings while leaving unverified claims behind.
+
+### Information still needed from the business/operations side
+
+The implementation team must receive or independently verify the authoritative launch data for:
+- actual account products and eligibility;
+- actual card products and card availability;
+- lending products, limits, pricing, fees, tenors and approval rules;
+- supported currencies, FX/transfer coverage, fees and limits;
+- branch/ATM/service-center locations and hours;
+- rates and fee schedules;
+- approved public documents/forms;
+- legal entity, jurisdiction, regulatory/licensing status and required disclosures;
+- final privacy/terms/cookie language;
+- production support hours and escalation channels.
+
+Until those are supplied and verified, the affected pages remain launch blockers or should be removed from launch navigation.
