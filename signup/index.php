@@ -8,7 +8,6 @@ require_once('../signup/app.php');
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,-50..200">
 <link rel="stylesheet" href="/assets/stylesheets/public-v2.css?v=<?php echo time(); ?>"></head><body>
-<div class="pv2-demo">DEMO ENVIRONMENT</div>
 <main class="pv2-auth-page">
 <section class="pv2-auth-side">
   <a href="/"><img class="pv2-auth-brand" src="/assets/images/branding/logo.png" alt="Velmora Bank"></a>
@@ -19,7 +18,7 @@ require_once('../signup/app.php');
       <div><span class="material-symbols-rounded">badge</span><div><strong>3. Complete verification</strong><small>Provide the information required for the KYC profile.</small></div></div>
     </div>
   </div>
-  <div class="pv2-auth-foot">Velmora Bank · Demo environment</div>
+  <div class="pv2-auth-foot">Velmora Bank · Secure account opening</div>
 </section>
 <section class="pv2-auth-main">
   <div class="pv2-auth-card">
