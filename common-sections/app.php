@@ -313,8 +313,6 @@ function requireLoginForInternalPages() {
     $publicPaths = [
         '/',
         '/index.php',
-        '/create_tables',
-        '/create_tables.php',
     ];
 
     // Public path prefixes — any URL starting with these is accessible without login
