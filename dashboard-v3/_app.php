@@ -457,6 +457,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_exchange']
         $status = 'Successful';
         $type = 'FX Exchange';
         $now = time();
+        $channel = 'Online Banking';
+        $valueDate = date('Y-m-d', $now);
+        $postedAt = date('Y-m-d H:i:s', $now);
 
         $sourceAmount = -abs((float)$quote['source_amount']);
         $targetAmount = abs((float)$quote['target_amount']);
@@ -470,17 +473,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_exchange']
         $targetAccount = (string)$quote['to_account'];
 
         $stmt = $db->prepare("INSERT INTO transactions
-            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,counter_currency,counter_amount,fx_rate,fx_spread_bps)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $stmt->bind_param('sssidsssisddi', $debitId, $type, $user_email, $sourceAccount, $sourceAmount, $sourceCurrency, $sourceDesc, $status, $now, $targetCurrency, $targetAmount, $rate, $spread);
+            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,counter_currency,counter_amount,fx_rate,fx_spread_bps,channel,value_date,posted_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param('sssidsssisddisss', $debitId, $type, $user_email, $sourceAccount, $sourceAmount, $sourceCurrency, $sourceDesc, $status, $now, $targetCurrency, $targetAmount, $rate, $spread, $channel, $valueDate, $postedAt);
         $stmt->execute();
         $stmt->close();
 
         $stmt = $db->prepare("INSERT INTO transactions
-            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,counter_currency,counter_amount,fx_rate,fx_spread_bps)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,counter_currency,counter_amount,fx_rate,fx_spread_bps,channel,value_date,posted_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $counterSource = abs((float)$quote['source_amount']);
-        $stmt->bind_param('sssidsssisddi', $creditId, $type, $user_email, $targetAccount, $targetAmount, $targetCurrency, $targetDesc, $status, $now, $sourceCurrency, $counterSource, $rate, $spread);
+        $stmt->bind_param('sssidsssisddisss', $creditId, $type, $user_email, $targetAccount, $targetAmount, $targetCurrency, $targetDesc, $status, $now, $sourceCurrency, $counterSource, $rate, $spread, $channel, $valueDate, $postedAt);
         $stmt->execute();
         $stmt->close();
 
@@ -494,6 +497,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_exchange']
         $stmt->bind_param('ssssssdddisii', $tradeId, $user_email, $sourceAccount, $targetAccount, $sourceCurrency, $targetCurrency, $sourcePositive, $targetAmount, $rate, $spread, $tradeStatus, $quotedAt, $now);
         $stmt->execute();
         $stmt->close();
+
+        v3Notify(
+            $db,
+            $user_email,
+            'Currency exchange completed',
+            velmoraFormatCurrency($sourcePositive, $sourceCurrency) . ' was exchanged for ' . velmoraFormatCurrency($targetAmount, $targetCurrency) . '. Trade ' . $tradeId . '.',
+            'FX Trade',
+            '/dashboard-v3/exchange/'
+        );
 
         $db->commit();
         unset($_SESSION['v3_fx_quote']);
@@ -581,6 +593,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_transfer']
         $status = 'Pending';
         $amount = -abs((float)$quote['amount']);
         $now = time();
+        $channel = 'Online Banking';
+        $valueDate = date('Y-m-d', $now);
+        $postedAt = date('Y-m-d H:i:s', $now);
         $description = 'Transfer to ' . $quote['bank_name'] . ' account number ' . $quote['recipient_account'];
         $sourceAccount = (string)$quote['from_account'];
         $sourceCurrency = (string)$quote['source_currency'];
@@ -591,13 +606,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_transfer']
         $bank = (string)$quote['bank_name'];
         $acctType = (string)$quote['recipient_account_type'];
         $recipient = (string)$quote['recipient_account'];
+        $beneficiaryName = (string)$quote['beneficiary_name'];
 
         $stmt = $db->prepare("INSERT INTO transactions
-            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,to_bank_name,to_account_type,to_account_number,counter_currency,counter_amount,fx_rate,fx_spread_bps)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $stmt->bind_param('sssidsssissssddi', $txid, $type, $user_email, $sourceAccount, $amount, $sourceCurrency, $description, $status, $now, $bank, $acctType, $recipient, $recipientCurrency, $recipientAmount, $rate, $spread);
+            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,to_bank_name,to_account_type,to_account_number,counter_currency,counter_amount,fx_rate,fx_spread_bps,channel,value_date,posted_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param('sssidsssissssddisss', $txid, $type, $user_email, $sourceAccount, $amount, $sourceCurrency, $description, $status, $now, $bank, $acctType, $recipient, $recipientCurrency, $recipientAmount, $rate, $spread, $channel, $valueDate, $postedAt);
         $stmt->execute();
         $stmt->close();
+
+        if (!empty($quote['save_beneficiary'])) {
+            $nickname = $beneficiaryName;
+            $beneficiaryStatus = 'Active';
+            $beneficiaryStmt = $db->prepare("INSERT INTO beneficiaries
+                (user_email,nickname,beneficiary_name,bank_name,account_number,account_type,currency,status,last_used_at)
+                VALUES (?,?,?,?,?,?,?,?,NOW())
+                ON DUPLICATE KEY UPDATE nickname=VALUES(nickname), beneficiary_name=VALUES(beneficiary_name),
+                account_type=VALUES(account_type), currency=VALUES(currency), status='Active', last_used_at=NOW()");
+            if ($beneficiaryStmt) {
+                $beneficiaryStmt->bind_param('ssssssss', $user_email, $nickname, $beneficiaryName, $bank, $recipient, $acctType, $recipientCurrency, $beneficiaryStatus);
+                $beneficiaryStmt->execute();
+                $beneficiaryStmt->close();
+            }
+        } else {
+            $usedStmt = $db->prepare("UPDATE beneficiaries SET last_used_at = NOW() WHERE user_email = ? AND bank_name = ? AND account_number = ?");
+            if ($usedStmt) {
+                $usedStmt->bind_param('sss', $user_email, $bank, $recipient);
+                $usedStmt->execute();
+                $usedStmt->close();
+            }
+        }
+
+        v3Notify(
+            $db,
+            $user_email,
+            'Transfer submitted',
+            'Transfer ' . $txid . ' to ' . $beneficiaryName . ' at ' . $bank . ' has been submitted for bank processing.',
+            'Transfer',
+            '/dashboard-v3/transactions/'
+        );
         $db->close();
 
         unset($_SESSION['v3_transfer_quote']);
