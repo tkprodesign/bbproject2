@@ -51,3 +51,37 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_support_phone'])){
     if($phone===''){cpv2Flash('error','Enter a support phone number.');cpv2Go('/control-panel-v2/settings/');}
     $db=connectToDatabase();$stmt=$db->prepare("INSERT INTO dynamic_data (name,value) VALUES ('phone_number',?) ON DUPLICATE KEY UPDATE value=VALUES(value)");$stmt->bind_param('s',$phone);$stmt->execute();$stmt->close();$db->close();cpv2Flash('success','Support phone updated.');cpv2Go('/control-panel-v2/settings/');
 }
+
+if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_customer_status'])){
+    cpv2Verify();$id=(int)($_POST['customer_id']??0);$status=(string)($_POST['status']??'');
+    if($id<=0||!in_array($status,['Active','Suspended'],true)){cpv2Flash('error','Invalid customer status.');cpv2Go('/control-panel-v2/customers/');}
+    $db=connectToDatabase();$stmt=$db->prepare("UPDATE users SET user_status=? WHERE id=?");$stmt->bind_param('si',$status,$id);$stmt->execute();$stmt->close();$db->close();
+    cpv2Flash('success','Customer relationship status updated.');cpv2Go('/control-panel-v2/customers/detail/?id='.$id);
+}
+
+if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_account_status'])){
+    cpv2Verify();$account=preg_replace('/\D+/','',(string)($_POST['account_number']??''));$status=(string)($_POST['status']??'');
+    if($account===''||!in_array($status,['Active','Restricted','Closed'],true)){cpv2Flash('error','Invalid account status.');cpv2Go('/control-panel-v2/accounts/');}
+    $db=connectToDatabase();$stmt=$db->prepare("UPDATE accounts SET account_status=? WHERE account_number=?");$stmt->bind_param('ss',$status,$account);$stmt->execute();$stmt->close();$db->close();
+    cpv2Flash('success','Account status updated.');cpv2Go('/control-panel-v2/accounts/?account='.urlencode($account));
+}
+
+if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_adjust_ledger'])){
+    cpv2Verify();
+    $email=trim((string)($_POST['email']??''));$account=preg_replace('/\D+/','',(string)($_POST['account_number']??''));$direction=(string)($_POST['direction']??'');$amount=filter_var($_POST['amount']??null,FILTER_VALIDATE_FLOAT);$description=trim((string)($_POST['description']??''));
+    if(!filter_var($email,FILTER_VALIDATE_EMAIL)||$account===''||!in_array($direction,['Credit','Debit'],true)||$amount===false||$amount<=0){cpv2Flash('error','Complete the ledger adjustment correctly.');cpv2Go('/control-panel-v2/adjustments/');}
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT currency,account_status FROM accounts WHERE user_email=? AND account_number=? LIMIT 1");$stmt->bind_param('ss',$email,$account);$stmt->execute();$acct=$stmt->get_result()->fetch_assoc();$stmt->close();
+    if(!$acct||$acct['account_status']==='Closed'){$db->close();cpv2Flash('error','Account was not found or is closed.');cpv2Go('/control-panel-v2/adjustments/');}
+    $currency=strtoupper((string)$acct['currency']);$signed=$direction==='Credit'?abs((float)$amount):-abs((float)$amount);
+    if($direction==='Debit'){
+        $stmt=$db->prepare("SELECT COALESCE(SUM(CASE WHEN LOWER(status)<>'failed' THEN amount ELSE 0 END),0) FROM transactions WHERE account_number=?");$stmt->bind_param('s',$account);$stmt->execute();$stmt->bind_result($balance);$stmt->fetch();$stmt->close();
+        if(abs($signed)>(float)$balance){$db->close();cpv2Flash('error','Debit exceeds the available ledger balance.');cpv2Go('/control-panel-v2/adjustments/');}
+    }
+    $txid='OPS-'.strtoupper(bin2hex(random_bytes(7)));$type=$direction==='Credit'?'Operations Credit':'Operations Debit';$status='Successful';$now=time();$channel='Operations Console';$valueDate=date('Y-m-d',$now);$postedAt=date('Y-m-d H:i:s',$now);if($description==='')$description=$type.' adjustment';
+    $stmt=$db->prepare("INSERT INTO transactions (type,transaction_id,user_email,account_number,amount,currency,description,status,time,channel,value_date,posted_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+    $stmt->bind_param('ssssdsssisss',$type,$txid,$email,$account,$signed,$currency,$description,$status,$now,$channel,$valueDate,$postedAt);$stmt->execute();$stmt->close();
+    createUserNotification($db,$email,'Account adjustment posted',$description.' · '.velmoraFormatCurrency($signed,$currency).' · Reference '.$txid.'.','Account','/dashboard-v3/transactions/detail/?ref='.urlencode($txid));
+    recordSecurityEvent($db,$email,'Operations Adjustment','Operations console posted '.$txid);
+    $db->close();cpv2Flash('success','Ledger adjustment posted: '.$txid);cpv2Go('/control-panel-v2/adjustments/');
+}
