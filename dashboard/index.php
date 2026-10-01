@@ -7,7 +7,7 @@ $accounts = v3Accounts($user_email);
 
 $db = connectToDatabase();
 $stmt = $db->prepare("SELECT type, description, amount, currency, status, time
-    FROM transactions WHERE user_email = ? ORDER BY time DESC LIMIT 7");
+    FROM transactions WHERE user_email = ? AND (status IS NULL OR LOWER(status) <> 'archived') ORDER BY time DESC LIMIT 7");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
 $stmt->bind_result($txType,$txDescription,$txAmount,$txCurrency,$txStatus,$txTime);
