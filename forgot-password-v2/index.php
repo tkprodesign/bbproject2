@@ -12,6 +12,11 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['request_reset'])){
 
         if($user){
             $db->query("DELETE FROM password_reset_tokens WHERE expires_at < NOW() OR used_at IS NOT NULL");
+            $recent=false;
+            $stmt=$db->prepare("SELECT id FROM password_reset_tokens WHERE LOWER(user_email)=LOWER(?) AND created_at>DATE_SUB(NOW(),INTERVAL 2 MINUTE) LIMIT 1");
+            $stmt->bind_param('s',$email);$stmt->execute();$recent=(bool)$stmt->get_result()->fetch_assoc();$stmt->close();
+
+            if(!$recent){
             $stmt=$db->prepare("DELETE FROM password_reset_tokens WHERE LOWER(user_email)=LOWER(?) AND used_at IS NULL");
             $stmt->bind_param('s',$email);$stmt->execute();$stmt->close();
 
@@ -39,8 +44,11 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['request_reset'])){
               </div>
             </div></body></html>';
 
-            sendSiteEmail($email,'Reset your Velmora password',$body);
+            if(!sendSiteEmail($email,'Reset your Velmora password',$body)){
+                error_log('Password reset email delivery failed for a registered profile.');
+            }
             recordSecurityEvent($db,$email,'Password Reset Requested','Password reset link requested');
+            }
         }
         $db->close();
     }
