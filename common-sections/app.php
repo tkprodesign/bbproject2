@@ -265,6 +265,215 @@ function recordSecurityEvent(mysqli $db, string $email, string $eventType, strin
     } catch(Throwable $e){ error_log('Security event record skipped: '.$e->getMessage()); }
 }
 
+
+function velmoraCustomerCookieSecure(): bool {
+    return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+}
+
+function velmoraExpireCookie(string $name): void {
+    setcookie($name, '', [
+        'expires' => time() - 3600,
+        'path' => '/',
+        'secure' => velmoraCustomerCookieSecure(),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    unset($_COOKIE[$name]);
+}
+
+function velmoraDeleteRememberTokenByCookie(): void {
+    $cookie = (string)($_COOKIE['vlm_remember'] ?? '');
+    $parts = explode(':', $cookie, 2);
+    if (count($parts) === 2 && preg_match('/^[a-f0-9]{32}$/', $parts[0])) {
+        try {
+            $db = connectToDatabase();
+            $stmt = $db->prepare('DELETE FROM customer_remember_tokens WHERE selector=?');
+            if ($stmt) {
+                $stmt->bind_param('s', $parts[0]);
+                $stmt->execute();
+                $stmt->close();
+            }
+            $db->close();
+        } catch (Throwable $e) {
+            error_log('Remember-token cleanup skipped: '.$e->getMessage());
+        }
+    }
+    velmoraExpireCookie('vlm_remember');
+}
+
+function velmoraLogoutCustomer(bool $deleteRememberToken = true): void {
+    if ($deleteRememberToken) {
+        velmoraDeleteRememberTokenByCookie();
+    } else {
+        velmoraExpireCookie('vlm_remember');
+    }
+    velmoraExpireCookie('login_email');
+    unset($_SESSION['customer_auth'], $_SESSION['user_email'], $_SESSION['login_email']);
+    unset($GLOBALS['velmora_customer_auth_cache']);
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_regenerate_id(true);
+    }
+}
+
+function velmoraEstablishCustomerSession(string $email, int $sessionVersion): void {
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_regenerate_id(true);
+    }
+    $email = strtolower(trim($email));
+    $_SESSION['customer_auth'] = [
+        'email' => $email,
+        'session_version' => max(1, $sessionVersion),
+        'authenticated_at' => time(),
+    ];
+    // Compatibility for existing dashboard code; this value is now server-side only.
+    $_SESSION['user_email'] = $email;
+    unset($_SESSION['login_email']);
+    velmoraExpireCookie('login_email');
+    unset($GLOBALS['velmora_customer_auth_cache']);
+}
+
+function velmoraIssueRememberToken(mysqli $db, string $email, int $sessionVersion, int $days = 30): void {
+    $selector = bin2hex(random_bytes(16));
+    $validator = bin2hex(random_bytes(32));
+    $tokenHash = hash('sha256', $validator);
+    $expiresTs = time() + max(1, $days) * 86400;
+    $expiresAt = date('Y-m-d H:i:s', $expiresTs);
+
+    $cleanup = $db->prepare('DELETE FROM customer_remember_tokens WHERE user_email=? OR expires_at<NOW()');
+    if ($cleanup) {
+        $cleanup->bind_param('s', $email);
+        $cleanup->execute();
+        $cleanup->close();
+    }
+
+    $stmt = $db->prepare('INSERT INTO customer_remember_tokens (selector,token_hash,user_email,session_version,expires_at) VALUES (?,?,?,?,?)');
+    if (!$stmt) {
+        throw new RuntimeException('Unable to prepare remember token.');
+    }
+    $stmt->bind_param('sssis', $selector, $tokenHash, $email, $sessionVersion, $expiresAt);
+    $stmt->execute();
+    $stmt->close();
+
+    $value = $selector.':'.$validator;
+    setcookie('vlm_remember', $value, [
+        'expires' => $expiresTs,
+        'path' => '/',
+        'secure' => velmoraCustomerCookieSecure(),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    $_COOKIE['vlm_remember'] = $value;
+}
+
+function velmoraResolveCustomerAuth(): array {
+    if (isset($GLOBALS['velmora_customer_auth_cache']) && is_array($GLOBALS['velmora_customer_auth_cache'])) {
+        return $GLOBALS['velmora_customer_auth_cache'];
+    }
+
+    $email = '';
+    $sessionVersion = 0;
+    $source = 'none';
+
+    $sessionAuth = $_SESSION['customer_auth'] ?? null;
+    if (is_array($sessionAuth)) {
+        $email = strtolower(trim((string)($sessionAuth['email'] ?? '')));
+        $sessionVersion = (int)($sessionAuth['session_version'] ?? 0);
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) && $sessionVersion > 0) {
+            $source = 'session';
+        } else {
+            $email = '';
+            $sessionVersion = 0;
+        }
+    }
+
+    $db = null;
+    if ($email === '') {
+        $cookie = (string)($_COOKIE['vlm_remember'] ?? '');
+        $parts = explode(':', $cookie, 2);
+        if (count($parts) === 2 && preg_match('/^[a-f0-9]{32}$/', $parts[0]) && preg_match('/^[a-f0-9]{64}$/', $parts[1])) {
+            try {
+                $db = connectToDatabase();
+                $stmt = $db->prepare("SELECT t.user_email,t.token_hash,t.session_version,u.user_status,u.session_version AS current_version
+                                      FROM customer_remember_tokens t
+                                      JOIN users u ON u.email=t.user_email
+                                      WHERE t.selector=? AND t.expires_at>NOW() LIMIT 1");
+                if ($stmt) {
+                    $stmt->bind_param('s', $parts[0]);
+                    $stmt->execute();
+                    $row = $stmt->get_result()->fetch_assoc();
+                    $stmt->close();
+                    if ($row && hash_equals((string)$row['token_hash'], hash('sha256', $parts[1]))) {
+                        $status = strtolower(trim((string)$row['user_status']));
+                        if (in_array($status, ['active','enabled'], true) && (int)$row['session_version'] === (int)$row['current_version']) {
+                            $email = strtolower((string)$row['user_email']);
+                            $sessionVersion = (int)$row['current_version'];
+                            $source = 'remember';
+                            velmoraEstablishCustomerSession($email, $sessionVersion);
+                            $touch = $db->prepare('UPDATE customer_remember_tokens SET last_used_at=NOW() WHERE selector=?');
+                            if ($touch) {$touch->bind_param('s',$parts[0]);$touch->execute();$touch->close();}
+                        } else {
+                            $GLOBALS['velmora_customer_auth_cache'] = ['authenticated'=>false,'email'=>'','status'=>(string)$row['user_status'],'source'=>'remember'];
+                            $delete = $db->prepare('DELETE FROM customer_remember_tokens WHERE selector=?');
+                            if ($delete) {$delete->bind_param('s',$parts[0]);$delete->execute();$delete->close();}
+                            $db->close();
+                            velmoraExpireCookie('vlm_remember');
+                            return $GLOBALS['velmora_customer_auth_cache'];
+                        }
+                    } else {
+                        velmoraExpireCookie('vlm_remember');
+                    }
+                }
+            } catch (Throwable $e) {
+                error_log('Remember-token authentication skipped: '.$e->getMessage());
+            }
+        }
+    }
+
+    if ($email === '') {
+        if ($db instanceof mysqli) {$db->close();}
+        return $GLOBALS['velmora_customer_auth_cache'] = ['authenticated'=>false,'email'=>'','status'=>'','source'=>'none'];
+    }
+
+    try {
+        if (!$db instanceof mysqli) {$db = connectToDatabase();}
+        $stmt = $db->prepare('SELECT user_status,session_version FROM users WHERE email=? LIMIT 1');
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        $db->close();
+
+        if (!$row) {
+            velmoraLogoutCustomer($source === 'remember');
+            return $GLOBALS['velmora_customer_auth_cache'] = ['authenticated'=>false,'email'=>'','status'=>'','source'=>$source];
+        }
+
+        $status = trim((string)$row['user_status']);
+        $currentVersion = (int)$row['session_version'];
+        if (!in_array(strtolower($status), ['active','enabled'], true) || $currentVersion !== $sessionVersion) {
+            velmoraLogoutCustomer($source === 'remember');
+            return $GLOBALS['velmora_customer_auth_cache'] = ['authenticated'=>false,'email'=>'','status'=>$status,'source'=>$source];
+        }
+
+        return $GLOBALS['velmora_customer_auth_cache'] = [
+            'authenticated'=>true,
+            'email'=>$email,
+            'status'=>$status,
+            'session_version'=>$currentVersion,
+            'source'=>$source,
+        ];
+    } catch (Throwable $e) {
+        if ($db instanceof mysqli) {$db->close();}
+        error_log('Customer authentication check failed: '.$e->getMessage());
+        return $GLOBALS['velmora_customer_auth_cache'] = ['authenticated'=>false,'email'=>'','status'=>'','source'=>$source];
+    }
+}
+
+function velmoraCurrentCustomerEmail(): ?string {
+    $auth = velmoraResolveCustomerAuth();
+    return !empty($auth['authenticated']) ? (string)$auth['email'] : null;
+}
+
 //Check for item in database
 function isInTable($email, $table) {
     $dbconn = connectToDatabase();
@@ -397,8 +606,10 @@ function requireLoginForInternalPages() {
         }
     }
 
-    if (!isset($_COOKIE['login_email'])) {
-        header('Location: /login');
+    $auth = velmoraResolveCustomerAuth();
+    if (empty($auth['authenticated'])) {
+        $suffix = in_array(strtolower((string)($auth['status'] ?? '')), ['restricted','archived','suspended'], true) ? '?restricted=yes' : '';
+        header('Location: /login/' . $suffix);
         exit;
     }
 }
