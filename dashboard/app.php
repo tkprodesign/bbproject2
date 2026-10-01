@@ -467,6 +467,7 @@ if (isset($_POST['submit_kyc_data'])) {
     $dual_citizenship = $_POST['dual_citizenship'];
     $country_of_residence = $_POST['country_of_residence'];
     $source_of_income = $_POST['source_of_income'];
+    $occupation = trim((string)($_POST['occupation'] ?? ''));
     $nationality = $_POST['nationality'];
     $email = $user_email;  // Assuming $user_email is already defined
     $time_uploaded = date('Y-m-d H:i:s'); // Current timestamp
@@ -474,8 +475,8 @@ if (isset($_POST['submit_kyc_data'])) {
     $sql = "INSERT INTO kyc_data  (
                 first_name, middle_name, last_name, suffix, gender, address1, address2, apartment_no, city, state,
                 phone_number, date_of_birth, zip_code, us_citizen, dual_citizenship, country_of_residence,
-                source_of_income, nationality, email, time_uploaded
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                source_of_income, occupation, nationality, email, time_uploaded
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $dbconn->prepare($sql);
     if ($stmt === false) {
@@ -483,10 +484,10 @@ if (isset($_POST['submit_kyc_data'])) {
     }
 
     $stmt->bind_param(
-        'ssssssssssssssssssss',
+        'sssssssssssssssssssss',
         $first_name, $middle_name, $last_name, $suffix, $gender, $address1, $address2, $apartment_no, $city, $state,
         $phone_number, $date_of_birth, $zip_code, $us_citizen, $dual_citizenship, $country_of_residence,
-        $source_of_income, $nationality, $email, $time_uploaded
+        $source_of_income, $occupation, $nationality, $email, $time_uploaded
     );
 
     if ($stmt->execute()) {
