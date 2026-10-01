@@ -11,3 +11,7 @@
 #   RewriteRule ^ - [F,L]
 # </IfModule>
 # ----------------------------------------------------------------------
+
+
+# Canonical professional error experience
+ErrorDocument 404 /404/
