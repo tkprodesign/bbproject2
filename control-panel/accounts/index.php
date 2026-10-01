@@ -21,7 +21,7 @@
         <h2>User Accounts Full List</h2>
         <?php
             $db = connectToDatabase();
-            $query = "SELECT id, user_name, user_email, account_number, currency, account_status, creation_time FROM accounts ORDER BY creation_time DESC";
+            $query = "SELECT id, user_name, user_email, account_number, account_type, account_alias, currency, account_status, creation_time, opened_at FROM accounts ORDER BY creation_time DESC";
             $result = $db->query($query);
 
             $accounts = [];
@@ -48,6 +48,7 @@
                     <td>User Name</td>
                     <td>User Email</td>
                     <td>Account Number</td>
+                    <td>Account</td>
                     <td>Currency</td>
                     <td>Balance</td>
                     <td>Account Status</td>
@@ -62,14 +63,15 @@
                             <td><?php echo htmlspecialchars($row['user_name']); ?></td>
                             <td><?php echo htmlspecialchars($row['user_email']); ?></td>
                             <td><?php echo htmlspecialchars($row['account_number']); ?></td>
+                            <td><?php echo htmlspecialchars(!empty($row['account_alias']) ? $row['account_alias'] : $row['account_type']); ?></td>
                             <td><span class="currency-chip"><?php echo htmlspecialchars(strtoupper((string)$row['currency'])); ?></span></td>
                             <td><?php echo htmlspecialchars(velmoraFormatCurrency((float)($balances[$row['account_number']] ?? 0), velmoraIsSupportedCurrency((string)$row['currency']) ? strtoupper((string)$row['currency']) : 'USD')); ?></td>
                             <td><?php echo htmlspecialchars($row['account_status']); ?></td>
-                            <td><?php echo htmlspecialchars(date('d M Y', (int)$row['creation_time'])); ?></td>
+                            <td><?php echo !empty($row['opened_at']) ? htmlspecialchars(date('d M Y', strtotime((string)$row['opened_at']))) : htmlspecialchars(date('d M Y', (int)$row['creation_time'])); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <tr><td colspan="8">No accounts found</td></tr>
+                    <tr><td colspan="9">No accounts found</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
