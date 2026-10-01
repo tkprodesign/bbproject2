@@ -1,0 +1,24 @@
+<?php require_once('../common-sections/app.php'); ?>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow"><title>Privacy Policy | Velmora Bank</title><meta name="description" content="Velmora Bank privacy information for website, account, KYC, contact, transaction and security data.">
+<link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,-50..200">
+<link rel="stylesheet" href="/assets/stylesheets/public-v2.css?v=<?php echo time(); ?>"></head><body>
+<?php include('../common-sections/public-v2-header.php'); ?>
+<main>
+<section class="pv2-page-hero"><div class="pv2-container"><span class="pv2-eyebrow">PRIVACY POLICY</span><h1 style="max-width:850px">A clearer explanation of the information this site handles.</h1><p style="max-width:760px">This review policy is written around the current Velmora application and should be legally reviewed before being treated as final production policy.</p></div></section>
+<section class="pv2-section"><div class="pv2-container pv2-legal">
+<div class="pv2-policy-meta"><span>Review version</span><span>Demo environment</span><span>Last updated <?php echo date('F Y'); ?></span></div>
+<div class="pv2-warning"><span class="material-symbols-rounded">info</span><div><strong>Policy review required before production use.</strong><p>This draft describes the current application at a practical level. Jurisdiction-specific legal language, retention periods and regulatory rights should be validated by qualified counsel.</p></div></div>
+<h2>Information Velmora may process</h2><p>The current application handles information supplied during registration, account use, profile verification and support interactions. This can include name, email address, password hash, contact information, date of birth, residential information, occupation, source-of-income information, account identifiers, transaction records, KYC status, support messages and profile images.</p>
+<h3>Account and transaction information</h3><p>Account type, account number, currency, status, balances derived from ledger activity, beneficiaries, transfer details, foreign-exchange trades, transaction references, value dates, channels and related status information may be stored to provide the banking experience.</p>
+<h3>Security and device information</h3><p>The application can record sign-in time, IP address, browser user-agent information and security events such as successful sign-in or preference changes. This data is used to support account security, diagnostics and review of activity.</p>
+<h2>How information is used</h2><ul><li>To create and administer user profiles and accounts.</li><li>To display account and transaction information.</li><li>To process or record transfers and foreign-exchange activity within the demo banking system.</li><li>To support identity/KYC workflows.</li><li>To respond to contact and support requests.</li><li>To generate notifications and security records.</li><li>To maintain and improve the application and investigate technical or security issues.</li></ul>
+<h2>Cookies and authentication</h2><p>The application uses browser cookies for authenticated access and may use browser storage or cookies for site preferences such as cookie-consent state. See the <a href="/cookie-policy-v2/" style="color:#315978;font-weight:700">Cookie Policy</a> for more detail.</p>
+<h2>Sharing and service providers</h2><p>Technical service providers may process information where required to host the site, store data, deliver email or operate connected infrastructure. The production version should identify material categories of processors and the contractual protections that apply.</p>
+<h2>Retention</h2><p>Retention periods have not yet been formalized in this demo environment. A production privacy program should define retention schedules for account, KYC, transaction, security and support information based on legal, operational and security requirements.</p>
+<h2>Your questions or requests</h2><p>For privacy questions or requests relating to information held by Velmora, use the published support channel at <a href="/contact-v2/" style="color:#315978;font-weight:700">Contact Velmora</a>. Applicable rights depend on jurisdiction and the final legal status of the service.</p>
+</div></section>
+</main>
+<?php include('../common-sections/public-v2-footer.php'); ?></body></html>
