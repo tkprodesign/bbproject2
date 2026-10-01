@@ -290,7 +290,10 @@ function requireLoginForInternalPages() {
     // Public path prefixes — any URL starting with these is accessible without login
     $publicPrefixes = [
         '/login',
+        '/login-v2',
         '/signup',
+        '/signup-v2',
+        '/onboarding-v2',
         '/sign-up',
         '/about-us',
         '/personal',

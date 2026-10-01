@@ -29,8 +29,8 @@ $supportWhatsappLink = getSupportWhatsappLink();
       <a href="/about-v2/">About</a>
     </nav>
     <div class="pv2-header-actions">
-      <a class="pv2-signin" href="/login/"><span class="material-symbols-rounded">lock</span>Sign in</a>
-      <a class="pv2-open" href="/signup/">Open an account</a>
+      <a class="pv2-signin" href="/login-v2/"><span class="material-symbols-rounded">lock</span>Sign in</a>
+      <a class="pv2-open" href="/signup-v2/">Open an account</a>
     </div>
     <button class="pv2-menu-btn" id="pv2MenuBtn" type="button" aria-label="Open navigation" aria-expanded="false">
       <span class="material-symbols-rounded">menu</span>
@@ -46,8 +46,8 @@ $supportWhatsappLink = getSupportWhatsappLink();
     <a href="/about-v2/">About Velmora</a>
     <a href="/contact-v2/">Support</a>
     <div>
-      <a class="pv2-signin" href="/login/">Sign in</a>
-      <a class="pv2-open" href="/signup/">Open an account</a>
+      <a class="pv2-signin" href="/login-v2/">Sign in</a>
+      <a class="pv2-open" href="/signup-v2/">Open an account</a>
     </div>
   </nav>
 </header>

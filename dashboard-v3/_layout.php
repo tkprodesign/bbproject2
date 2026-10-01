@@ -34,6 +34,7 @@ function v3PageStart(string $title, string $active, array $profile, ?string $pro
             <?php echo v3NavItem('/dashboard-v3/accounts/','account_balance_wallet','Accounts',$active,'accounts'); ?>
             <p>PROFILE</p>
             <?php echo v3NavItem('/dashboard-v3/profile/','person','Profile',$active,'profile'); ?>
+            <?php echo v3NavItem('/dashboard-v3/identity/','badge','Identity & KYC',$active,'identity'); ?>
             <?php echo v3NavItem('/dashboard-v3/security/','shield_lock','Security',$active,'security'); ?>
         </nav>
         <div class="v3-side-bottom">
