@@ -48,7 +48,51 @@
             // Fetch the result and verify password
             if ($stmt->fetch()) {
                 if (password_verify($password, $hashed_password)) {
+                    $accountAllowed = true;
+                    try {
+                        $statusStmt = $dbconn->prepare("SELECT user_status FROM users WHERE email = ? LIMIT 1");
+                        if ($statusStmt) {
+                            $statusStmt->bind_param('s', $email);
+                            $statusStmt->execute();
+                            $statusStmt->bind_result($userStatus);
+                            if ($statusStmt->fetch() && !in_array(strtolower(trim((string)$userStatus)), ['active','enabled'], true)) {
+                                $accountAllowed = false;
+                            }
+                            $statusStmt->close();
+                        }
+                    } catch (Throwable $e) {
+                        error_log('User status check skipped: ' . $e->getMessage());
+                    }
+
+                    if (!$accountAllowed) {
+                        $_GET['alert_time'] = time();
+                        $_GET['error'] = 'yes';
+                        $dbconn->close();
+                    } else {
                     $cookie_timeout = $remember_me == 1 ? 30 * 24 * 60 * 60 : 1 * 60 * 60;
+                    $loginTime = time();
+                    $loginAt = date('Y-m-d H:i:s', $loginTime);
+                    $loginIp = substr((string)($_SERVER['REMOTE_ADDR'] ?? ''), 0, 45);
+                    $userAgent = substr((string)($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500);
+
+                    try {
+                        $trackStmt = $dbconn->prepare("UPDATE users SET last_active=?, last_login_at=?, last_login_ip=?, login_count=login_count+1 WHERE email=?");
+                        if ($trackStmt) {
+                            $trackStmt->bind_param('isss', $loginTime, $loginAt, $loginIp, $email);
+                            $trackStmt->execute();
+                            $trackStmt->close();
+                        }
+                        $eventType = 'Sign In';
+                        $eventDescription = 'Successful online banking sign-in';
+                        $eventStmt = $dbconn->prepare("INSERT INTO security_events (user_email,event_type,description,ip_address,user_agent) VALUES (?,?,?,?,?)");
+                        if ($eventStmt) {
+                            $eventStmt->bind_param('sssss', $email, $eventType, $eventDescription, $loginIp, $userAgent);
+                            $eventStmt->execute();
+                            $eventStmt->close();
+                        }
+                    } catch (Throwable $e) {
+                        error_log('Login activity tracking skipped: ' . $e->getMessage());
+                    }
                     $dbconn->close();
 
                     // Set the login cookie
@@ -62,6 +106,7 @@
                         header("Location: " . $loginTarget);
                     }
                     exit;
+                    }
                 } else {
                     // If password verification fails
                     $_GET['alert_time'] = time();
