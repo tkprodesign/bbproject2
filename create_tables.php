@@ -1,4 +1,11 @@
 <?php
+// VELMORA_CLI_MIGRATION_ONLY: production schema migrations are deployment/CLI operations.
+// Never expose schema mutation through a public web request.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /**
  * Database bootstrapper for Velmora Bank.
  * Creates and updates required tables if they do not already exist.
