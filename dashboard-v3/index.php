@@ -3,6 +3,8 @@ require_once __DIR__ . '/_app.php';
 require_once __DIR__ . '/_layout.php';
 
 $profile = v3Profile($user_email, $user_name);
+$client = v3ClientMeta($user_email);
+$unreadNotifications = v3UnreadNotificationCount($user_email);
 $accounts = v3Accounts($user_email);
 
 $db = connectToDatabase();
@@ -139,6 +141,10 @@ v3FlashMessages();
             <div><dt>Occupation</dt><dd><?php echo htmlspecialchars($profile['occupation']); ?></dd></div>
             <div><dt>KYC status</dt><dd><span class="v3-verified"><?php echo htmlspecialchars($profile['status']); ?></span></dd></div>
             <div><dt>Country</dt><dd><?php echo htmlspecialchars($profile['country']); ?></dd></div>
+            <div><dt>Customer number</dt><dd><?php echo htmlspecialchars($client['customer_number']); ?></dd></div>
+            <div><dt>Relationship status</dt><dd><span class="v3-verified"><?php echo htmlspecialchars($client['user_status']); ?></span></dd></div>
+            <div><dt>Member since</dt><dd><?php echo htmlspecialchars($client['member_since']); ?></dd></div>
+            <div><dt>Notifications</dt><dd><?php echo (int)$unreadNotifications; ?> unread</dd></div>
         </dl>
         <a class="v3-text-link" href="/dashboard-v3/profile/">View full profile <span class="material-symbols-rounded">arrow_forward</span></a>
     </aside>
