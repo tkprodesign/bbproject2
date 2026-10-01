@@ -302,6 +302,7 @@ function requireLoginForInternalPages() {
         '/atm-and-bank-locations',
         '/quick-links',
         '/online-banking',
+        '/home-v2',
         '/cookie-policy',
         '/assets',
     ];
