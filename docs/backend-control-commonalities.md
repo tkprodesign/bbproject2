@@ -42,6 +42,6 @@ A restricted customer:
 
 Preferred sender: `security@velmorabank.us` / **Velmora Bank Security**.
 
-Until that mailbox is provisioned with `SECURITY_EMAIL_PASSWORD`, the application safely falls back to `support@velmorabank.us`.
+Support and Security are operated by the same department head. The `security@velmorabank.us` alias intentionally uses the same SpaceMail mailbox credential as `support@velmorabank.us`, stored only as `SUPPORT_EMAIL_PASSWORD`. There is no separate `SECURITY_EMAIL_PASSWORD` requirement.
 
-The actual SpaceMail mailbox/alias must be provisioned separately; adding application support does not create the provider mailbox.
+Outbound alias mail remains Resend-first. If Resend is unavailable, the application safely falls back to the physical Support mailbox. The actual `security@` alias still has to exist provider-side and route into Support.
