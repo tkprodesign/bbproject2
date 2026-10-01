@@ -33,11 +33,12 @@ function v3TransactionId(string $prefix): string {
 function v3Accounts(string $email): array {
     $db = connectToDatabase();
     $stmt = $db->prepare("SELECT a.id, a.account_number, a.account_type, a.currency, a.account_status, a.creation_time,
+        a.account_alias, a.opened_at,
         COALESCE(SUM(CASE WHEN t.status IS NULL OR LOWER(t.status) <> 'failed' THEN t.amount ELSE 0 END), 0) AS balance
         FROM accounts a
         LEFT JOIN transactions t ON t.account_number = a.account_number
         WHERE a.user_email = ?
-        GROUP BY a.id, a.account_number, a.account_type, a.currency, a.account_status, a.creation_time
+        GROUP BY a.id, a.account_number, a.account_type, a.currency, a.account_status, a.creation_time, a.account_alias, a.opened_at
         ORDER BY a.id DESC");
     $stmt->bind_param('s', $email);
     $stmt->execute();
@@ -90,6 +91,34 @@ function v3Profile(string $email, string $fallbackName): array {
     return $profile;
 }
 
+function v3ClientMeta(string $email): array {
+    $meta=['customer_number'=>'Not assigned','user_status'=>'Active','member_since'=>'Not available','last_login_at'=>null,'last_login_ip'=>null,'login_count'=>0];
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT customer_number,user_status,date_registered,last_login_at,last_login_ip,login_count FROM users WHERE email=? LIMIT 1");
+    if($stmt){$stmt->bind_param('s',$email);$stmt->execute();$stmt->bind_result($cn,$status,$registered,$lastLogin,$ip,$count);
+        if($stmt->fetch()){if($cn)$meta['customer_number']=$cn;if($status)$meta['user_status']=$status;if((int)$registered>0)$meta['member_since']=date('M d, Y',(int)$registered);$meta['last_login_at']=$lastLogin;$meta['last_login_ip']=$ip;$meta['login_count']=(int)$count;}
+        $stmt->close();}
+    $db->close();return $meta;
+}
+function v3Beneficiaries(string $email, bool $activeOnly=true): array {
+    $db=connectToDatabase();$sql="SELECT id,nickname,beneficiary_name,bank_name,account_number,account_type,currency,status,last_used_at,created_at FROM beneficiaries WHERE user_email=?";
+    if($activeOnly)$sql.=" AND status='Active'";$sql.=" ORDER BY COALESCE(last_used_at,created_at) DESC,id DESC";
+    $stmt=$db->prepare($sql);$rows=[];if($stmt){$stmt->bind_param('s',$email);$stmt->execute();$res=$stmt->get_result();while($r=$res->fetch_assoc())$rows[]=$r;$stmt->close();}$db->close();return $rows;
+}
+function v3Notifications(string $email,int $limit=50): array {
+    $db=connectToDatabase();$limit=max(1,min(100,$limit));$stmt=$db->prepare("SELECT id,title,body,notification_type,action_url,is_read,read_at,created_at FROM notifications WHERE user_email=? ORDER BY id DESC LIMIT ".$limit);
+    $rows=[];if($stmt){$stmt->bind_param('s',$email);$stmt->execute();$res=$stmt->get_result();while($r=$res->fetch_assoc())$rows[]=$r;$stmt->close();}$db->close();return $rows;
+}
+function v3UnreadNotificationCount(string $email): int {
+    $db=connectToDatabase();$count=0;$stmt=$db->prepare("SELECT COUNT(*) FROM notifications WHERE user_email=? AND is_read=0");
+    if($stmt){$stmt->bind_param('s',$email);$stmt->execute();$stmt->bind_result($count);$stmt->fetch();$stmt->close();}$db->close();return (int)$count;
+}
+function v3Preferences(string $email): array {
+    $p=['timezone'=>'America/New_York','language'=>'en','email_transaction_alerts'=>1,'email_security_alerts'=>1,'in_app_notifications'=>1,'statement_delivery'=>'Digital'];
+    $db=connectToDatabase();$stmt=$db->prepare("SELECT timezone,language,email_transaction_alerts,email_security_alerts,in_app_notifications,statement_delivery FROM user_preferences WHERE user_email=? LIMIT 1");
+    if($stmt){$stmt->bind_param('s',$email);$stmt->execute();$res=$stmt->get_result();if($r=$res->fetch_assoc())$p=array_merge($p,$r);$stmt->close();}$db->close();return $p;
+}
+
 function v3OwnedAccount(mysqli $db, string $email, string $accountNumber): ?array {
     $stmt = $db->prepare("SELECT account_number, account_type, currency, account_status
         FROM accounts WHERE user_email = ? AND account_number = ? LIMIT 1");
@@ -123,10 +152,35 @@ function v3Flash(string $key): ?string {
     return is_string($value) ? $value : null;
 }
 
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_add_beneficiary'])) {
+    v3VerifyPost();
+    $name=trim((string)($_POST['beneficiary_name']??''));$nickname=trim((string)($_POST['nickname']??''));$bank=trim((string)($_POST['bank_name']??''));$account=trim((string)($_POST['account_number']??''));$type=trim((string)($_POST['account_type']??''));$currency=strtoupper(trim((string)($_POST['currency']??'')));
+    if($name===''||$bank===''||$account===''||!velmoraIsSupportedCurrency($currency)){v3PostMessage('error','Complete the beneficiary details correctly.');v3Redirect('/dashboard-v3/beneficiaries/');}
+    $db=connectToDatabase();$status='Active';
+    $stmt=$db->prepare("INSERT INTO beneficiaries (user_email,nickname,beneficiary_name,bank_name,account_number,account_type,currency,status) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE nickname=VALUES(nickname),beneficiary_name=VALUES(beneficiary_name),account_type=VALUES(account_type),currency=VALUES(currency),status='Active'");
+    $stmt->bind_param('ssssssss',$user_email,$nickname,$name,$bank,$account,$type,$currency,$status);$stmt->execute();$stmt->close();$db->close();
+    v3PostMessage('success','Beneficiary saved.');v3Redirect('/dashboard-v3/beneficiaries/');
+}
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_remove_beneficiary'])) {
+    v3VerifyPost();$id=(int)($_POST['beneficiary_id']??0);if($id>0){$db=connectToDatabase();$stmt=$db->prepare("UPDATE beneficiaries SET status='Inactive' WHERE id=? AND user_email=?");$stmt->bind_param('is',$id,$user_email);$stmt->execute();$stmt->close();$db->close();v3PostMessage('success','Beneficiary removed.');}v3Redirect('/dashboard-v3/beneficiaries/');
+}
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_mark_notifications_read'])) {
+    v3VerifyPost();$db=connectToDatabase();$stmt=$db->prepare("UPDATE notifications SET is_read=1,read_at=NOW() WHERE user_email=? AND is_read=0");$stmt->bind_param('s',$user_email);$stmt->execute();$stmt->close();$db->close();v3Redirect('/dashboard-v3/notifications/');
+}
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_save_preferences'])) {
+    v3VerifyPost();$timezone=trim((string)($_POST['timezone']??'America/New_York'));if(!in_array($timezone,DateTimeZone::listIdentifiers(),true))$timezone='America/New_York';
+    $txAlerts=isset($_POST['email_transaction_alerts'])?1:0;$secAlerts=isset($_POST['email_security_alerts'])?1:0;$inApp=isset($_POST['in_app_notifications'])?1:0;$delivery=in_array((string)($_POST['statement_delivery']??''),['Digital','Email'],true)?(string)$_POST['statement_delivery']:'Digital';$language='en';
+    $db=connectToDatabase();$stmt=$db->prepare("INSERT INTO user_preferences (user_email,timezone,language,email_transaction_alerts,email_security_alerts,in_app_notifications,statement_delivery) VALUES (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE timezone=VALUES(timezone),language=VALUES(language),email_transaction_alerts=VALUES(email_transaction_alerts),email_security_alerts=VALUES(email_security_alerts),in_app_notifications=VALUES(in_app_notifications),statement_delivery=VALUES(statement_delivery)");
+    $stmt->bind_param('sssiiis',$user_email,$timezone,$language,$txAlerts,$secAlerts,$inApp,$delivery);$stmt->execute();$stmt->close();recordSecurityEvent($db,$user_email,'Preferences Updated','Online banking preferences updated');$db->close();
+    v3PostMessage('success','Preferences updated.');v3Redirect('/dashboard-v3/preferences/');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_create_account'])) {
     v3VerifyPost();
     $currency = strtoupper(trim((string)($_POST['currency'] ?? '')));
     $accountType = trim((string)($_POST['account_type'] ?? ''));
+    $accountAlias = trim((string)($_POST['account_alias'] ?? ''));
+    if(strlen($accountAlias)>100)$accountAlias=substr($accountAlias,0,100);
 
     if (!velmoraIsSupportedCurrency($currency) || !in_array($accountType, ['Savings','Current','Fixed','Personal Checking'], true)) {
         v3PostMessage('error', 'Choose a valid account type and currency.');
@@ -144,14 +198,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_create_account']))
         $stmt->close();
     } while ((int)$taken > 0);
 
-    $status = 'Active';
-    $now = time();
-    $stmt = $db->prepare('INSERT INTO accounts (account_type,user_name,user_email,currency,account_number,account_status,creation_time) VALUES (?,?,?,?,?,?,?)');
-    $stmt->bind_param('ssssssi', $accountType, $user_name, $user_email, $currency, $accountNumber, $status, $now);
-    $stmt->execute();
-    $stmt->close();
+    $status='Active';$now=time();$openedAt=date('Y-m-d H:i:s',$now);
+    $stmt=$db->prepare('INSERT INTO accounts (account_type,user_name,user_email,currency,account_number,account_status,creation_time,account_alias,opened_at) VALUES (?,?,?,?,?,?,?,?,?)');
+    $stmt->bind_param('ssssssiss',$accountType,$user_name,$user_email,$currency,$accountNumber,$status,$now,$accountAlias,$openedAt);$stmt->execute();$stmt->close();
+    createUserNotification($db,$user_email,'New account opened',$currency.' '.$accountType.' account ending '.substr($accountNumber,-4).' is now active.','Account','/dashboard-v3/accounts/');
     $db->close();
-
     v3Redirect('/dashboard-v3/accounts/opened/?account=' . urlencode($accountNumber));
 }
 
