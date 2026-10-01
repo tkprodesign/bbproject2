@@ -26,7 +26,9 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_change_password'])){
             $newHash=password_hash($new,PASSWORD_DEFAULT);
             $stmt=$db->prepare("UPDATE users SET password=? WHERE email=?");
             $stmt->bind_param('ss',$newHash,$user_email);$stmt->execute();$stmt->close();
-            recordSecurityEvent($db,$user_email,'Password Changed','Online banking password changed successfully');
+            $newSessionVersion=velmoraRevokeCustomerSessions($db,$user_email);
+            velmoraEstablishCustomerSession($user_email,$newSessionVersion);
+            recordSecurityEvent($db,$user_email,'Password Changed','Online banking password changed successfully; other customer sessions revoked');
             createUserNotification($db,$user_email,'Password changed','Your online banking password was changed. If you did not make this change, contact support immediately.','Security','/dashboard/security/');
             $db->close();
             v3PostMessage('success','Password changed successfully.');
