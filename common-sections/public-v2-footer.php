@@ -7,7 +7,7 @@
       </div>
       <div class="pv2-footer-links">
         <div><strong>Banking</strong><a href="/personal/">Personal</a><a href="/business/">Business</a><a href="/credit-card/">Cards</a><a href="/loan/">Loans</a><a href="/international/">International</a></div>
-        <div><strong>Digital</strong><a href="/online-banking/">Online Banking</a><a href="/login/">Sign in</a><a href="/signup/">Open an account</a><a href="/atm-and-bank-locations/">Locations</a></div>
+        <div><strong>Digital</strong><a href="/online-banking/">Online Banking</a><a href="/login/">Sign in</a><a href="/signup/">Open an account</a><a href="/atm-and-bank-locations/">Service access</a></div>
         <div><strong>Help</strong><a href="/support/">Support Center</a><a href="/security/">Security &amp; Fraud</a><a href="/contact/">Contact</a><a href="/documents/">Documents</a><a href="/rates/">Rates &amp; Fees</a></div>
         <div><strong>Legal</strong><a href="/legal/">Legal &amp; Disclosures</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/cookie-policy/">Cookies</a><a href="/accessibility/">Accessibility</a></div>
       </div>
