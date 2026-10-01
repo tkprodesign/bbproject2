@@ -8,7 +8,7 @@
 <?php include('../common-sections/public-v2-header.php'); ?>
 <main>
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
-<div><span class="pv2-eyebrow">SUPPORT CENTER</span><h1>Start with the issue. Get to the right help faster.</h1><p>Find guidance for accounts, payments, currency exchange, profile verification and online banking access, or contact support when the issue needs direct attention.</p><div class="pv2-actions"><a class="pv2-btn primary" href="/contact-v2/">Contact support</a><a class="pv2-btn secondary" href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener">Call / WhatsApp</a></div></div>
+<div><span class="pv2-eyebrow">SUPPORT CENTER</span><h1>Start with the issue. Get to the right help faster.</h1><p>Find guidance for accounts, payments, currency exchange, profile verification and online banking access, or contact support when the issue needs direct attention.</p><div class="pv2-actions"><a class="pv2-btn primary" href="/dashboard-v3/support/">Signed-in support messages</a><a class="pv2-btn secondary" href="/contact-v2/">General contact</a></div></div>
 <div class="pv2-hero-image"><img src="/assets/images/home/features/customer-support.jpg" alt="Velmora support"><div class="pv2-image-note"><small>SUPPORT</small><strong>Accounts · payments · access · security · verification</strong></div></div>
 </div></section>
 
@@ -29,6 +29,7 @@
 <div class="pv2-info-list">
 <div><span class="material-symbols-rounded">mail</span><div><strong>Email support</strong><a href="mailto:support@velmorabank.us">support@velmorabank.us</a></div></div>
 <div><span class="material-symbols-rounded">call</span><div><strong>Phone / WhatsApp</strong><a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($supportPhoneNumber); ?></a></div></div>
+<div><span class="material-symbols-rounded">chat</span><div><strong>Authenticated support</strong><a href="/dashboard-v3/support/">Open a traceable support case after signing in</a></div></div>
 <div><span class="material-symbols-rounded">location_on</span><div><strong>Locations</strong><a href="/locations-v2/">View the demo location directory</a></div></div>
 </div></div>
 <div class="pv2-info-card"><span class="pv2-eyebrow">BEFORE YOU CONTACT US</span><h2>Have the useful context ready.</h2><div class="pv2-bullet-list">

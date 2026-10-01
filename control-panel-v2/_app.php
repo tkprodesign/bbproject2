@@ -85,3 +85,39 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_adjust_ledger'])){
     recordSecurityEvent($db,$email,'Operations Adjustment','Operations console posted '.$txid);
     $db->close();cpv2Flash('success','Ledger adjustment posted: '.$txid);cpv2Go('/control-panel-v2/adjustments/');
 }
+
+
+if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_support_reply'])){
+    cpv2Verify();
+    $caseId=(int)($_POST['case_id']??0);
+    $message=trim((string)($_POST['message']??''));
+    $operator=trim((string)($_SESSION['user_email']??'operator@velmora'));
+    if($caseId<=0||$message===''){cpv2Flash('error','Enter a reply before sending.');cpv2Go('/control-panel-v2/support-cases/');}
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT user_email,case_number,status FROM support_cases WHERE id=? LIMIT 1");
+    $stmt->bind_param('i',$caseId);$stmt->execute();$case=$stmt->get_result()->fetch_assoc();$stmt->close();
+    if(!$case){$db->close();cpv2Flash('error','Support case not found.');cpv2Go('/control-panel-v2/support-cases/');}
+    $role='Operator';
+    $stmt=$db->prepare("INSERT INTO support_case_messages (case_id,sender_role,sender_email,message) VALUES (?,?,?,?)");
+    $stmt->bind_param('isss',$caseId,$role,$operator,$message);$stmt->execute();$stmt->close();
+    $nextStatus=in_array($case['status'],['Resolved','Closed'],true)?'In Review':($case['status']==='Open'?'In Review':$case['status']);
+    $stmt=$db->prepare("UPDATE support_cases SET status=?,assigned_to=?,last_operator_message_at=NOW(),resolved_at=NULL WHERE id=?");
+    $stmt->bind_param('ssi',$nextStatus,$operator,$caseId);$stmt->execute();$stmt->close();
+    createUserNotification($db,$case['user_email'],'Support replied','Velmora Support replied to case '.$case['case_number'].'.','Support','/dashboard-v3/support/detail/?id='.$caseId);
+    $db->close();cpv2Flash('success','Reply sent to the customer.');cpv2Go('/control-panel-v2/support-cases/detail/?id='.$caseId);
+}
+
+if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_support_status'])){
+    cpv2Verify();
+    $caseId=(int)($_POST['case_id']??0);$status=(string)($_POST['status']??'');
+    $operator=trim((string)($_SESSION['user_email']??'operator@velmora'));
+    if($caseId<=0||!in_array($status,['Open','In Review','Resolved','Closed'],true)){cpv2Flash('error','Invalid support-case status.');cpv2Go('/control-panel-v2/support-cases/');}
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT user_email,case_number FROM support_cases WHERE id=? LIMIT 1");$stmt->bind_param('i',$caseId);$stmt->execute();$case=$stmt->get_result()->fetch_assoc();$stmt->close();
+    if(!$case){$db->close();cpv2Flash('error','Support case not found.');cpv2Go('/control-panel-v2/support-cases/');}
+    $resolved=in_array($status,['Resolved','Closed'],true)?date('Y-m-d H:i:s'):null;
+    $stmt=$db->prepare("UPDATE support_cases SET status=?,assigned_to=?,resolved_at=? WHERE id=?");
+    $stmt->bind_param('sssi',$status,$operator,$resolved,$caseId);$stmt->execute();$stmt->close();
+    createUserNotification($db,$case['user_email'],'Support case updated','Case '.$case['case_number'].' status is now '.$status.'.','Support','/dashboard-v3/support/detail/?id='.$caseId);
+    $db->close();cpv2Flash('success','Support case status updated.');cpv2Go('/control-panel-v2/support-cases/detail/?id='.$caseId);
+}

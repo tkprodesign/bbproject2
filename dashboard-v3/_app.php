@@ -119,6 +119,24 @@ function v3Preferences(string $email): array {
     if($stmt){$stmt->bind_param('s',$email);$stmt->execute();$res=$stmt->get_result();if($r=$res->fetch_assoc())$p=array_merge($p,$r);$stmt->close();}$db->close();return $p;
 }
 
+function v3SupportCases(string $email): array {
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT id,case_number,category,subject,status,priority,related_transaction_id,assigned_to,last_customer_message_at,last_operator_message_at,resolved_at,created_at,updated_at FROM support_cases WHERE user_email=? ORDER BY updated_at DESC,id DESC");
+    $rows=[];
+    if($stmt){$stmt->bind_param('s',$email);$stmt->execute();$res=$stmt->get_result();while($r=$res->fetch_assoc())$rows[]=$r;$stmt->close();}
+    $db->close();return $rows;
+}
+function v3SupportCase(string $email,int $id): ?array {
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT id,case_number,user_email,category,subject,status,priority,related_transaction_id,assigned_to,resolved_at,created_at,updated_at FROM support_cases WHERE id=? AND user_email=? LIMIT 1");
+    $stmt->bind_param('is',$id,$email);$stmt->execute();$case=$stmt->get_result()->fetch_assoc()?:null;$stmt->close();
+    if($case){
+        $stmt=$db->prepare("SELECT id,sender_role,sender_email,message,created_at FROM support_case_messages WHERE case_id=? ORDER BY id ASC");
+        $stmt->bind_param('i',$id);$stmt->execute();$case['messages']=$stmt->get_result()->fetch_all(MYSQLI_ASSOC);$stmt->close();
+    }
+    $db->close();return $case;
+}
+
 function v3OwnedAccount(mysqli $db, string $email, string $accountNumber): ?array {
     $stmt = $db->prepare("SELECT account_number, account_type, currency, account_status
         FROM accounts WHERE user_email = ? AND account_number = ? LIMIT 1");
@@ -150,6 +168,49 @@ function v3Flash(string $key): ?string {
     $value = $_SESSION['v3_flash'][$key] ?? null;
     unset($_SESSION['v3_flash'][$key]);
     return is_string($value) ? $value : null;
+}
+
+
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_create_support_case'])) {
+    v3VerifyPost();
+    $category=trim((string)($_POST['category']??'General'));
+    $subject=trim((string)($_POST['subject']??''));
+    $message=trim((string)($_POST['message']??''));
+    $priority=trim((string)($_POST['priority']??'Normal'));
+    $related=trim((string)($_POST['related_transaction_id']??''));
+    $allowedCategories=['Accounts','Transfers','FX','Cards','Loans','Profile & KYC','Security','General'];
+    if(!in_array($category,$allowedCategories,true))$category='General';
+    if(!in_array($priority,['Normal','Urgent'],true))$priority='Normal';
+    if($subject===''||$message===''){
+        v3PostMessage('error','Add a subject and message before submitting the support case.');
+        v3Redirect('/dashboard-v3/support/');
+    }
+    $caseNumber='VLM-SUP-'.date('Ymd').'-'.strtoupper(bin2hex(random_bytes(3)));
+    $db=connectToDatabase();
+    $stmt=$db->prepare("INSERT INTO support_cases (case_number,user_email,category,subject,status,priority,related_transaction_id,last_customer_message_at) VALUES (?,?,?,?,'Open',?,?,NOW())");
+    $stmt->bind_param('ssssss',$caseNumber,$user_email,$category,$subject,$priority,$related);$stmt->execute();$caseId=(int)$db->insert_id;$stmt->close();
+    $role='Customer';
+    $stmt=$db->prepare("INSERT INTO support_case_messages (case_id,sender_role,sender_email,message) VALUES (?,?,?,?)");
+    $stmt->bind_param('isss',$caseId,$role,$user_email,$message);$stmt->execute();$stmt->close();
+    createUserNotification($db,$user_email,'Support case created','Your support case '.$caseNumber.' has been opened.','Support','/dashboard-v3/support/detail/?id='.$caseId);
+    $db->close();
+    v3PostMessage('success','Support case '.$caseNumber.' was created.');
+    v3Redirect('/dashboard-v3/support/detail/?id='.$caseId);
+}
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_reply_support_case'])) {
+    v3VerifyPost();
+    $caseId=(int)($_POST['case_id']??0);$message=trim((string)($_POST['message']??''));
+    if($caseId<=0||$message===''){v3PostMessage('error','Enter a message before sending.');v3Redirect('/dashboard-v3/support/');}
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT status FROM support_cases WHERE id=? AND user_email=? LIMIT 1");$stmt->bind_param('is',$caseId,$user_email);$stmt->execute();$row=$stmt->get_result()->fetch_assoc();$stmt->close();
+    if(!$row){$db->close();v3PostMessage('error','Support case not found.');v3Redirect('/dashboard-v3/support/');}
+    if(in_array($row['status'],['Resolved','Closed'],true)){
+        $stmt=$db->prepare("UPDATE support_cases SET status='Open',resolved_at=NULL,last_customer_message_at=NOW() WHERE id=? AND user_email=?");$stmt->bind_param('is',$caseId,$user_email);$stmt->execute();$stmt->close();
+    }else{
+        $stmt=$db->prepare("UPDATE support_cases SET last_customer_message_at=NOW() WHERE id=? AND user_email=?");$stmt->bind_param('is',$caseId,$user_email);$stmt->execute();$stmt->close();
+    }
+    $role='Customer';$stmt=$db->prepare("INSERT INTO support_case_messages (case_id,sender_role,sender_email,message) VALUES (?,?,?,?)");$stmt->bind_param('isss',$caseId,$role,$user_email,$message);$stmt->execute();$stmt->close();$db->close();
+    v3PostMessage('success','Your message was added to the support case.');v3Redirect('/dashboard-v3/support/detail/?id='.$caseId);
 }
 
 if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['v3_add_beneficiary'])) {

@@ -45,10 +45,10 @@ v3FlashMessages();
   <aside class="v3-panel">
     <div class="v3-section-head"><div><span class="v3-kicker">CONTROLS</span><h2>Security settings</h2></div></div>
     <div class="v3-settings-list">
-      <a href="/dashboard/security/change-password/"><span class="material-symbols-rounded">password</span><div><strong>Change password</strong><small>Update the password used for online banking.</small></div><span class="material-symbols-rounded">chevron_right</span></a>
+      <a href="/dashboard-v3/security/change-password/"><span class="material-symbols-rounded">password</span><div><strong>Change password</strong><small>Update the password used for online banking.</small></div><span class="material-symbols-rounded">chevron_right</span></a>
       <a href="/dashboard-v3/preferences/"><span class="material-symbols-rounded">tune</span><div><strong>Alert preferences</strong><small>Manage stored notification and statement preferences.</small></div><span class="material-symbols-rounded">chevron_right</span></a>
       <a href="/security-v2/"><span class="material-symbols-rounded">policy</span><div><strong>Security & Fraud Center</strong><small>Review public guidance for suspicious activity.</small></div><span class="material-symbols-rounded">chevron_right</span></a>
-      <a href="/support-v2/"><span class="material-symbols-rounded">support_agent</span><div><strong>Security support</strong><small>Contact support if something looks wrong.</small></div><span class="material-symbols-rounded">chevron_right</span></a>
+      <a href="/dashboard-v3/support/"><span class="material-symbols-rounded">support_agent</span><div><strong>Security support</strong><small>Open an authenticated support case if something looks wrong.</small></div><span class="material-symbols-rounded">chevron_right</span></a>
     </div>
   </aside>
 </div>

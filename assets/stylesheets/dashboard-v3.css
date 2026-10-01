@@ -266,3 +266,24 @@ button{cursor:pointer}
 @media print{.v3-sidebar,.v3-topbar,.v3-demo,.v3-receipt-actions{display:none!important}.v3-shell{display:block}.v3-page{padding:0}.v3-panel{box-shadow:none;border:0}}
 
 .v3-nav a{position:relative}.v3-nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:inline-grid;place-items:center;background:#dce8f3;color:#183957;font-size:9px;font-weight:800}.v3-nav a.active .v3-nav-badge{background:#e9eef4;color:var(--navy)}
+
+.v3-support-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(310px,.7fr);gap:18px;align-items:start}
+.v3-support-case{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-top:1px solid #edf0f3}
+.v3-support-case:first-child{border-top:0}
+.v3-support-case strong{display:block;font-size:11px}
+.v3-support-case small{display:block;color:var(--muted);font-size:9px;line-height:1.55;margin-top:4px}
+.v3-support-case>a{font-size:9px;font-weight:800;color:#365f82}
+.v3-thread{display:grid;gap:12px;margin-top:16px}
+.v3-message{max-width:78%;padding:12px 13px;border-radius:13px;border:1px solid #e3e9ee;background:#f8fafb}
+.v3-message.customer{margin-left:auto;background:#102b45;color:#fff;border-color:#102b45}
+.v3-message.operator{margin-right:auto}
+.v3-message strong{display:block;font-size:9px;margin-bottom:5px}
+.v3-message p{margin:0;font-size:10px;line-height:1.6}
+.v3-message small{display:block;font-size:8px;margin-top:7px;color:#7b8a98}
+.v3-message.customer small{color:#a9bac8}
+.v3-case-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding-bottom:16px;border-bottom:1px solid #edf0f3}
+.v3-case-head h1{font-family:Manrope,sans-serif;font-size:25px;margin:5px 0 6px}
+.v3-case-meta{display:flex;gap:7px;flex-wrap:wrap}
+.v3-case-meta span{border:1px solid #e1e7ec;background:#f7f9fb;border-radius:999px;padding:5px 8px;font-size:8px;color:#68788a;font-weight:700}
+@media(max-width:900px){.v3-support-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.v3-support-case{grid-template-columns:38px minmax(0,1fr)}.v3-support-case>a{grid-column:2}.v3-message{max-width:92%}.v3-case-head{display:block}}

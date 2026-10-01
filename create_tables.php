@@ -173,6 +173,37 @@ $queries = [
         INDEX idx_notifications_unread (user_email, is_read)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
+    "CREATE TABLE IF NOT EXISTS support_cases (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        case_number VARCHAR(32) NOT NULL UNIQUE,
+        user_email VARCHAR(190) NOT NULL,
+        category VARCHAR(80) NOT NULL,
+        subject VARCHAR(190) NOT NULL,
+        status VARCHAR(40) NOT NULL DEFAULT 'Open',
+        priority VARCHAR(30) NOT NULL DEFAULT 'Normal',
+        related_transaction_id VARCHAR(40) DEFAULT NULL,
+        assigned_to VARCHAR(190) DEFAULT NULL,
+        last_customer_message_at DATETIME DEFAULT NULL,
+        last_operator_message_at DATETIME DEFAULT NULL,
+        resolved_at DATETIME DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_support_cases_user_email (user_email),
+        INDEX idx_support_cases_status (status),
+        INDEX idx_support_cases_updated_at (updated_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+    "CREATE TABLE IF NOT EXISTS support_case_messages (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        case_id BIGINT UNSIGNED NOT NULL,
+        sender_role VARCHAR(30) NOT NULL,
+        sender_email VARCHAR(190) NOT NULL,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_support_case_messages_case (case_id),
+        INDEX idx_support_case_messages_created (created_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
     "CREATE TABLE IF NOT EXISTS security_events (
         id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         user_email VARCHAR(190) NOT NULL,
@@ -374,7 +405,7 @@ if ($seedStmt) {
 header('Content-Type: text/plain');
 if (empty($errors)) {
     echo "Success: database tables are ready.\n";
-    echo "Tables managed: users, accounts, transactions, fx_trades, beneficiaries, notifications, security_events, user_preferences, kyc_data, dynamic_data.\n";
+    echo "Tables managed: users, accounts, transactions, fx_trades, beneficiaries, notifications, support_cases, support_case_messages, security_events, user_preferences, kyc_data, dynamic_data.\n";
 } else {
     echo "Finished with errors:\n- " . implode("\n- ", $errors) . "\n";
 }
