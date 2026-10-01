@@ -19,8 +19,6 @@ $supportWhatsappLink = getSupportWhatsappLink();
     <link rel="stylesheet" href="/assets/stylesheets/home-v2.css?v=<?php echo time(); ?>">
 </head>
 <body>
-<div class="hv2-demo">DEMO ENVIRONMENT</div>
-
 <div class="hv2-utility">
     <div class="hv2-container hv2-utility-inner">
         <div>
@@ -273,7 +271,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
             </div>
         </div>
         <div class="hv2-footer-bottom">
-            <span>© <?php echo date('Y'); ?> Velmora Bank. Demo environment.</span>
+            <span>© <?php echo date('Y'); ?> Velmora Bank.</span>
             <span>400 Park Ave, New York, NY 10022, United States</span>
         </div>
     </div>
