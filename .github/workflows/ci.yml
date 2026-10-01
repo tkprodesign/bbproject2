@@ -1,0 +1,25 @@
+name: Velmora PHP CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint active PHP
+        run: |
+          set -euo pipefail
+          find . \
+            -path './archive' -prune -o \
+            -path './docs/archive' -prune -o \
+            -path './PHPMailer' -prune -o \
+            -name '*.php' -print0 | xargs -0 -n1 php -l
+          echo "PHP_LINT_OK=YES"
