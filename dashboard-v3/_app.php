@@ -177,7 +177,7 @@ function v3Beneficiaries(string $email, bool $activeOnly = true): array {
 
 function v3UserPreferences(string $email): array {
     $defaults = [
-        'timezone' => 'UTC',
+        'timezone' => 'America/New_York',
         'language' => 'en',
         'email_transaction_alerts' => 1,
         'email_security_alerts' => 1,
@@ -199,11 +199,7 @@ function v3UserPreferences(string $email): array {
 }
 
 function v3Notify(mysqli $db, string $email, string $title, string $body, string $type = 'General', ?string $url = null): void {
-    $stmt = $db->prepare("INSERT INTO notifications (user_email, title, body, notification_type, action_url) VALUES (?, ?, ?, ?, ?)");
-    if (!$stmt) return;
-    $stmt->bind_param('sssss', $email, $title, $body, $type, $url);
-    $stmt->execute();
-    $stmt->close();
+    createUserNotification($db, $email, $title, $body, $type, $url);
 }
 
 function v3OwnedAccount(mysqli $db, string $email, string $accountNumber): ?array {
@@ -297,8 +293,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_mark_notifications
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_save_preferences'])) {
     v3VerifyPost();
-    $timezone = trim((string)($_POST['timezone'] ?? 'UTC'));
-    if (!in_array($timezone, DateTimeZone::listIdentifiers(), true)) $timezone = 'UTC';
+    $timezone = trim((string)($_POST['timezone'] ?? 'America/New_York'));
+    if (!in_array($timezone, DateTimeZone::listIdentifiers(), true)) $timezone = 'America/New_York';
     $language = 'en';
     $transactionAlerts = isset($_POST['email_transaction_alerts']) ? 1 : 0;
     $securityAlerts = isset($_POST['email_security_alerts']) ? 1 : 0;
