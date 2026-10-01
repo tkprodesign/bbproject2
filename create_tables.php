@@ -190,7 +190,7 @@ $queries = [
     "CREATE TABLE IF NOT EXISTS user_preferences (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         user_email VARCHAR(190) NOT NULL UNIQUE,
-        timezone VARCHAR(80) NOT NULL DEFAULT 'UTC',
+        timezone VARCHAR(80) NOT NULL DEFAULT 'America/New_York',
         language VARCHAR(12) NOT NULL DEFAULT 'en',
         email_transaction_alerts TINYINT(1) NOT NULL DEFAULT 1,
         email_security_alerts TINYINT(1) NOT NULL DEFAULT 1,
