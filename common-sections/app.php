@@ -234,8 +234,12 @@ function loadPHPMailerClasses(): bool {
 }
 
 function getEmailPasswordForSender(string $fromEmail): string {
+    $supportPassword = getenv('SUPPORT_EMAIL_PASSWORD') ?: '';
     $passwordsBySender = [
-        'support@velmorabank.us' => getenv('SUPPORT_EMAIL_PASSWORD') ?: '',
+        'support@velmorabank.us' => $supportPassword,
+        // Security is operated by the same head of Support/Security and intentionally
+        // shares the Support mailbox credential. Do not introduce a separate security password.
+        'security@velmorabank.us' => $supportPassword,
         'admin@velmorabank.us' => getenv('ADMIN_EMAIL_PASSWORD') ?: '',
         'no-reply@velmorabank.us' => getenv('NOREPLY_EMAIL_PASSWORD') ?: '',
     ];
