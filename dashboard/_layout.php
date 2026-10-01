@@ -75,6 +75,7 @@ function v3PageEnd(): void {
         </div>
     </main>
 </div>
+<?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?>
 <script src="/assets/scripts/dashboard-v3.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
