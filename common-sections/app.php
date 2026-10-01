@@ -303,6 +303,12 @@ function requireLoginForInternalPages() {
         '/quick-links',
         '/online-banking',
         '/home-v2',
+        '/personal-v2',
+        '/business-v2',
+        '/credit-card-v2',
+        '/loan-v2',
+        '/online-banking-v2',
+        '/international-v2',
         '/cookie-policy',
         '/assets',
     ];
