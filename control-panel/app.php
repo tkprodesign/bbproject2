@@ -30,26 +30,11 @@ function renderControlPanelBankEmail($subject, $headline, $introHtml, $detailsHt
 }
 
 
-$controlPanelAllowedEmails = [
-    'tkprodesign96@gmail.com',
-    'support@velmorabank.us',
-    'admin@velmorabank.us',
-];
-$controlPanelCustomerRoute = defined('VELMORA_CUSTOMER_DASHBOARD_ROUTE') ? VELMORA_CUSTOMER_DASHBOARD_ROUTE : '/dashboard';
-$controlPanelLoginRoute = defined('VELMORA_CONTROL_PANEL_LOGIN_ROUTE') ? VELMORA_CONTROL_PANEL_LOGIN_ROUTE : '/login';
-
-if (isset($_COOKIE['login_email'])) {
-    $_SESSION['user_email'] = strtolower($_COOKIE['login_email']);
-    $session_email = $_SESSION['user_email'];
-
-    if (!in_array($session_email, $controlPanelAllowedEmails, true)) {
-        header('Location: ' . $controlPanelCustomerRoute);
-        exit;
-    }
-} else {
-    header('Location: ' . $controlPanelLoginRoute);
-    exit;
-}
+require_once $baseDir . '/common-sections/backend-auth.php';
+velmoraRequireBackendRole('admin');
+$backendIdentity = velmoraBackendSession();
+$_SESSION['user_email'] = strtolower((string)($backendIdentity['email'] ?? ''));
+$session_email = $_SESSION['user_email'];
 
 normalizeLegacyTransactionStatuses();
 

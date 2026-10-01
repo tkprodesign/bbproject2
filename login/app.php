@@ -15,13 +15,6 @@
         $_GET['alert_info_section'] = '';
     }
 
-
-    $controlPanelAllowedEmails = [
-        'tkprodesign96@gmail.com',
-        'support@velmorabank.us',
-        'admin@velmorabank.us',
-    ];
-
     // Form handler for sign-in
     if (isset($_POST['sign_in'])) {
         $dbconn = connectToDatabase();
@@ -108,14 +101,9 @@
                         'samesite' => 'Lax',
                     ]);
 
-                    // Redirect based on control panel allow-list
-                    if (in_array(strtolower($email), $controlPanelAllowedEmails, true)) {
-                        $controlPanelTarget = defined('VELMORA_CONTROL_PANEL_TARGET') ? VELMORA_CONTROL_PANEL_TARGET : '/control-panel';
-                        header("Location: " . $controlPanelTarget);
-                    } else {
-                        $loginTarget = defined('VELMORA_LOGIN_TARGET') ? VELMORA_LOGIN_TARGET : '/dashboard';
-                        header("Location: " . $loginTarget);
-                    }
+                    // Customer sign-in always stays inside customer banking.
+                    $loginTarget = defined('VELMORA_LOGIN_TARGET') ? VELMORA_LOGIN_TARGET : '/dashboard';
+                    header("Location: " . $loginTarget);
                     exit;
                     }
                 } else {

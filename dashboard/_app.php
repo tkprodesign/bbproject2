@@ -421,6 +421,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_exchange']
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_quote_transfer'])) {
     v3VerifyPost();
     $from = preg_replace('/\D+/', '', (string)($_POST['from_account'] ?? ''));
+    $recipientName = trim((string)($_POST['recipient_name'] ?? ''));
     $bank = trim((string)($_POST['bank_name'] ?? ''));
     $recipient = trim((string)($_POST['account_number'] ?? ''));
     $accountType = trim((string)($_POST['account_type'] ?? ''));
@@ -429,7 +430,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_quote_transfer']))
 
     $db = connectToDatabase();
     $source = v3OwnedAccount($db, $user_email, $from);
-    if (!$source || $source['account_status'] !== 'Active' || $bank === '' || $recipient === '' || $amount === false || $amount <= 0 || !velmoraIsSupportedCurrency($recipientCurrency)) {
+    if (!$source || $source['account_status'] !== 'Active' || $recipientName === '' || $recipient === '' || $amount === false || $amount <= 0 || !velmoraIsSupportedCurrency($recipientCurrency)) {
         $db->close();
         v3PostMessage('error', 'Complete all transfer details correctly.');
         v3Redirect('/dashboard/transfer/');
@@ -454,6 +455,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_quote_transfer']))
         'from_account' => $from,
         'source_currency' => $source['currency'],
         'amount' => (float)$amount,
+        'recipient_name' => $recipientName,
         'bank_name' => $bank,
         'recipient_account' => $recipient,
         'recipient_account_type' => $accountType ?: 'Not Sure',
@@ -488,7 +490,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_transfer']
         $status = 'Pending';
         $amount = -abs((float)$quote['amount']);
         $now = time();
-        $description = 'Transfer to ' . $quote['bank_name'] . ' account number ' . $quote['recipient_account'];
+        $recipientName = (string)$quote['recipient_name'];
+        $description = 'Transfer to ' . $recipientName . ' account number ' . $quote['recipient_account'];
         $sourceAccount = (string)$quote['from_account'];
         $sourceCurrency = (string)$quote['source_currency'];
         $recipientCurrency = (string)$quote['recipient_currency'];
@@ -500,9 +503,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_transfer']
         $recipient = (string)$quote['recipient_account'];
 
         $stmt = $db->prepare("INSERT INTO transactions
-            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,to_bank_name,to_account_type,to_account_number,counter_currency,counter_amount,fx_rate,fx_spread_bps)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $stmt->bind_param('sssidsssissssddi', $txid, $type, $user_email, $sourceAccount, $amount, $sourceCurrency, $description, $status, $now, $bank, $acctType, $recipient, $recipientCurrency, $recipientAmount, $rate, $spread);
+            (transaction_id,type,user_email,account_number,amount,currency,description,status,time,to_bank_name,recipient_name,to_account_type,to_account_number,counter_currency,counter_amount,fx_rate,fx_spread_bps)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param('ssssdsssisssssddi', $txid, $type, $user_email, $sourceAccount, $amount, $sourceCurrency, $description, $status, $now, $bank, $recipientName, $acctType, $recipient, $recipientCurrency, $recipientAmount, $rate, $spread);
         $stmt->execute();
         $stmt->close();
 
@@ -526,7 +529,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_execute_transfer']
             $db,
             $user_email,
             'Transfer submitted',
-            'Transfer ' . $txid . ' to ' . $bank . ' account ending ' . substr($recipient, -4) . ' has been submitted for processing.',
+            'Transfer ' . $txid . ' to ' . $recipientName . ' account ending ' . substr($recipient, -4) . ' has been submitted for processing.',
             'Transfer',
             '/dashboard/transactions/detail/?ref=' . urlencode($txid)
         );
