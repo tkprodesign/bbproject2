@@ -196,6 +196,24 @@ jobs:
             php -r '"'"'echo function_exists("imap_open") ? "IMAP_RUNTIME=READY\n" : "IMAP_RUNTIME=MISSING\n";'"'"'
           '
 
+      - name: Check outbound mail transport
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/velmora-mail-check.php" <<'PHP'
+          <?php
+          require getcwd() . '/common-sections/app.php';
+          $resend = trim((string)(getenv('RESEND_API_KEY') ?: '')) !== '';
+          $curl = function_exists('curl_init');
+          echo 'OUTBOUND_MAIL_TRANSPORT=' . ($resend ? 'RESEND' : 'SPACEMAIL_FALLBACK') . PHP_EOL;
+          echo 'RESEND_HTTP_RUNTIME=' . ($curl ? 'READY' : 'MISSING') . PHP_EOL;
+          if ($resend && !$curl) {
+              fwrite(STDERR, "RESEND_API_KEY is configured but PHP cURL is unavailable.\n");
+              exit(1);
+          }
+          PHP
+          scp -q -P "$SSH_PORT" "$RUNNER_TEMP/velmora-mail-check.php" "$SSH_USER@$SSH_HOST:velmora-mail-check.php"
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd '$LIVE_APP_ROOT'; php '$HOME/velmora-mail-check.php'; rm -f '$HOME/velmora-mail-check.php'"
+
       - name: Lint PHP files
         run: |
           set -euo pipefail
