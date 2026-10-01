@@ -29,7 +29,7 @@ require_once('../login/app.php');
     <form method="post" class="pv2-form">
       <label><span>Email address</span><input type="email" name="email" autocomplete="username" required placeholder="you@example.com"></label>
       <label><span>Password</span><input type="password" name="password" autocomplete="current-password" required placeholder="Enter your password"></label>
-      <div class="pv2-auth-row"><label class="pv2-auth-check"><input type="checkbox" name="remember_me" value="1">Keep me signed in</label><a class="pv2-auth-link" href="/support-v2/">Password help</a></div>
+      <div class="pv2-auth-row"><label class="pv2-auth-check"><input type="checkbox" name="remember_me" value="1">Keep me signed in</label><a class="pv2-auth-link" href="/forgot-password-v2/">Forgot password?</a></div>
       <button class="pv2-btn primary pv2-auth-submit" type="submit" name="sign_in" value="sign-in">Sign in securely</button>
     </form>
     <div class="pv2-auth-divider"></div>
