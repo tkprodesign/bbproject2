@@ -1,0 +1,175 @@
+@import url("/assets/stylesheets/mobile/main.css");
+section.hero .content {
+  place-content: center;
+}
+section.hero .content h1 {
+  width: unset;
+  font-size: 40px;
+  line-height: 1.15;
+}
+section.hero .content p {
+  width: unset;
+}
+section.hero .content :is(h2, h3, h4, h5, h6) {
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+section.stats .stats {
+  position: unset;
+  transform: unset;
+}
+section.stats .stats .container {
+  flex-direction: column;
+  gap: 64px;
+  justify-content: unset;
+}
+
+section.steps .container {
+  grid-template-columns: 100%;
+  gap: 64px;
+}
+
+section.services .row {
+  grid-template-columns: 100%;
+}
+
+section.credit-card .container {
+  width: 100%;
+  max-width: unset;
+}
+section.credit-card .container .content {
+  max-width: 960px;
+  grid-template-columns: 100%;
+  gap: 64px;
+}
+section.credit-card .container .content .left .lists {
+  grid-template-columns: 100%;
+}
+section.credit-card .container .content .right {
+  max-width: 500px;
+}/*# sourceMappingURL=home.css.map */
+.hero.hero-static .hero-static-inner { padding: 74px 0 108px; }
+.hero.hero-static {
+  background-image: linear-gradient(90deg, rgba(10, 28, 52, 0.58), rgba(10, 28, 52, 0.34)), url("/assets/images/home/hero/consulting-banner.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.hero.hero-static .content h1 { font-size: 32px; line-height: 1.18; }
+.hero.hero-static .content p { font-size: 16px; }
+.hero-actions a { width: 100%; text-align: center; }
+section.trust-strip { margin-top: 10px; }
+section.trust-strip .container { grid-template-columns: 1fr; padding: 14px; }
+section.loan-calculator .container { grid-template-columns: 1fr; gap: 14px; }
+section.loan-calculator .container .right { width: 100%; left: unset; bottom: unset; padding: 20px; min-height: 470px; }
+section.loan-calculator .container .left { padding-bottom: 0; }
+section.features-3 .swiper-slide img { height: 180px; }
+section.faq .container { padding: 18px; }
+footer .container .left { grid-template-columns: 1fr; }
+section.features-3 .container .swiper-2 { overflow: hidden; }
+section.features-3 .container .swiper-2 .swiper-slide { height: auto; }
+section.features-3 .container .swiper-2 .swiper-slide img { height: 170px; object-fit: cover; }
+section.features-2 .container .features .feature { width: 100%; min-height: 128px; }
+section.benefits .container .benefits .center { position: static; transform: none; margin-top: 12px; justify-content: center; }
+section.benefits .container .benefits .center > div { width: 46px; height: 46px; }
+section.benefits .container .benefits .right { min-height: 320px; height: auto; }
+
+@media (max-width: 720px) {
+  .hero.hero-static .hero-static-inner { padding: 64px 0 96px; }
+  .hero.hero-static .content h1 { font-size: 30px; line-height: 1.2; }
+  .hero-actions { gap: 10px; margin-bottom: 32px; }
+  section.trust-strip { margin-top: 10px; z-index: 2; }
+  section.trust-strip .container { gap: 8px; padding: 12px; }
+
+  section.features-2 .container .features { gap: 10px; }
+  section.features-2 .container .features .feature {
+    min-height: 136px;
+    padding: 16px 14px;
+    overflow: hidden;
+  }
+  section.features-2 .container .features .feature svg,
+  section.features-2 .container .features .feature img { margin: 0 auto; }
+  section.features-2 .container .features .feature span { text-align: center; line-height: 1.35; }
+
+  section.benefits { padding-top: 34px; }
+  section.benefits .container .benefits { padding: 14px; gap: 14px; }
+  section.benefits .container .benefits .left { min-height: 220px; background-color: #e9eff6; }
+  section.benefits .container .benefits .left img { width: 100%; height: 100%; object-fit: cover; }
+  section.benefits .container .benefits .right { min-height: auto; padding: 0; }
+  section.benefits .container .benefits .right .benefit h2 { font-size: 22px; }
+
+  section.loan-calculator .container { gap: 16px; }
+  section.loan-calculator .container .left .details,
+  section.loan-calculator .container .left .calculator { padding: 16px; }
+  section.loan-calculator .container .left .calculator p { margin-bottom: 12px; }
+  section.loan-calculator .container .left .calculator .salary-live-input,
+  section.loan-calculator .container .left .calculator .loan-tenor-select { width: 100%; margin-bottom: 14px; }
+  section.loan-calculator .container .left .calculator .toggle-box { margin: 8px auto 0; }
+  section.loan-calculator .container .right { padding: 16px; min-height: auto; }
+  section.loan-calculator .container .right div { margin: 14px 0; }
+  section.loan-calculator .container .right a { width: 100%; }
+}
+
+@media (max-width: 720px) {
+  section.loan-calculator .container .left .calculator .salary-live-input { display: none !important; }
+}
+
+
+
+@media (max-width: 720px) {
+  section.benefits { padding: 30px 0 12px; }
+  section.benefits .container .benefits { gap: 14px; }
+  section.benefits .container .benefits > .center {
+    position: static;
+    transform: none;
+    margin: 10px 0 8px;
+    justify-content: center;
+    z-index: 1;
+  }
+  section.benefits .container .benefits > .center > .nav-prev,
+  section.benefits .container .benefits > .center > .nav-next {
+    width: 48px;
+    height: 48px;
+  }
+  section.benefits .container .benefits > .right {
+    position: static;
+    min-height: 0;
+    height: auto;
+    padding: 0;
+  }
+  section.benefits .container .benefits > .right .benefit {
+    position: static;
+    top: auto;
+    left: auto;
+    height: auto;
+    display: none;
+    place-content: initial;
+    padding: 0;
+  }
+  section.benefits .container .benefits > .right .benefit h2 {
+    margin: 0 0 10px;
+    line-height: 1.2;
+    font-size: 22px;
+  }
+  section.benefits .container .benefits > .right .benefit p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  section.features-3 { margin-top: 18px; }
+  section.features-3 .container {
+    padding: 24px 16px 90px;
+  }
+  section.features-3 .container .heading {
+    margin-bottom: 14px;
+  }
+  section.features-3 .container .heading h2 {
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  section.features-3 .container .heading p {
+    margin: 0;
+    line-height: 1.55;
+  }
+}
