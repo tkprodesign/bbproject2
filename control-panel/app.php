@@ -35,17 +35,19 @@ $controlPanelAllowedEmails = [
     'support@velmorabank.us',
     'admin@velmorabank.us',
 ];
+$controlPanelCustomerRoute = defined('VELMORA_CUSTOMER_DASHBOARD_ROUTE') ? VELMORA_CUSTOMER_DASHBOARD_ROUTE : '/dashboard';
+$controlPanelLoginRoute = defined('VELMORA_CONTROL_PANEL_LOGIN_ROUTE') ? VELMORA_CONTROL_PANEL_LOGIN_ROUTE : '/login';
 
 if (isset($_COOKIE['login_email'])) {
     $_SESSION['user_email'] = strtolower($_COOKIE['login_email']);
     $session_email = $_SESSION['user_email'];
 
     if (!in_array($session_email, $controlPanelAllowedEmails, true)) {
-        header('Location: /dashboard');
+        header('Location: ' . $controlPanelCustomerRoute);
         exit;
     }
 } else {
-    header('Location: /login');
+    header('Location: ' . $controlPanelLoginRoute);
     exit;
 }
 
