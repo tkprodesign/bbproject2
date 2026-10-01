@@ -11,7 +11,7 @@
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
   <div><span class="pv2-eyebrow">LOANS &amp; FINANCING</span><h1>Borrowing should start with clarity.</h1>
   <p>Understand the structure before you apply. Velmora’s lending journey is designed around a clear estimate, an application review and a final decision—not vague promises.</p>
-  <div class="pv2-actions"><a class="pv2-btn primary" href="#estimator">Estimate borrowing</a><a class="pv2-btn secondary" href="/contact/">Speak to lending support</a></div></div>
+  <div class="pv2-actions"><a class="pv2-btn primary" href="#estimator">Estimate borrowing</a><a class="pv2-btn secondary" href="/contact-v2/">Speak to lending support</a></div></div>
   <div class="pv2-hero-image"><img src="/assets/images/home/features/mortgage-and-loans.jpg" alt="Loans and financing"><div class="pv2-image-note"><small>LENDING</small><strong>Estimate → Apply → Review → Decision</strong></div></div>
 </div></section>
 
@@ -54,6 +54,6 @@
   <div class="pv2-split-image"><img src="/assets/images/home/hero/consulting-banner.jpg" alt="Financial consultation"></div>
 </div></section>
 
-<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">LENDING SUPPORT</span><h2>Need help understanding the next step?</h2></div><div><a class="pv2-btn gold" href="/contact/">Talk to lending support</a><a class="pv2-btn secondary" href="#estimator">Use estimator</a></div></div></section>
+<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">LENDING SUPPORT</span><h2>Need help understanding the next step?</h2></div><div><a class="pv2-btn gold" href="/contact-v2/">Talk to lending support</a><a class="pv2-btn secondary" href="#estimator">Use estimator</a></div></div></section>
 </main>
 <?php include('../common-sections/public-v2-footer.php'); ?></body></html>
