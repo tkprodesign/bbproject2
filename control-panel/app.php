@@ -170,10 +170,13 @@ if (isset($_POST['credit_user'])) {
         $stmtCheck->close();
     } while ((int)$count > 0);
 
+    $channel = 'Control Panel';
+    $value_date = date('Y-m-d', $time);
+    $posted_at = date('Y-m-d H:i:s', $time);
     $stmt = $dbconn->prepare("INSERT INTO transactions
         (`type`, transaction_id, user_email, account_number, amount, currency, `description`, `status`, `time`,
-         counter_currency, counter_amount, fx_rate, fx_spread_bps)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+         counter_currency, counter_amount, fx_rate, fx_spread_bps, channel, value_date, posted_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
         $dbconn->close();
@@ -182,7 +185,7 @@ if (isset($_POST['credit_user'])) {
     }
 
     $stmt->bind_param(
-        'sssidsssisddi',
+        'sssidsssisddisss',
         $transaction_type,
         $transaction_id,
         $user_email,
@@ -195,7 +198,10 @@ if (isset($_POST['credit_user'])) {
         $input_currency,
         $input_amount,
         $fx_rate,
-        $fx_spread_bps
+        $fx_spread_bps,
+        $channel,
+        $value_date,
+        $posted_at
     );
 
     if (!$stmt->execute()) {
@@ -207,6 +213,14 @@ if (isset($_POST['credit_user'])) {
     }
 
     $stmt->close();
+    createUserNotification(
+        $dbconn,
+        $user_email,
+        'Deposit posted',
+        'A deposit of ' . velmoraFormatCurrency($credited_amount, $account_currency) . ' has been posted to account ending ' . substr((string)$account_number, -4) . '.',
+        'Deposit',
+        '/dashboard-v3/transactions/'
+    );
     $dbconn->close();
 
     $formatted_time = date('H:i | d F Y /T', $time);
@@ -298,12 +312,15 @@ if (isset($_POST['debit_user'])) {
     } while ((int)$count > 0);
 
     $negative_amount = -abs($debit_amount);
+    $channel = 'Control Panel';
+    $value_date = date('Y-m-d', $time);
+    $posted_at = date('Y-m-d H:i:s', $time);
     $stmt = $dbconn->prepare("INSERT INTO transactions
         (`type`, transaction_id, user_email, account_number, amount, currency, `description`, `status`, `time`,
-         counter_currency, counter_amount, fx_rate, fx_spread_bps)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+         counter_currency, counter_amount, fx_rate, fx_spread_bps, channel, value_date, posted_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param(
-        'sssidsssisddi',
+        'sssidsssisddisss',
         $transaction_type,
         $transaction_id,
         $user_email,
@@ -316,7 +333,10 @@ if (isset($_POST['debit_user'])) {
         $payout_currency,
         $payout_amount,
         $fx_rate,
-        $fx_spread_bps
+        $fx_spread_bps,
+        $channel,
+        $value_date,
+        $posted_at
     );
 
     if (!$stmt->execute()) {
@@ -328,6 +348,14 @@ if (isset($_POST['debit_user'])) {
     }
 
     $stmt->close();
+    createUserNotification(
+        $dbconn,
+        $user_email,
+        'Withdrawal posted',
+        'A withdrawal of ' . velmoraFormatCurrency($debit_amount, $account_currency) . ' has been posted to account ending ' . substr((string)$account_number, -4) . '.',
+        'Withdrawal',
+        '/dashboard-v3/transactions/'
+    );
     $dbconn->close();
 
     $formatted_time = date('H:i | d F Y /T', $time);
