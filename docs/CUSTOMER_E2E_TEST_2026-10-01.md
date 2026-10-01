@@ -200,6 +200,9 @@ For each email record:
 | 4 | Preferences save/persist | PASS | Africa/Lagos, Digital statements, transaction/security email alerts ON, in-app notifications ON; persisted after reload | — |
 | 5 | Customer support case creation | PASS | Case VLM-SUP-20261001-EB8AA6 created, General/Normal/Open | — |
 | 6 | Notification creation/read state | PASS | 'Support case created' appeared unread; Mark all read reduced unread count from 1 to 0 | — |
+| 7 | Open USD Personal Checking | PASS | QA USD Primary · 2262941241 · Active · USD 0.00 | — |
+| 8 | Open EUR Savings | PASS | QA EUR FX · 2605068880 · Active · EUR 0.00 | — |
+| 9 | Open GBP Current | PASS | QA GBP Status · 2778019838 · Active · GBP 0.00 | — |
 
 ## Final cleanup requirements
 - Return Cody customer relationship to Active.
