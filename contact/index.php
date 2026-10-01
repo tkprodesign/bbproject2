@@ -1,7 +1,11 @@
 <?php
 require_once('../common-sections/app.php');
+if(empty($_SESSION['contact_csrf'])){$_SESSION['contact_csrf']=bin2hex(random_bytes(24));}
+$contactCsrf=(string)$_SESSION['contact_csrf'];
 $contactSuccess=false;$contactError='';
 if(isset($_POST['contact_submit'])){
+  $submittedCsrf=(string)($_POST['csrf']??'');
+  if($submittedCsrf===''||!hash_equals($contactCsrf,$submittedCsrf)){$contactError='Please refresh the page and submit your request again.';}else{
   $fullName=trim((string)($_POST['full_name']??''));$fromEmail=trim((string)($_POST['email']??''));$subject=trim((string)($_POST['subject']??''));$message=trim((string)($_POST['message']??''));
   if($fullName!==''&&filter_var($fromEmail,FILTER_VALIDATE_EMAIL)&&$subject!==''&&$message!==''){
     $safeName=htmlspecialchars($fullName,ENT_QUOTES,'UTF-8');$safeEmail=htmlspecialchars($fromEmail,ENT_QUOTES,'UTF-8');$safeSubject=htmlspecialchars($subject,ENT_QUOTES,'UTF-8');$safeMessage=nl2br(htmlspecialchars($message,ENT_QUOTES,'UTF-8'));
@@ -9,6 +13,7 @@ if(isset($_POST['contact_submit'])){
     $body='<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f3f6f8;padding:24px"><div style="max-width:640px;margin:auto;background:#fff;border:1px solid #e4e9ef;border-radius:12px;overflow:hidden"><div style="background:#0b2239;padding:20px;color:#fff"><strong>Velmora Bank — Contact Request</strong></div><div style="padding:24px"><p><strong>Name:</strong> '.$safeName.'</p><p><strong>Email:</strong> '.$safeEmail.'</p><p><strong>Subject:</strong> '.$safeSubject.'</p><p><strong>Message:</strong><br>'.$safeMessage.'</p></div></div></body></html>';
     if(sendSiteEmail('support@velmorabank.us',$emailSubject,$body)){$contactSuccess=true;}else{$contactError='Your message could not be sent. Please use the published email or phone channel.';}
   }else{$contactError='Please complete all required fields with valid information.';}
+  }
 }
 $supportPhoneNumber=getSupportPhoneNumber();$supportWhatsappLink=getSupportWhatsappLink();
 ?>
@@ -29,6 +34,7 @@ $supportPhoneNumber=getSupportPhoneNumber();$supportWhatsappLink=getSupportWhats
 <div class="pv2-form-card"><span class="pv2-eyebrow">SEND A MESSAGE</span><h2>General support request</h2><p>Do not include passwords or one-time security codes. For suspected fraud or account compromise, use the Security & Fraud Center guidance and contact support directly.</p>
 <?php if($contactSuccess): ?><div class="pv2-alert success">Your message was sent successfully. Support can follow up using the contact information you provided.</div><?php elseif($contactError!==''): ?><div class="pv2-alert error"><?php echo htmlspecialchars($contactError); ?></div><?php endif; ?>
 <?php if(!$contactSuccess): ?><form method="post" class="pv2-form">
+<input type="hidden" name="csrf" value="<?php echo htmlspecialchars($contactCsrf,ENT_QUOTES,'UTF-8'); ?>">
 <label><span>Full name</span><input type="text" name="full_name" required value="<?php echo htmlspecialchars($_POST['full_name']??'',ENT_QUOTES,'UTF-8'); ?>"></label>
 <label><span>Email address</span><input type="email" name="email" required value="<?php echo htmlspecialchars($_POST['email']??'',ENT_QUOTES,'UTF-8'); ?>"></label>
 <label><span>Subject</span><input type="text" name="subject" required placeholder="What do you need help with?" value="<?php echo htmlspecialchars($_POST['subject']??'',ENT_QUOTES,'UTF-8'); ?>"></label>
@@ -40,8 +46,8 @@ $supportPhoneNumber=getSupportPhoneNumber();$supportWhatsappLink=getSupportWhats
 <div class="pv2-info-list">
 <div><span class="material-symbols-rounded">mail</span><div><strong>Email</strong><a href="mailto:support@velmorabank.us">support@velmorabank.us</a></div></div>
 <div><span class="material-symbols-rounded">call</span><div><strong>Phone / WhatsApp</strong><a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($supportPhoneNumber); ?></a></div></div>
-<div><span class="material-symbols-rounded">location_on</span><div><strong>Address</strong><small>400 Park Ave, New York, NY 10022, United States</small></div></div>
-<div><span class="material-symbols-rounded">schedule</span><div><strong>Published service hours</strong><small>Monday–Friday · 8:00 AM–8:00 PM EST</small></div></div>
+<div><span class="material-symbols-rounded">chat</span><div><strong>Secure support</strong><a href="/dashboard/support/">Sign in to open a traceable support case</a></div></div>
+<div><span class="material-symbols-rounded">security</span><div><strong>Security concerns</strong><a href="/security/">Use the Security &amp; Fraud Center guidance</a></div></div>
 </div>
 <div class="pv2-actions"><a class="pv2-btn secondary" href="/support/">Support Center</a><a class="pv2-btn secondary" href="/security/">Security & Fraud</a></div>
 </aside>
