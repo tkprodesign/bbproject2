@@ -183,9 +183,8 @@ function loadPHPMailerClasses(): bool {
 
 function getEmailPasswordForSender(string $fromEmail): string {
     $passwordsBySender = [
-        'admin@velmorabank.us' => getenv('ADMIN_EMAIL_PASSWORD') ?: '',
         'support@velmorabank.us' => getenv('SUPPORT_EMAIL_PASSWORD') ?: '',
-        'security@velmorabank.us' => getenv('SECURITY_EMAIL_PASSWORD') ?: '',
+        'admin@velmorabank.us' => getenv('ADMIN_EMAIL_PASSWORD') ?: '',
         'no-reply@velmorabank.us' => getenv('NOREPLY_EMAIL_PASSWORD') ?: '',
     ];
 
@@ -193,26 +192,80 @@ function getEmailPasswordForSender(string $fromEmail): string {
 }
 
 function getSecurityNoticeSender(): array {
-    $securityPassword = (string)(getenv('SECURITY_EMAIL_PASSWORD') ?: '');
-    if ($securityPassword !== '') {
+    if ((string)(getenv('RESEND_API_KEY') ?: '') !== '') {
         return ['email' => 'security@velmorabank.us', 'name' => 'Velmora Bank Security'];
     }
     return ['email' => 'support@velmorabank.us', 'name' => 'Velmora Bank Support'];
 }
 
-function sendSiteEmail(string $to, string $subject, string $htmlBody, string $fromEmail = 'no-reply@velmorabank.us', string $fromName = 'Velmora Bank Notifications'): bool {
+function sendSiteEmailViaResend(string $to, string $subject, string $htmlBody, string $fromEmail, string $fromName): bool {
+    $apiKey = trim((string)(getenv('RESEND_API_KEY') ?: ''));
+    if ($apiKey === '' || !function_exists('curl_init')) {
+        return false;
+    }
+
+    $fromEmail = strtolower(trim($fromEmail));
+    $allowedSenders = [
+        'support@velmorabank.us',
+        'security@velmorabank.us',
+        'no-reply@velmorabank.us',
+        'admin@velmorabank.us',
+    ];
+    if (!in_array($fromEmail, $allowedSenders, true)) {
+        error_log('Resend blocked an unapproved sender identity: '.$fromEmail);
+        return false;
+    }
+
+    $replyTo = $fromEmail === 'no-reply@velmorabank.us'
+        ? 'support@velmorabank.us'
+        : $fromEmail;
+
+    $payload = [
+        'from' => trim($fromName).' <'.$fromEmail.'>',
+        'to' => [$to],
+        'subject' => $subject,
+        'html' => $htmlBody,
+        'text' => trim(html_entity_decode(strip_tags($htmlBody), ENT_QUOTES, 'UTF-8')),
+        'reply_to' => $replyTo,
+    ];
+
+    $ch = curl_init('https://api.resend.com/emails');
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 20,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer '.$apiKey,
+            'Content-Type: application/json',
+        ],
+        CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+    ]);
+
+    $response = curl_exec($ch);
+    $statusCode = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if ($response !== false && $statusCode >= 200 && $statusCode < 300) {
+        return true;
+    }
+
+    error_log('Resend email failed for '.$fromEmail.' with HTTP '.$statusCode.($curlError !== '' ? ': '.$curlError : ''));
+    return false;
+}
+
+function sendSiteEmailViaSmtp(string $to, string $subject, string $htmlBody, string $fromEmail, string $fromName): bool {
     if (!loadPHPMailerClasses()) {
         return false;
     }
 
     $smtpHost = getenv('SMTP_HOST') ?: 'mail.spacemail.com';
-    $smtpPort = (int) (getenv('SMTP_PORT') ?: 465);
+    $smtpPort = (int)(getenv('SMTP_PORT') ?: 465);
     $smtpUser = getenv('SMTP_USERNAME') ?: $fromEmail;
     $smtpPassword = getEmailPasswordForSender($fromEmail);
     $smtpEncryption = strtolower(getenv('SMTP_ENCRYPTION') ?: ($smtpPort === 465 ? 'ssl' : 'tls'));
 
     if ($smtpPassword === '') {
-        error_log('SMTP password is not configured for ' . $fromEmail);
         return false;
     }
 
@@ -238,10 +291,31 @@ function sendSiteEmail(string $to, string $subject, string $htmlBody, string $fr
 
         return $mail->send();
     } catch (\PHPMailer\PHPMailer\Exception $exception) {
-        error_log('SMTP email failed: ' . $exception->getMessage());
+        error_log('SMTP email failed: '.$exception->getMessage());
         return false;
     }
 }
+
+function sendSiteEmail(string $to, string $subject, string $htmlBody, string $fromEmail = 'no-reply@velmorabank.us', string $fromName = 'Velmora Bank Notifications'): bool {
+    if ((string)(getenv('RESEND_API_KEY') ?: '') !== '') {
+        if (sendSiteEmailViaResend($to, $subject, $htmlBody, $fromEmail, $fromName)) {
+            return true;
+        }
+        error_log('Resend delivery failed; attempting SpaceMail SMTP fallback.');
+    }
+
+    // SpaceMail is the fallback transport. With the current single-mailbox plan,
+    // aliases should use Resend; support@ remains the physical mailbox.
+    $smtpFromEmail = strtolower($fromEmail) === 'support@velmorabank.us'
+        ? 'support@velmorabank.us'
+        : 'support@velmorabank.us';
+    $smtpFromName = strtolower($fromEmail) === 'support@velmorabank.us'
+        ? $fromName
+        : 'Velmora Bank Support';
+
+    return sendSiteEmailViaSmtp($to, $subject, $htmlBody, $smtpFromEmail, $smtpFromName);
+}
+
 
 function createUserNotification(mysqli $db, string $email, string $title, string $body, string $type = 'General', ?string $actionUrl = null): void {
     try {
