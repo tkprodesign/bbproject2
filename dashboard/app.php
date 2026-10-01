@@ -15,6 +15,8 @@ $controlPanelAllowedEmails = [
     'support@velmorabank.us',
     'admin@velmorabank.us',
 ];
+$dashboardLoginRoute = defined('VELMORA_LOGIN_ROUTE') ? VELMORA_LOGIN_ROUTE : '/login';
+$dashboardControlPanelRoute = defined('VELMORA_CONTROL_PANEL_ROUTE') ? VELMORA_CONTROL_PANEL_ROUTE : '/control-panel';
 
 if (isset($_COOKIE['login_email'])) {
     $cookieEmail = strtolower(trim((string)$_COOKIE['login_email']));
@@ -22,7 +24,7 @@ if (isset($_COOKIE['login_email'])) {
         setcookie('login_email', '', time() - 3600, '/');
         session_unset();
         session_destroy();
-        header('Location: /login');
+        header('Location: ' . $dashboardLoginRoute);
         exit;
     }
 
@@ -30,11 +32,11 @@ if (isset($_COOKIE['login_email'])) {
     $session_email = $_SESSION['user_email'];
 
     if (in_array($session_email, $controlPanelAllowedEmails, true)) {
-        header('Location: /control-panel');
+        header('Location: ' . $dashboardControlPanelRoute);
         exit;
     }
 } else {
-    header('Location: /login');
+    header('Location: ' . $dashboardLoginRoute);
     exit;
 }
 
@@ -55,7 +57,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
     session_unset();
     session_destroy();
     // Redirect to login page
-    header('Location: /login');
+    header('Location: ' . $dashboardLoginRoute);
     exit();
 }
 
@@ -84,7 +86,7 @@ if (empty($hasUser) || empty($user_email)) {
     setcookie('login_email', '', time() - 3600, '/');
     session_unset();
     session_destroy();
-    header('Location: /login');
+    header('Location: ' . $dashboardLoginRoute);
     exit;
 }
 
