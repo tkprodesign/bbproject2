@@ -26,6 +26,7 @@ require_once('../login/app.php');
   <div class="pv2-auth-card">
     <a class="pv2-auth-home" href="/"><span class="material-symbols-rounded">arrow_back</span>Back to Velmora</a>
     <h2>Sign in</h2><p>Use the email address and password registered with your Velmora profile.</p>
+    <?php if(isset($_GET['restricted'])&&$_GET['restricted']==='yes'): ?><div class="pv2-alert error" id="restrictedAccessNotice">Access to this Velmora customer profile is currently restricted. Please contact Velmora Bank Support for assistance.</div><?php endif; ?>
     <?php if(isset($_GET['error'])&&$_GET['error']==='yes'): ?><div class="pv2-alert error">The email or password was not accepted. Check your details and try again.</div><?php endif; ?>
     <form method="post" class="pv2-form">
       <label><span>Email address</span><input type="email" name="email" autocomplete="username" required placeholder="you@example.com"></label>
@@ -37,4 +38,8 @@ require_once('../login/app.php');
     <div class="pv2-auth-bottom">New to Velmora? <a href="/signup/">Open an account</a></div>
   </div>
 </section>
-</main><?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?></body></html>
+</main><?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?>
+<script>
+const restrictedNotice=document.getElementById('restrictedAccessNotice');
+if(restrictedNotice){setTimeout(()=>{restrictedNotice.style.transition='opacity .35s ease';restrictedNotice.style.opacity='0';setTimeout(()=>restrictedNotice.remove(),400);},6500);}
+</script></body></html>
