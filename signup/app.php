@@ -51,8 +51,9 @@ if (isset($_POST['sign_up'])) {
         $stmt->close();
         $dbconn->close();
 
-        // Stay on signup page after successful registration
-        header('location: /signup/?registered=true');
+        // Redirect to the requested onboarding experience when supplied.
+        $signupSuccessTarget = defined('VELMORA_SIGNUP_SUCCESS_TARGET') ? VELMORA_SIGNUP_SUCCESS_TARGET : '/signup/?registered=true';
+        header('Location: ' . $signupSuccessTarget);
         exit;
     }
 }
