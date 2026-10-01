@@ -89,4 +89,4 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['request_reset'])){
     <?php endif; ?>
   </div>
 </section>
-</main></body></html>
+</main><?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?></body></html>

@@ -18,4 +18,5 @@
     </div>
   </div>
 </footer>
+<?php include __DIR__ . '/smartsupp-live-chat.html'; ?>
 <script src="/assets/scripts/public-v2.js?v=<?php echo time(); ?>"></script>

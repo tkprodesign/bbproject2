@@ -20,4 +20,4 @@
   </div>
   <div class="pv2-actions"><a class="pv2-btn primary" href="/login/">Continue to sign in <span class="material-symbols-rounded">arrow_forward</span></a><a class="pv2-btn secondary" href="/">Return home</a></div>
 </div>
-</div></main></body></html>
+</div></main><?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?></body></html>

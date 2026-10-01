@@ -83,4 +83,4 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['reset_password'])){
     <?php endif; ?>
   </div>
 </section>
-</main></body></html>
+</main><?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?></body></html>

@@ -279,6 +279,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
     </div>
 </footer>
 
+<?php include __DIR__ . '/common-sections/smartsupp-live-chat.html'; ?>
 <script src="/assets/scripts/home-v2.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

@@ -37,4 +37,4 @@ require_once('../login/app.php');
     <div class="pv2-auth-bottom">New to Velmora? <a href="/signup/">Open an account</a></div>
   </div>
 </section>
-</main></body></html>
+</main><?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?></body></html>
