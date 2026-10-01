@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="pv2-footer-bottom">
-      <span>© <?php echo date('Y'); ?> Velmora Bank. Demo environment.</span>
+      <span>© <?php echo date('Y'); ?> Velmora Bank.</span>
       <span>400 Park Ave, New York, NY 10022, United States</span>
     </div>
   </div>
