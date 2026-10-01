@@ -84,6 +84,7 @@ $queries = [
         restriction_reason TEXT DEFAULT NULL,
         restricted_by VARCHAR(190) DEFAULT NULL,
         restricted_at DATETIME DEFAULT NULL,
+        session_version INT UNSIGNED NOT NULL DEFAULT 1,
         last_login_at DATETIME DEFAULT NULL,
         last_login_ip VARCHAR(45) DEFAULT NULL,
         login_count INT UNSIGNED NOT NULL DEFAULT 0,
@@ -194,6 +195,19 @@ $queries = [
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_password_reset_email (user_email),
         INDEX idx_password_reset_expiry (expires_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+    "CREATE TABLE IF NOT EXISTS customer_remember_tokens (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        selector CHAR(32) NOT NULL UNIQUE,
+        token_hash CHAR(64) NOT NULL,
+        user_email VARCHAR(190) NOT NULL,
+        session_version INT UNSIGNED NOT NULL,
+        expires_at DATETIME NOT NULL,
+        last_used_at DATETIME DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_customer_remember_email (user_email),
+        INDEX idx_customer_remember_expiry (expires_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
     "CREATE TABLE IF NOT EXISTS support_cases (
@@ -311,7 +325,8 @@ $columnMigrations = [
         'restriction_reason' => "`restriction_reason` TEXT DEFAULT NULL AFTER `user_status`",
         'restricted_by' => "`restricted_by` VARCHAR(190) DEFAULT NULL AFTER `restriction_reason`",
         'restricted_at' => "`restricted_at` DATETIME DEFAULT NULL AFTER `restricted_by`",
-        'last_login_at' => "`last_login_at` DATETIME DEFAULT NULL AFTER `restricted_at`",
+        'session_version' => "`session_version` INT UNSIGNED NOT NULL DEFAULT 1 AFTER `restricted_at`",
+        'last_login_at' => "`last_login_at` DATETIME DEFAULT NULL AFTER `session_version`",
         'last_login_ip' => "`last_login_ip` VARCHAR(45) DEFAULT NULL AFTER `last_login_at`",
         'login_count' => "`login_count` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `last_login_ip`",
         'created_at' => "`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `login_count`",
@@ -433,7 +448,7 @@ if ($seedStmt) {
 header('Content-Type: text/plain');
 if (empty($errors)) {
     echo "Success: database tables are ready.\n";
-    echo "Tables managed: users, accounts, transactions, fx_trades, beneficiaries, notifications, password_reset_tokens, support_cases, support_case_messages, security_events, user_preferences, kyc_data, dynamic_data.\n";
+    echo "Tables managed: users, accounts, transactions, fx_trades, beneficiaries, notifications, password_reset_tokens, customer_remember_tokens, support_cases, support_case_messages, security_events, user_preferences, kyc_data, dynamic_data.\n";
 } else {
     echo "Finished with errors:\n- " . implode("\n- ", $errors) . "\n";
 }
