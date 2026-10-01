@@ -28,17 +28,21 @@ function v3PageStart(string $title, string $active, array $profile, ?string $pro
             <p>OVERVIEW</p>
             <?php echo v3NavItem('/dashboard-v3/','grid_view','Overview',$active,'overview'); ?>
             <?php echo v3NavItem('/dashboard-v3/transactions/','receipt_long','Transactions',$active,'transactions'); ?>
+            <?php echo v3NavItem('/dashboard-v3/notifications/','notifications','Notifications',$active,'notifications'); ?>
             <p>BANKING</p>
             <?php echo v3NavItem('/dashboard-v3/transfer/','north_east','Transfer funds',$active,'transfer'); ?>
             <?php echo v3NavItem('/dashboard-v3/exchange/','currency_exchange','Currency exchange',$active,'exchange'); ?>
             <?php echo v3NavItem('/dashboard-v3/accounts/','account_balance_wallet','Accounts',$active,'accounts'); ?>
+            <?php echo v3NavItem('/dashboard-v3/beneficiaries/','group','Beneficiaries',$active,'beneficiaries'); ?>
+            <?php echo v3NavItem('/dashboard-v3/statements/','description','Statements',$active,'statements'); ?>
             <p>PROFILE</p>
             <?php echo v3NavItem('/dashboard-v3/profile/','person','Profile',$active,'profile'); ?>
             <?php echo v3NavItem('/dashboard-v3/identity/','badge','Identity & KYC',$active,'identity'); ?>
             <?php echo v3NavItem('/dashboard-v3/security/','shield_lock','Security',$active,'security'); ?>
+            <?php echo v3NavItem('/dashboard-v3/preferences/','tune','Preferences',$active,'preferences'); ?>
         </nav>
         <div class="v3-side-bottom">
-            <a href="/contact/"><span class="material-symbols-rounded">support_agent</span><span>Support</span></a>
+            <a href="/support-v2/"><span class="material-symbols-rounded">support_agent</span><span>Support</span></a>
             <a href="?logout=1"><span class="material-symbols-rounded">logout</span><span>Sign out</span></a>
         </div>
     </aside>
