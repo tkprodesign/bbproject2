@@ -4,7 +4,7 @@ require_once __DIR__ . '/../_layout.php';
 $profile=v3Profile($user_email,$user_name);
 $db=connectToDatabase();
 $stmt=$db->prepare("SELECT transaction_id,type,description,amount,currency,status,time,account_number,counter_currency,counter_amount,fx_rate,channel,value_date,posted_at
-    FROM transactions WHERE user_email=? ORDER BY time DESC");
+    FROM transactions WHERE user_email=? AND (status IS NULL OR LOWER(status) <> 'archived') ORDER BY time DESC");
 $stmt->bind_param('s',$user_email);
 $stmt->execute();
 $result=$stmt->get_result();
