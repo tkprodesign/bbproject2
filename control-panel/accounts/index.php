@@ -1,82 +1,16 @@
-<?php include('../app.php') ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Control Panel — All Accounts</title>
-    <link rel="stylesheet" href="/assets/stylesheets/control-panel.css?v=<?php echo time();?>">
-    <link rel="stylesheet" href="/assets/stylesheets/tab/control-panel.css?v=<?php echo time();?>" media="screen and (max-width: 1000px)">
-    <link rel="stylesheet" href="/assets/stylesheets/mobile/control-panel.css?v=<?php echo time();?>" media="screen and (max-width: 720px)">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-</head>
-<body>
-<?php include('../../common-sections/control-panel-header.php'); ?>
-<section class="table site-users" style="padding: 100px 0;">
-    <div class="container">
-        <h2>User Accounts Full List</h2>
-        <?php
-            $db = connectToDatabase();
-            $query = "SELECT id, user_name, user_email, account_number, currency, account_status, creation_time FROM accounts ORDER BY creation_time DESC";
-            $result = $db->query($query);
-
-            $accounts = [];
-            if ($result && $result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $accounts[] = $row;
-                }
-            }
-
-            $balances = [];
-            if (!empty($accounts)) {
-                $acctNums = implode(',', array_map(fn($a) => "'" . $db->real_escape_string($a['account_number']) . "'", $accounts));
-                $balResult = $db->query("SELECT account_number, SUM(amount) AS account_balance FROM transactions WHERE account_number IN ($acctNums) AND status IN ('Successful','Pending') GROUP BY account_number");
-                while ($brow = $balResult->fetch_assoc()) {
-                    $balances[$brow['account_number']] = $brow['account_balance'];
-                }
-            }
-        ?>
-
-        <table>
-            <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>User Name</td>
-                    <td>User Email</td>
-                    <td>Account Number</td>
-                    <td>Currency</td>
-                    <td>Balance</td>
-                    <td>Account Status</td>
-                    <td>Date</td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($accounts)): ?>
-                    <?php foreach ($accounts as $row): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['id']); ?></td>
-                            <td><?php echo htmlspecialchars($row['user_name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['user_email']); ?></td>
-                            <td><?php echo htmlspecialchars($row['account_number']); ?></td>
-                            <td><span class="currency-chip"><?php echo htmlspecialchars(strtoupper((string)$row['currency'])); ?></span></td>
-                            <td><?php echo htmlspecialchars(velmoraFormatCurrency((float)($balances[$row['account_number']] ?? 0), velmoraIsSupportedCurrency((string)$row['currency']) ? strtoupper((string)$row['currency']) : 'USD')); ?></td>
-                            <td><?php echo htmlspecialchars($row['account_status']); ?></td>
-                            <td><?php echo htmlspecialchars(date('d M Y', (int)$row['creation_time'])); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr><td colspan="8">No accounts found</td></tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-
-        <?php $db->close(); ?>
-    </div>
-</section>
-<script src="/assets/scripts/control-panel.js?v=<?php echo time(); ?>"></script>
-</body>
-</html>
+<?php
+require_once __DIR__ . '/../_app.php';
+require_once __DIR__ . '/../_layout.php';
+$db=connectToDatabase();
+$res=$db->query("SELECT a.id,a.account_number,a.account_type,a.account_alias,a.user_name,a.user_email,a.currency,a.account_status,a.opened_at,a.creation_time,
+ COALESCE(SUM(CASE WHEN t.status IS NULL OR LOWER(t.status)<>'failed' THEN t.amount ELSE 0 END),0) balance
+ FROM accounts a LEFT JOIN transactions t ON t.account_number=a.account_number
+ GROUP BY a.id,a.account_number,a.account_type,a.account_alias,a.user_name,a.user_email,a.currency,a.account_status,a.opened_at,a.creation_time ORDER BY a.id DESC");
+$rows=$res?$res->fetch_all(MYSQLI_ASSOC):[];$db->close();$selected=preg_replace('/\D+/','',(string)($_GET['account']??''));
+cpv2Start('Accounts','accounts');
+?>
+<section class="op-heading"><div><span class="op-kicker">ACCOUNTS</span><h1>Account registry</h1><p>Currency, balance, account status and owner relationship in one operational view.</p></div></section>
+<section class="op-panel"><div class="op-search"><input id="opSearch" type="search" placeholder="Search account, customer or currency"></div><div class="op-table-wrap"><table class="op-table" id="opSearchTable"><thead><tr><th>Account</th><th>Customer</th><th>Currency</th><th>Balance</th><th>Status</th><th>Opened</th><th>Control</th></tr></thead><tbody>
+<?php foreach($rows as $r):?><tr<?php echo $selected===(string)$r['account_number']?' style="background:#f0f6fa"':''; ?>><td><strong><?php echo htmlspecialchars($r['account_alias']?:$r['account_type']); ?></strong><small><?php echo htmlspecialchars($r['account_number']); ?></small></td><td><?php echo htmlspecialchars($r['user_name']); ?><small><?php echo htmlspecialchars($r['user_email']); ?></small></td><td><?php echo htmlspecialchars($r['currency']); ?></td><td><?php echo htmlspecialchars(velmoraFormatCurrency((float)$r['balance'],$r['currency'])); ?></td><td><span class="op-status <?php echo strtolower($r['account_status']); ?>"><?php echo htmlspecialchars($r['account_status']); ?></span></td><td><?php echo !empty($r['opened_at'])?htmlspecialchars(date('M d, Y',strtotime($r['opened_at']))):htmlspecialchars(date('M d, Y',(int)$r['creation_time'])); ?></td><td><form method="post" style="display:flex;gap:5px;align-items:center"><?php echo cpv2CsrfInput(); ?><input type="hidden" name="account_number" value="<?php echo htmlspecialchars($r['account_number']); ?>"><select name="status" style="height:31px;border:1px solid #dce3ea;border-radius:7px;font-size:8px"><option value="Active" <?php echo $r['account_status']==='Active'?'selected':''; ?>>Active</option><option value="Restricted" <?php echo $r['account_status']==='Restricted'?'selected':''; ?>>Restricted</option><option value="Closed" <?php echo $r['account_status']==='Closed'?'selected':''; ?>>Closed</option></select><button class="op-btn secondary" type="submit" name="cpv2_account_status" value="1">Save</button></form></td></tr><?php endforeach;?>
+</tbody></table></div></section><script>document.getElementById('opSearch')?.addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('#opSearchTable tbody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none')})</script>
+<?php cpv2End(); ?>

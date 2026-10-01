@@ -1,98 +1,46 @@
-<?php include('../app.php')?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="/assets/stylesheets/dashboard.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="/assets/stylesheets/tab/dashboard.css?v=<?php echo time(); ?>" media="screen and (max-width: 1000px)">
-    <link rel="stylesheet" href="/assets/stylesheets/mobile/dashboard.css?v=<?php echo time(); ?>" media="screen and (max-width: 720px)">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script src="https://kit.fontawesome.com/79b279a6c9.js" crossorigin="anonymous"></script>
-</head>
-<body>
-<?php include('../../common-sections/dashboard-header.html')?>
-<section class="add-account">
-    <div class="container">
-        <a href="/dashboard/accounts/create" class="manage-accounts"><span class="material-symbols-outlined">add</span>Add New Account
-        </a>
-        <div class="accounts-list">
-            <?php
-                $dbconn = connectToDatabase();
-                $sql = "SELECT account_type, account_number, currency, account_status FROM accounts WHERE user_email = ?";
-                $stmt = $dbconn->prepare($sql);
-                // Check if the statement was prepared successfully
-                if ($stmt === false) {
-                    die("Error preparing statement: " . $dbconn->error);
-                }
-                $stmt->bind_param('s', $user_email);
-                $stmt->execute();
-                $stmt->bind_result($account_type, $account_number, $currency, $status);
-
-                $accounts = [];
-                while ($stmt->fetch()) {
-                    $accounts[] = [
-                        'account_type' => $account_type,
-                        'account_number' => $account_number,
-                        'currency' => $currency,
-                        'status' => $status
-                    ];
-                }
-
-                $stmt->close();
-
-                function getAccountBalance($dbconn, $account_number) {
-                    $sql = "SELECT SUM(amount) FROM transactions WHERE account_number = ? AND (status IS NULL OR LOWER(status) <> 'failed')";
-                    $stmt = $dbconn->prepare($sql);
-                    if ($stmt === false) {
-                        die("Error preparing statement: " . $dbconn->error);
-                    }
-                    $stmt->bind_param('s', $account_number);
-                    $stmt->execute();
-                    $stmt->bind_result($balance);
-                    $stmt->fetch();
-                    $stmt->close();
-                    return $balance !== null ? (float)$balance : 0.0;
-                }
-            ?>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Account Type</th>
-                            <th>Account Number</th>
-                            <th>Account Currency</th>
-                            <th>Available Balance</th>
-                            <th>Account Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($accounts as $account): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($account['account_type']); ?></td>
-                                <td><?php echo htmlspecialchars($account['account_number']); ?></td>
-                                <td><?php echo htmlspecialchars($account['currency']); ?></td>
-                                <td><?php echo htmlspecialchars(velmoraFormatCurrency(getAccountBalance($dbconn, $account['account_number']), $account['currency'])); ?></td>
-                                <td><?php echo htmlspecialchars($account['status']); ?></td>
-                                <!-- <td><a href="/dashboard/accounts/manage?account-number=<?php echo htmlspecialchars($account['account_number']); ?>">Perform Action</a></td> -->
-                                <td><a href="manage?nos=<?php echo $account['account_number']; ?>s">Perform Action</a></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-
-            <?php
-                $dbconn->close();
-            ?>
-        </div>
-    </div>
+<?php
+require_once __DIR__ . '/../_app.php';
+require_once __DIR__ . '/../_layout.php';
+$profile=v3Profile($user_email,$user_name);
+$accounts=v3Accounts($user_email);
+v3PageStart('Accounts','accounts',$profile,$user_profile_picture);
+v3FlashMessages();
+?>
+<section class="v3-heading">
+    <div><span class="v3-kicker">BANKING</span><h1>Your accounts</h1><p>Each account has a fixed denomination. Open another currency account before exchanging funds into that currency.</p></div>
 </section>
-<script src="/assets/scripts/dashboard.js?v=<?php echo time(); ?>"></script>
-</body>
-</html>
+
+<div class="v3-two-col accounts-page">
+    <section class="v3-panel">
+        <div class="v3-section-head"><div><span class="v3-kicker">ACTIVE ACCOUNTS</span><h2>Account portfolio</h2></div></div>
+        <div class="v3-account-list">
+            <?php foreach($accounts as $account): ?>
+            <article>
+                <div class="v3-account-ident">
+                    <span class="material-symbols-rounded">account_balance</span>
+                    <div><strong><?php echo htmlspecialchars(!empty($account['account_alias'])?$account['account_alias']:$account['account_type']); ?></strong><small><?php echo htmlspecialchars($account['account_type'].' · '.$account['account_number']); ?></small></div>
+                </div>
+                <div><span>Currency</span><strong><?php echo htmlspecialchars($account['currency']); ?></strong></div>
+                <div><span>Available balance</span><strong><?php echo htmlspecialchars(velmoraFormatCurrency($account['balance'],$account['currency'])); ?></strong></div>
+                <div><span>Opened</span><strong><?php echo !empty($account['opened_at'])?htmlspecialchars(date('M d, Y',strtotime((string)$account['opened_at']))):htmlspecialchars(date('M d, Y',(int)$account['creation_time'])); ?></strong></div>
+                <div><span>Status</span><strong class="v3-verified"><?php echo htmlspecialchars($account['account_status']); ?></strong></div>
+                <div class="v3-list-actions"><a href="/dashboard/accounts/detail/?account=<?php echo urlencode((string)$account['account_number']); ?>">View</a></div>
+            </article>
+            <?php endforeach; ?>
+            <?php if(empty($accounts)): ?><div class="v3-empty">No accounts have been opened.</div><?php endif; ?>
+        </div>
+    </section>
+
+    <aside class="v3-panel">
+        <div class="v3-section-head"><div><span class="v3-kicker">NEW ACCOUNT</span><h2>Open a currency account</h2></div></div>
+        <p class="v3-form-note">An account’s currency does not change after creation. To hold another currency, open the appropriate account and use Currency Exchange.</p>
+        <form method="post" class="v3-form">
+            <?php echo v3CsrfInput(); ?>
+            <label><span>Account nickname <small>(optional)</small></span><input type="text" name="account_alias" maxlength="100" placeholder="e.g. Everyday EUR"></label>
+            <label><span>Account type</span><select name="account_type" required><option value="Personal Checking">Personal Checking</option><option value="Savings">Savings</option><option value="Current">Current</option><option value="Fixed">Fixed</option></select></label>
+            <label><span>Currency</span><select name="currency" required><?php echo velmoraCurrencyOptions('USD'); ?></select></label>
+            <button type="submit" name="v3_create_account" value="1" class="v3-primary-btn">Open account</button>
+        </form>
+    </aside>
+</div>
+<?php v3PageEnd(); ?>
