@@ -1,0 +1,10 @@
+@media (max-width: 900px) {
+  section.auth-page .content {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+  }
+  section.auth-page .auth-panel,
+  section.auth-page .auth-form {
+    padding: 28px;
+  }
+}
