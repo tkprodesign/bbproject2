@@ -125,7 +125,7 @@ button{cursor:pointer}
 .v3-alert.info{background:#eef5fb;border:1px solid #d8e6f2;color:#355b7b}
 .v3-alert a{text-decoration:underline;font-weight:700}
 .v3-account-list{display:grid;gap:10px}
-.v3-account-list article{display:grid;grid-template-columns:minmax(220px,1.4fr) .55fr .85fr .5fr;align-items:center;gap:15px;border:1px solid #e8ecf0;border-radius:12px;padding:14px 15px}
+.v3-account-list article{display:grid;grid-template-columns:minmax(220px,1.3fr) .42fr .72fr .48fr .48fr auto;align-items:center;gap:15px;border:1px solid #e8ecf0;border-radius:12px;padding:14px 15px}
 .v3-account-ident{display:flex;align-items:center;gap:11px}
 .v3-account-ident>.material-symbols-rounded{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#eef3f7;color:#355875}
 .v3-account-ident strong{display:block;font-size:12px}
