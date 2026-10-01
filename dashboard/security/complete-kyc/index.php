@@ -123,6 +123,10 @@
                 </select>
             </div>
             <div class="input-box">
+                <label>Occupation:<span>*</span></label>
+                <input type="text" name="occupation" required>
+            </div>
+            <div class="input-box">
                 <label>Nationality:<span>*</span></label>
                 <input type="text" name="nationality" <?php echo $kyc_required; ?>>
             </div>
