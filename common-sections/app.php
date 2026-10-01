@@ -315,6 +315,13 @@ function requireLoginForInternalPages() {
         '/careers-v2',
         '/support-v2',
         '/security-v2',
+        '/rates-v2',
+        '/documents-v2',
+        '/legal-v2',
+        '/privacy-v2',
+        '/terms-v2',
+        '/cookie-policy-v2',
+        '/accessibility-v2',
         '/cookie-policy',
         '/assets',
     ];
