@@ -309,6 +309,12 @@ function requireLoginForInternalPages() {
         '/loan-v2',
         '/online-banking-v2',
         '/international-v2',
+        '/about-v2',
+        '/contact-v2',
+        '/locations-v2',
+        '/careers-v2',
+        '/support-v2',
+        '/security-v2',
         '/cookie-policy',
         '/assets',
     ];
