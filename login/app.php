@@ -58,7 +58,8 @@
                     if (in_array(strtolower($email), $controlPanelAllowedEmails, true)) {
                         header("Location: /control-panel");
                     } else {
-                        header("Location: /dashboard");
+                        $loginTarget = defined('VELMORA_LOGIN_TARGET') ? VELMORA_LOGIN_TARGET : '/dashboard';
+                        header("Location: " . $loginTarget);
                     }
                     exit;
                 } else {
