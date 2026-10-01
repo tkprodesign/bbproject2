@@ -9,7 +9,7 @@
 <?php include('../common-sections/public-v2-header.php'); ?>
 <main>
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
-  <div><span class="pv2-eyebrow">VELMORA ONLINE BANKING</span><h1>A digital bank should behave like a bank, not a visual demo.</h1>
+  <div><span class="pv2-eyebrow">VELMORA ONLINE BANKING</span><h1>Online banking built around clear account records and controlled access.</h1>
   <p>Accounts retain their actual currencies. Transfers go through review. FX uses a bank quote. Transactions keep references and status. Your profile and security activity stay connected to the same banking relationship.</p>
   <div class="pv2-actions"><a class="pv2-btn primary" href="/login/">Sign in securely <span class="material-symbols-rounded">arrow_forward</span></a><a class="pv2-btn secondary" href="/signup/">Open an account</a></div></div>
   <div class="pv2-hero-image"><img src="/assets/images/home/features/online-banking.jpg" alt="Online banking"><div class="pv2-image-note"><small>DIGITAL BANKING</small><strong>Accounts, transfers, FX, beneficiaries and security.</strong></div></div>
@@ -23,7 +23,7 @@
 </div></section>
 
 <section class="pv2-section"><div class="pv2-container">
-  <div class="pv2-section-head"><div><span class="pv2-eyebrow">YOUR BANKING WORKSPACE</span><h2>One place for the actions that define the relationship.</h2></div><p>The online banking product is structured around the database and the real state of each account—not static dashboard numbers.</p></div>
+  <div class="pv2-section-head"><div><span class="pv2-eyebrow">YOUR BANKING WORKSPACE</span><h2>One place for the actions that define the relationship.</h2></div><p>Account balances, transaction history and status information are tied to the underlying account records rather than presentation-only figures.</p></div>
   <div class="pv2-card-grid">
     <article class="pv2-card"><span class="pv2-card-icon"><span class="material-symbols-rounded">account_balance</span></span><h3>Accounts</h3><p>Review account type, currency, balance, status, alias and opening information.</p></article>
     <article class="pv2-card"><span class="pv2-card-icon"><span class="material-symbols-rounded">sync_alt</span></span><h3>Transfers</h3><p>Prepare recipient details, review any conversion and submit the payment for processing.</p></article>
@@ -35,7 +35,7 @@
 </div></section>
 
 <section class="pv2-section pv2-dark"><div class="pv2-container pv2-process">
-  <div><span class="pv2-eyebrow">INTERACTION PRINCIPLE</span><h2>The screen should tell the truth about the money.</h2><p style="font-size:11px;line-height:1.8;color:#a7b6c5">A banking interface becomes credible when the visual state reflects the financial state. A UI control must not imply that money moved when no banking transaction occurred.</p></div>
+  <div><span class="pv2-eyebrow">INTERACTION PRINCIPLE</span><h2>The screen should tell the truth about the money.</h2><p style="font-size:11px;line-height:1.8;color:#a7b6c5">The banking workspace keeps account views, transaction status and recorded money movement aligned so customers can review what has actually been recorded.</p></div>
   <div class="pv2-steps">
     <div class="pv2-step" style="border-color:rgba(255,255,255,.1)"><span style="color:#8fa8bf">01</span><div><strong>Account balance</strong><small style="color:#9db0c1">Comes from transactions attached to the account.</small></div></div>
     <div class="pv2-step" style="border-color:rgba(255,255,255,.1)"><span style="color:#8fa8bf">02</span><div><strong>Transfer status</strong><small style="color:#9db0c1">Shows whether activity is pending, successful or failed.</small></div></div>
