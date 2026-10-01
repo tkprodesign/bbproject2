@@ -41,6 +41,6 @@
 </div>
 </div></section>
 
-<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">BANK WITH VELMORA</span><h2>Choose the relationship that matches what you need to do.</h2></div><div><a class="pv2-btn gold" href="/signup/">Open an account</a><a class="pv2-btn secondary" href="/contact-v2/">Contact us</a></div></div></section>
+<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">BANK WITH VELMORA</span><h2>Choose the relationship that matches what you need to do.</h2></div><div><a class="pv2-btn gold" href="/signup-v2/">Open an account</a><a class="pv2-btn secondary" href="/contact-v2/">Contact us</a></div></div></section>
 </main>
 <?php include('../common-sections/public-v2-footer.php'); ?></body></html>

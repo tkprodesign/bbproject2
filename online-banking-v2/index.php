@@ -11,7 +11,7 @@
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
   <div><span class="pv2-eyebrow">VELMORA ONLINE BANKING</span><h1>A digital bank should behave like a bank, not a visual demo.</h1>
   <p>Accounts retain their actual currencies. Transfers go through review. FX uses a bank quote. Transactions keep references and status. Your profile and security activity stay connected to the same banking relationship.</p>
-  <div class="pv2-actions"><a class="pv2-btn primary" href="/login/">Sign in securely <span class="material-symbols-rounded">arrow_forward</span></a><a class="pv2-btn secondary" href="/signup/">Open an account</a></div></div>
+  <div class="pv2-actions"><a class="pv2-btn primary" href="/login-v2/">Sign in securely <span class="material-symbols-rounded">arrow_forward</span></a><a class="pv2-btn secondary" href="/signup-v2/">Open an account</a></div></div>
   <div class="pv2-hero-image"><img src="/assets/images/home/features/online-banking.jpg" alt="Online banking"><div class="pv2-image-note"><small>DIGITAL BANKING</small><strong>Accounts, transfers, FX, beneficiaries and security.</strong></div></div>
 </div></section>
 
@@ -54,6 +54,6 @@
   </div>
 </div></section>
 
-<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">ONLINE BANKING</span><h2>Access your Velmora banking workspace.</h2></div><div><a class="pv2-btn gold" href="/login/">Sign in</a><a class="pv2-btn secondary" href="/signup/">Open an account</a></div></div></section>
+<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">ONLINE BANKING</span><h2>Access your Velmora banking workspace.</h2></div><div><a class="pv2-btn gold" href="/login-v2/">Sign in</a><a class="pv2-btn secondary" href="/signup-v2/">Open an account</a></div></div></section>
 </main>
 <?php include('../common-sections/public-v2-footer.php'); ?></body></html>

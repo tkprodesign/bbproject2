@@ -47,7 +47,7 @@ function v3PageStart(string $title, string $active, array $profile, ?string $pro
         </nav>
         <div class="v3-side-bottom">
             <a href="/support-v2/"><span class="material-symbols-rounded">support_agent</span><span>Support</span></a>
-            <a href="?logout=1"><span class="material-symbols-rounded">logout</span><span>Sign out</span></a>
+            <a href="/dashboard-v3/logout/"><span class="material-symbols-rounded">logout</span><span>Sign out</span></a>
         </div>
     </aside>
     <div class="v3-overlay" id="v3Overlay"></div>

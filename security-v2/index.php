@@ -8,7 +8,7 @@
 <?php include('../common-sections/public-v2-header.php'); ?>
 <main>
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
-<div><span class="pv2-eyebrow">SECURITY &amp; FRAUD CENTER</span><h1>If something feels wrong, treat it as a security issue first.</h1><p>Learn what Velmora will not ask you for, how to react to suspicious contact and where to report unfamiliar account activity.</p><div class="pv2-actions"><a class="pv2-btn primary" href="/contact-v2/">Report a concern</a><a class="pv2-btn secondary" href="/login/">Review your account</a></div></div>
+<div><span class="pv2-eyebrow">SECURITY &amp; FRAUD CENTER</span><h1>If something feels wrong, treat it as a security issue first.</h1><p>Learn what Velmora will not ask you for, how to react to suspicious contact and where to report unfamiliar account activity.</p><div class="pv2-actions"><a class="pv2-btn primary" href="/contact-v2/">Report a concern</a><a class="pv2-btn secondary" href="/login-v2/">Review your account</a></div></div>
 <div class="pv2-hero-image"><img src="/assets/images/home/benefits/financial-security.jpg" alt="Banking security"><div class="pv2-image-note"><small>ACCOUNT SECURITY</small><strong>Verify the channel before you share information or move money.</strong></div></div>
 </div></section>
 

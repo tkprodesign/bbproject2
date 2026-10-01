@@ -11,7 +11,7 @@
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
   <div><span class="pv2-eyebrow">BUSINESS BANKING</span><h1>Banking infrastructure for businesses that need to move with control.</h1>
   <p>Keep operating funds visible, separate currencies properly, organize outgoing payments and give finance activity a clearer audit trail.</p>
-  <div class="pv2-actions"><a class="pv2-btn primary" href="/contact/">Speak to business banking</a><a class="pv2-btn secondary" href="/signup/">Open an account</a></div></div>
+  <div class="pv2-actions"><a class="pv2-btn primary" href="/contact-v2/">Speak to business banking</a><a class="pv2-btn secondary" href="/signup-v2/">Open an account</a></div></div>
   <div class="pv2-hero-image"><img src="/assets/images/home/hero/corporatebanking-banner.png" alt="Business banking"><div class="pv2-image-note"><small>BUSINESS BANKING</small><strong>Operating accounts, payments, FX and account visibility.</strong></div></div>
 </div></section>
 
@@ -50,6 +50,6 @@
   <div class="pv2-steps"><div class="pv2-step"><span>01</span><div><strong>Select funding account</strong><small>Choose the actual account and currency to debit.</small></div></div><div class="pv2-step"><span>02</span><div><strong>Enter beneficiary details</strong><small>Bank, recipient, account, account type and receiving currency.</small></div></div><div class="pv2-step"><span>03</span><div><strong>Review transfer terms</strong><small>If FX is involved, the receiving amount and bank rate are displayed.</small></div></div><div class="pv2-step"><span>04</span><div><strong>Submit for processing</strong><small>The transaction appears in the ledger with status and reference.</small></div></div></div>
 </div></section>
 
-<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">BUSINESS RELATIONSHIP</span><h2>Build the banking layer your business can actually work with.</h2></div><div><a class="pv2-btn gold" href="/contact/">Talk to business banking</a><a class="pv2-btn secondary" href="/online-banking-v2/">See online banking</a></div></div></section>
+<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">BUSINESS RELATIONSHIP</span><h2>Build the banking layer your business can actually work with.</h2></div><div><a class="pv2-btn gold" href="/contact-v2/">Talk to business banking</a><a class="pv2-btn secondary" href="/online-banking-v2/">See online banking</a></div></div></section>
 </main>
 <?php include('../common-sections/public-v2-footer.php'); ?></body></html>

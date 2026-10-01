@@ -11,7 +11,7 @@
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
   <div><span class="pv2-eyebrow">PERSONAL BANKING</span><h1>Everyday banking, properly organized around you.</h1>
   <p>Manage daily spending, savings and money movement through clear account structures, secure digital access and support when a banking decision needs a human conversation.</p>
-  <div class="pv2-actions"><a class="pv2-btn primary" href="/signup/">Open an account <span class="material-symbols-rounded">arrow_forward</span></a><a class="pv2-btn secondary" href="/online-banking-v2/">Explore online banking</a></div></div>
+  <div class="pv2-actions"><a class="pv2-btn primary" href="/signup-v2/">Open an account <span class="material-symbols-rounded">arrow_forward</span></a><a class="pv2-btn secondary" href="/online-banking-v2/">Explore online banking</a></div></div>
   <div class="pv2-hero-image"><img src="/assets/images/home/hero/private-bank-banner.png" alt="Personal banking client"><div class="pv2-image-note"><small>PERSONAL BANKING</small><strong>Accounts, savings, payments and secure digital access.</strong></div></div>
 </div></section>
 <section class="pv2-trust"><div class="pv2-container pv2-trust-grid">
@@ -24,8 +24,8 @@
 <section class="pv2-section"><div class="pv2-container">
   <div class="pv2-section-head"><div><span class="pv2-eyebrow">YOUR BANKING FOUNDATION</span><h2>Start with the accounts and tools you actually use.</h2></div><p>Personal banking should make ordinary financial tasks easier to understand, not bury them under products and jargon.</p></div>
   <div class="pv2-card-grid">
-    <article class="pv2-card"><span class="pv2-card-icon"><span class="material-symbols-rounded">account_balance</span></span><h3>Everyday accounts</h3><p>Hold and manage day-to-day funds with clear balances, transaction history and secure account access.</p><a href="/signup/">Open an account <span class="material-symbols-rounded">arrow_forward</span></a></article>
-    <article class="pv2-card"><span class="pv2-card-icon"><span class="material-symbols-rounded">savings</span></span><h3>Savings</h3><p>Separate savings from everyday spending and build a clearer view of money set aside for future goals.</p><a href="/contact/">Talk to support <span class="material-symbols-rounded">arrow_forward</span></a></article>
+    <article class="pv2-card"><span class="pv2-card-icon"><span class="material-symbols-rounded">account_balance</span></span><h3>Everyday accounts</h3><p>Hold and manage day-to-day funds with clear balances, transaction history and secure account access.</p><a href="/signup-v2/">Open an account <span class="material-symbols-rounded">arrow_forward</span></a></article>
+    <article class="pv2-card"><span class="pv2-card-icon"><span class="material-symbols-rounded">savings</span></span><h3>Savings</h3><p>Separate savings from everyday spending and build a clearer view of money set aside for future goals.</p><a href="/contact-v2/">Talk to support <span class="material-symbols-rounded">arrow_forward</span></a></article>
     <article class="pv2-card"><span class="pv2-card-icon"><span class="material-symbols-rounded">sync_alt</span></span><h3>Payments & transfers</h3><p>Move money using a review-first workflow with references and status recorded in your transaction history.</p><a href="/online-banking-v2/">See digital banking <span class="material-symbols-rounded">arrow_forward</span></a></article>
   </div>
 </div></section>
@@ -52,6 +52,6 @@
   </div>
 </div></section>
 
-<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">START PERSONAL BANKING</span><h2>Open your relationship with Velmora.</h2></div><div><a class="pv2-btn gold" href="/signup/">Open an account</a><a class="pv2-btn secondary" href="/contact/">Contact us</a></div></div></section>
+<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">START PERSONAL BANKING</span><h2>Open your relationship with Velmora.</h2></div><div><a class="pv2-btn gold" href="/signup-v2/">Open an account</a><a class="pv2-btn secondary" href="/contact-v2/">Contact us</a></div></div></section>
 </main>
 <?php include('../common-sections/public-v2-footer.php'); ?></body></html>

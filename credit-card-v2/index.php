@@ -11,15 +11,15 @@
 <section class="pv2-page-hero"><div class="pv2-container pv2-hero-grid">
   <div><span class="pv2-eyebrow">CARDS</span><h1>Cards should fit the way you spend—not complicate it.</h1>
   <p>Explore card options for everyday purchases, travel and business spending, with a digital banking experience designed around visibility and account control.</p>
-  <div class="pv2-actions"><a class="pv2-btn primary" href="/contact/">Discuss card options</a><a class="pv2-btn secondary" href="/signup/">Become a client</a></div></div>
+  <div class="pv2-actions"><a class="pv2-btn primary" href="/contact-v2/">Discuss card options</a><a class="pv2-btn secondary" href="/signup-v2/">Become a client</a></div></div>
   <div class="pv2-hero-image"><img src="/assets/images/home/Credit Cards hero bg.jpg" alt="Velmora card services"><div class="pv2-image-note"><small>VELMORA CARDS</small><strong>Everyday, travel and business spending options.</strong></div></div>
 </div></section>
 
 <section class="pv2-section"><div class="pv2-container">
   <div class="pv2-section-head"><div><span class="pv2-eyebrow">CARD OPTIONS</span><h2>Choose by use case, not by marketing noise.</h2></div><p>Product eligibility, pricing and final terms should always be confirmed through the bank rather than assumed from a marketing page.</p></div>
   <div class="pv2-card-showcase">
-    <article class="pv2-bank-card one"><small>EVERYDAY</small><h3>Velmora Everyday</h3><p>A straightforward card option for routine purchases and digital payments.</p><div class="pv2-card-chip"></div><a href="/contact/">Ask about eligibility →</a></article>
-    <article class="pv2-bank-card two"><small>TRAVEL</small><h3>Velmora Travel</h3><p>A card relationship designed around clients who spend across travel and international contexts.</p><div class="pv2-card-chip"></div><a href="/contact/">Ask about eligibility →</a></article>
+    <article class="pv2-bank-card one"><small>EVERYDAY</small><h3>Velmora Everyday</h3><p>A straightforward card option for routine purchases and digital payments.</p><div class="pv2-card-chip"></div><a href="/contact-v2/">Ask about eligibility →</a></article>
+    <article class="pv2-bank-card two"><small>TRAVEL</small><h3>Velmora Travel</h3><p>A card relationship designed around clients who spend across travel and international contexts.</p><div class="pv2-card-chip"></div><a href="/contact-v2/">Ask about eligibility →</a></article>
     <article class="pv2-bank-card three"><small>BUSINESS</small><h3>Velmora Business</h3><p>Card access for business spending and clearer separation of operational expenses.</p><div class="pv2-card-chip"></div><a href="/business-v2/">Explore business banking →</a></article>
   </div>
 </div></section>
@@ -45,6 +45,6 @@
   </div>
 </div></section>
 
-<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">CARD SERVICES</span><h2>Talk to Velmora about the right card relationship.</h2></div><div><a class="pv2-btn gold" href="/contact/">Contact us</a><a class="pv2-btn secondary" href="/online-banking-v2/">Online banking</a></div></div></section>
+<section class="pv2-cta"><div class="pv2-container"><div><span class="pv2-eyebrow" style="color:#8fa8bf">CARD SERVICES</span><h2>Talk to Velmora about the right card relationship.</h2></div><div><a class="pv2-btn gold" href="/contact-v2/">Contact us</a><a class="pv2-btn secondary" href="/online-banking-v2/">Online banking</a></div></div></section>
 </main>
 <?php include('../common-sections/public-v2-footer.php'); ?></body></html>
