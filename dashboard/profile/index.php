@@ -1,34 +1,39 @@
-<?php include('../app.php');?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="icon" type="image/png" href="/assets/images/branding/velmora/icon.png">
-    <link rel="shortcut icon" href="/assets/images/branding/velmora/icon.png">
-    <link rel="apple-touch-icon" href="/assets/images/branding/velmora/icon.png">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="/assets/stylesheets/dashboard.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="/assets/stylesheets/tab/dashboard.css?v=<?php echo time(); ?>" media="screen and (max-width: 1000px)">
-    <link rel="stylesheet" href="/assets/stylesheets/mobile/dashboard.css?v=<?php echo time(); ?>" media="screen and (max-width: 720px)">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script src="https://kit.fontawesome.com/79b279a6c9.js" crossorigin="anonymous"></script>
-</head>
-<body>
-<?php include('../../common-sections/dashboard-header.html')?>
-<section class="profile-kyc">
-    <div class="container">
-        <div class="heading">
-            <h1>Profile & Verification</h1>
-        </div>
-        <div class="content">
-            <a href="/dashboard/profile-picture" class="sec-cta">Update Profile Picture</a>
-            <a href="/dashboard/security/complete-kyc" class="cta">Complete KYC</a>
-        </div>
+<?php
+require_once __DIR__ . '/../_app.php';
+require_once __DIR__ . '/../_layout.php';
+$profile=v3Profile($user_email,$user_name);
+$client=v3ClientMeta($user_email);
+v3PageStart('Profile','profile',$profile,$user_profile_picture);
+?>
+<section class="v3-heading"><div><span class="v3-kicker">CLIENT PROFILE</span><h1>Personal information</h1><p>Verified profile and KYC information associated with your banking relationship.</p></div><a class="v3-secondary-btn" href="/dashboard/profile-picture/">Update photo</a></section>
+<div class="v3-profile-grid">
+<section class="v3-panel">
+    <div class="v3-profile-hero">
+        <?php if($user_profile_picture && $user_profile_picture!=='nil'): ?><img src="/dashboard/security/complete-kyc/uploads/<?php echo htmlspecialchars($user_profile_picture); ?>" alt="Profile"><?php else: ?><span class="v3-profile-avatar"><?php echo htmlspecialchars(strtoupper(substr($profile['name'],0,1))); ?></span><?php endif; ?>
+        <div><span class="v3-kicker">ACCOUNT HOLDER</span><h2><?php echo htmlspecialchars($profile['name']); ?></h2><p><?php echo htmlspecialchars($profile['occupation']); ?></p></div>
+        <span class="v3-status successful"><?php echo htmlspecialchars($profile['status']); ?></span>
     </div>
+    <div class="v3-meta-grid" style="margin-top:16px">
+        <div><span>Customer number</span><strong><?php echo htmlspecialchars($client['customer_number']); ?></strong></div>
+        <div><span>Relationship status</span><strong class="v3-verified"><?php echo htmlspecialchars($client['user_status']); ?></strong></div>
+        <div><span>Member since</span><strong><?php echo htmlspecialchars($client['member_since']); ?></strong></div>
+    </div>
+    <dl class="v3-profile-details">
+        <div><dt>Date of birth</dt><dd><?php echo htmlspecialchars($profile['dob']); ?></dd></div>
+        <div><dt>Phone number</dt><dd><?php echo htmlspecialchars($profile['phone']); ?></dd></div>
+        <div><dt>Occupation</dt><dd><?php echo htmlspecialchars($profile['occupation']); ?></dd></div>
+        <div><dt>Source of income</dt><dd><?php echo htmlspecialchars($profile['source_of_income']); ?></dd></div>
+        <div><dt>Nationality</dt><dd><?php echo htmlspecialchars($profile['nationality']); ?></dd></div>
+        <div><dt>Country of residence</dt><dd><?php echo htmlspecialchars($profile['country']); ?></dd></div>
+        <div class="wide"><dt>Residential address</dt><dd><?php echo htmlspecialchars($profile['address'].', '.$profile['city']); ?></dd></div>
+    </dl>
 </section>
-<script src="/assets/scripts/dashboard.js?v=<?php echo time(); ?>"></script>
-</body>
-</html>
+<aside class="v3-panel v3-profile-actions">
+    <span class="v3-kicker">PROFILE CONTROLS</span><h2>Manage your details</h2>
+    <p>Some verified KYC details require bank review before they can be changed.</p>
+    <a href="/dashboard/profile-picture/"><span class="material-symbols-rounded">photo_camera</span><div><strong>Profile picture</strong><small>Change your account photo</small></div></a>
+    <a href="/dashboard/identity/"><span class="material-symbols-rounded">badge</span><div><strong>KYC information</strong><small>Review verification information</small></div></a>
+    <a href="/dashboard/support/"><span class="material-symbols-rounded">support_agent</span><div><strong>Request profile change</strong><small>Open an authenticated support case</small></div></a>
+</aside>
+</div>
+<?php v3PageEnd(); ?>
