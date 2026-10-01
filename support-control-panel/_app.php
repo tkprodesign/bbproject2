@@ -17,37 +17,6 @@ function cpv2Flash(string $kind,string $message): void { $_SESSION['cpv2_flash']
 function cpv2TakeFlash(string $kind): ?string { $v=$_SESSION['cpv2_flash'][$kind]??null;unset($_SESSION['cpv2_flash'][$kind]);return is_string($v)?$v:null; }
 function cpv2Go(string $url): never { header('Location: '.$url);exit; }
 
-if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_archive_transaction'])){
-    cpv2Verify();
-    $id=(int)($_POST['transaction_row_id']??0);
-    if($id<=0){cpv2Flash('error','Invalid transaction.');cpv2Go('/support-control-panel/transactions/');}
-    $db=connectToDatabase();
-    $stmt=$db->prepare("SELECT user_email,transaction_id,status FROM transactions WHERE id=? LIMIT 1");
-    $stmt->bind_param('i',$id);$stmt->execute();$row=$stmt->get_result()->fetch_assoc();$stmt->close();
-    if(!$row){
-        cpv2Flash('error','Transaction not found.');
-    }elseif(strtolower((string)$row['status'])==='archived'){
-        cpv2Flash('error','Transaction is already archived.');
-    }else{
-        $operator=trim((string)($_SESSION['user_email']??''));
-        if($operator==='')$operator='unknown-operator';
-        $previousStatus=(string)$row['status'];
-        $archivedStatus='Archived';
-        $stmt=$db->prepare("UPDATE transactions SET archived_previous_status=?,status=?,archived_by=?,archived_at=NOW() WHERE id=? AND LOWER(status)<>'archived'");
-        $stmt->bind_param('sssi',$previousStatus,$archivedStatus,$operator,$id);
-        $stmt->execute();
-        $changed=$stmt->affected_rows;
-        $stmt->close();
-        if($changed>0){
-            recordSecurityEvent($db,(string)$row['user_email'],'Transaction Archived','Transaction '.(string)$row['transaction_id'].' archived by '.$operator.'.');
-            cpv2Flash('success','Transaction archived. It is hidden from the customer ledger but retained in the bank record.');
-        }else{
-            cpv2Flash('error','Transaction could not be archived.');
-        }
-    }
-    $db->close();cpv2Go('/support-control-panel/transactions/');
-}
-
 if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_transfer_decision'])){
     cpv2Verify();$id=(int)($_POST['transaction_id']??0);$decision=(string)($_POST['decision']??'');
     if($id<=0||!in_array($decision,['Successful','Failed'],true)){cpv2Flash('error','Invalid transfer decision.');cpv2Go('/support-control-panel/transfers/');}

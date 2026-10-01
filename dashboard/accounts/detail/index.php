@@ -10,7 +10,7 @@ $stmt=$db->prepare("SELECT account_number,account_type,currency,account_status,c
 $stmt->bind_param('ss',$user_email,$accountNumber);$stmt->execute();$account=$stmt->get_result()->fetch_assoc()?:null;$stmt->close();
 if(!$account){$db->close();v3Redirect('/dashboard/accounts/');}
 $balance=v3AccountBalance($db,$accountNumber);
-$stmt=$db->prepare("SELECT transaction_id,type,description,amount,currency,status,time,value_date,channel FROM transactions WHERE user_email=? AND account_number=? AND (status IS NULL OR LOWER(status) <> 'archived') ORDER BY time DESC LIMIT 10");
+$stmt=$db->prepare("SELECT transaction_id,type,description,amount,currency,status,time,value_date,channel FROM transactions WHERE user_email=? AND account_number=? ORDER BY time DESC LIMIT 10");
 $stmt->bind_param('ss',$user_email,$accountNumber);$stmt->execute();$txs=$stmt->get_result()->fetch_all(MYSQLI_ASSOC);$stmt->close();$db->close();
 
 v3PageStart('Account Detail','accounts',$profile,$user_profile_picture);

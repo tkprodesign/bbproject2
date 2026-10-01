@@ -36,7 +36,7 @@ function v3Accounts(string $email): array {
     $db = connectToDatabase();
     $stmt = $db->prepare("SELECT a.id, a.account_number, a.account_type, a.currency, a.account_status, a.creation_time,
         a.account_alias, a.opened_at,
-        COALESCE(SUM(CASE WHEN t.status IS NULL OR LOWER(t.status) NOT IN ('failed','archived') THEN t.amount ELSE 0 END), 0) AS balance
+        COALESCE(SUM(CASE WHEN t.status IS NULL OR LOWER(t.status) <> 'failed' THEN t.amount ELSE 0 END), 0) AS balance
         FROM accounts a
         LEFT JOIN transactions t ON t.account_number = a.account_number
         WHERE a.user_email = ?
@@ -152,7 +152,7 @@ function v3OwnedAccount(mysqli $db, string $email, string $accountNumber): ?arra
 }
 
 function v3AccountBalance(mysqli $db, string $accountNumber): float {
-    $stmt = $db->prepare("SELECT COALESCE(SUM(CASE WHEN status IS NULL OR LOWER(status) NOT IN ('failed','archived') THEN amount ELSE 0 END), 0)
+    $stmt = $db->prepare("SELECT COALESCE(SUM(CASE WHEN status IS NULL OR LOWER(status) <> 'failed' THEN amount ELSE 0 END), 0)
         FROM transactions WHERE account_number = ?");
     $stmt->bind_param('s', $accountNumber);
     $stmt->execute();
