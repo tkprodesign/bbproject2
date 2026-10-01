@@ -1,6 +1,13 @@
 <?php
 // Setting initials
 if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
     session_start();
 }
 $velmoraDebug = strtolower((string)(getenv('APP_ENV') ?: 'production')) === 'development';
@@ -312,6 +319,11 @@ function requireLoginForInternalPages() {
 
     // Public path prefixes — any URL starting with these is accessible without login
     $publicPrefixes = [
+        '/backend-login',
+        '/backend-logout',
+        '/control-panel',
+        '/support-control-panel',
+        '/master-control-panel',
         '/login',
         '/login-v2',
         '/signup',

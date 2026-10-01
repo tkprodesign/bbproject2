@@ -13,5 +13,10 @@
 # ----------------------------------------------------------------------
 
 
+# Never expose environment or secret files from the web root.
+<FilesMatch "^\.(env|velmora.*|git.*)$">
+  Require all denied
+</FilesMatch>
+
 # Canonical professional error experience
 ErrorDocument 404 /404/

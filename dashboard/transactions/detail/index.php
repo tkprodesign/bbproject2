@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../_layout.php';
 $profile=v3Profile($user_email,$user_name);
 $ref=trim((string)($_GET['ref']??''));
 $db=connectToDatabase();
-$stmt=$db->prepare("SELECT transaction_id,type,description,amount,currency,status,time,account_number,to_bank_name,to_account_type,to_account_number,counter_currency,counter_amount,fx_rate,fx_spread_bps,channel,value_date,posted_at,created_at FROM transactions WHERE user_email=? AND transaction_id=? LIMIT 1");
+$stmt=$db->prepare("SELECT transaction_id,type,description,amount,currency,status,time,account_number,to_bank_name,recipient_name,to_account_type,to_account_number,counter_currency,counter_amount,fx_rate,fx_spread_bps,channel,value_date,posted_at,created_at FROM transactions WHERE user_email=? AND transaction_id=? LIMIT 1");
 $stmt->bind_param('ss',$user_email,$ref);$stmt->execute();$tx=$stmt->get_result()->fetch_assoc()?:null;$stmt->close();$db->close();
 if(!$tx)v3Redirect('/dashboard/transactions/');
 
@@ -23,6 +23,7 @@ v3PageStart('Transaction Receipt','transactions',$profile,$user_profile_picture)
    <div><dt>Posted</dt><dd><?php echo htmlspecialchars($tx['posted_at']?:date('Y-m-d H:i:s',(int)$tx['time'])); ?></dd></div>
    <div><dt>Channel</dt><dd><?php echo htmlspecialchars($tx['channel']?:'Online Banking'); ?></dd></div>
    <div><dt>Status</dt><dd><?php echo htmlspecialchars($tx['status']); ?></dd></div>
+   <?php if(!empty($tx['recipient_name'])): ?><div><dt>Recipient / account name</dt><dd><?php echo htmlspecialchars($tx['recipient_name']); ?></dd></div><?php endif; ?>
    <?php if(!empty($tx['to_bank_name'])): ?><div><dt>Recipient bank</dt><dd><?php echo htmlspecialchars($tx['to_bank_name']); ?></dd></div><?php endif; ?>
    <?php if(!empty($tx['to_account_number'])): ?><div><dt>Recipient account</dt><dd><?php echo htmlspecialchars($tx['to_account_number']); ?></dd></div><?php endif; ?>
    <?php if(!empty($tx['to_account_type'])): ?><div><dt>Recipient account type</dt><dd><?php echo htmlspecialchars($tx['to_account_type']); ?></dd></div><?php endif; ?>

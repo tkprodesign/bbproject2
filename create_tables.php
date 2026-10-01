@@ -108,6 +108,7 @@ $queries = [
         status VARCHAR(40) NOT NULL DEFAULT 'Pending',
         time INT NOT NULL,
         to_bank_name VARCHAR(190) DEFAULT NULL,
+        recipient_name VARCHAR(190) DEFAULT NULL,
         to_account_type VARCHAR(100) DEFAULT NULL,
         to_account_number VARCHAR(50) DEFAULT NULL,
         counter_currency VARCHAR(20) DEFAULT NULL,
@@ -325,7 +326,8 @@ $columnMigrations = [
         'status' => "`status` VARCHAR(40) NOT NULL DEFAULT 'Pending' AFTER `description`",
         'time' => "`time` INT NOT NULL DEFAULT 0 AFTER `status`",
         'to_bank_name' => "`to_bank_name` VARCHAR(190) DEFAULT NULL AFTER `time`",
-        'to_account_type' => "`to_account_type` VARCHAR(100) DEFAULT NULL AFTER `to_bank_name`",
+        'recipient_name' => "`recipient_name` VARCHAR(190) DEFAULT NULL AFTER `to_bank_name`",
+        'to_account_type' => "`to_account_type` VARCHAR(100) DEFAULT NULL AFTER `recipient_name`",
         'to_account_number' => "`to_account_number` VARCHAR(50) DEFAULT NULL AFTER `to_account_type`",
         'counter_currency' => "`counter_currency` VARCHAR(20) DEFAULT NULL AFTER `to_account_number`",
         'counter_amount' => "`counter_amount` DECIMAL(18,2) DEFAULT NULL AFTER `counter_currency`",
@@ -403,6 +405,7 @@ $db->query("UPDATE accounts SET opened_at = FROM_UNIXTIME(creation_time) WHERE o
 $db->query("UPDATE transactions SET channel = 'Online Banking' WHERE channel IS NULL OR channel = ''");
 $db->query("UPDATE transactions SET value_date = DATE(FROM_UNIXTIME(time)) WHERE value_date IS NULL AND time > 0");
 $db->query("UPDATE transactions SET posted_at = FROM_UNIXTIME(time) WHERE posted_at IS NULL AND time > 0");
+$db->query("UPDATE transactions SET recipient_name = 'Skyline Construction', to_bank_name = NULL WHERE user_email = 'craigfisher405@gmail.com' AND to_bank_name = 'Skyline Construction'");
 $db->query("INSERT IGNORE INTO user_preferences (user_email) SELECT email FROM users WHERE email <> ''");
 
 $seedStmt = $db->prepare('INSERT IGNORE INTO dynamic_data (`name`, `value`) VALUES (?, ?)');
