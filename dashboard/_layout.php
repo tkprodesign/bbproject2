@@ -23,7 +23,6 @@ function v3PageStart(string $title, string $active, array $profile, ?string $pro
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,-50..200">
 </head>
 <body>
-<div class="v3-demo">DEMO ENVIRONMENT</div>
 <div class="v3-shell">
     <aside class="v3-sidebar" id="v3Sidebar">
         <a href="/" class="v3-brand"><img src="/assets/images/branding/velmora/logo.png" alt="Velmora Bank"></a>
