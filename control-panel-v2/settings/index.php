@@ -5,7 +5,7 @@ $db=connectToDatabase();
 $res=$db->query("SELECT name,value,updated_at FROM dynamic_data ORDER BY name");
 $dynamic=$res?$res->fetch_all(MYSQLI_ASSOC):[];
 $tableCounts=[];
-foreach(['users','accounts','transactions','fx_trades','beneficiaries','notifications','security_events','kyc_data'] as $table){$r=$db->query("SELECT COUNT(*) FROM `".$table."`");$tableCounts[$table]=(int)($r?$r->fetch_row()[0]:0);}
+foreach(['users','accounts','transactions','fx_trades','beneficiaries','notifications','support_cases','support_case_messages','security_events','kyc_data'] as $table){$r=$db->query("SELECT COUNT(*) FROM `".$table."`");$tableCounts[$table]=(int)($r?$r->fetch_row()[0]:0);}
 $db->close();$phone=getSupportPhoneNumber();
 cpv2Start('Settings','settings');
 ?>
