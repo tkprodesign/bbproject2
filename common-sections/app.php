@@ -226,6 +226,28 @@ function sendSiteEmail(string $to, string $subject, string $htmlBody, string $fr
     }
 }
 
+function createUserNotification(mysqli $db, string $email, string $title, string $body, string $type = 'General', ?string $actionUrl = null): void {
+    try {
+        $stmt=$db->prepare("SELECT in_app_notifications FROM user_preferences WHERE user_email=? LIMIT 1");
+        if($stmt){
+            $stmt->bind_param('s',$email);$stmt->execute();$stmt->bind_result($enabled);
+            if($stmt->fetch() && (int)$enabled===0){$stmt->close();return;}
+            $stmt->close();
+        }
+        $stmt=$db->prepare("INSERT INTO notifications (user_email,title,body,notification_type,action_url) VALUES (?,?,?,?,?)");
+        if($stmt){$stmt->bind_param('sssss',$email,$title,$body,$type,$actionUrl);$stmt->execute();$stmt->close();}
+    } catch(Throwable $e){ error_log('Notification record skipped: '.$e->getMessage()); }
+}
+
+function recordSecurityEvent(mysqli $db, string $email, string $eventType, string $description): void {
+    try {
+        $ip=substr((string)($_SERVER['REMOTE_ADDR']??''),0,45);
+        $ua=substr((string)($_SERVER['HTTP_USER_AGENT']??''),0,500);
+        $stmt=$db->prepare("INSERT INTO security_events (user_email,event_type,description,ip_address,user_agent) VALUES (?,?,?,?,?)");
+        if($stmt){$stmt->bind_param('sssss',$email,$eventType,$description,$ip,$ua);$stmt->execute();$stmt->close();}
+    } catch(Throwable $e){ error_log('Security event record skipped: '.$e->getMessage()); }
+}
+
 //Check for item in database
 function isInTable($email, $table) {
     $dbconn = connectToDatabase();
