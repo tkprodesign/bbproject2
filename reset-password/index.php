@@ -23,6 +23,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['reset_password'])){
             $newHash=password_hash($new,PASSWORD_DEFAULT);
             $stmt=$db->prepare("UPDATE users SET password=? WHERE email=?");
             $stmt->bind_param('ss',$newHash,$email);$stmt->execute();$stmt->close();
+            velmoraRevokeCustomerSessions($db,$email);
 
             $stmt=$db->prepare("UPDATE password_reset_tokens SET used_at=NOW() WHERE token_hash=? AND used_at IS NULL");
             $stmt->bind_param('s',$hash);$stmt->execute();$stmt->close();
@@ -30,7 +31,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['reset_password'])){
             $stmt=$db->prepare("UPDATE password_reset_tokens SET used_at=NOW() WHERE LOWER(user_email)=LOWER(?) AND used_at IS NULL");
             $stmt->bind_param('s',$email);$stmt->execute();$stmt->close();
 
-            recordSecurityEvent($db,$email,'Password Reset','Password reset completed using secure recovery link');
+            recordSecurityEvent($db,$email,'Password Reset','Password reset completed using secure recovery link; active customer sessions revoked');
             createUserNotification($db,$email,'Password reset completed','Your online banking password was reset successfully. If you did not make this change, contact support immediately.','Security','/dashboard/security/');
 
             $db->commit();$done=true;$valid=false;
