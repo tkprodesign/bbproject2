@@ -95,8 +95,18 @@
                     }
                     $dbconn->close();
 
-                    // Set the login cookie
-                    setcookie("login_email", $email, time() + $cookie_timeout, "/");
+                    // Set the login cookie with secure browser protections.
+                    if (session_status() === PHP_SESSION_ACTIVE) {
+                        session_regenerate_id(true);
+                        $_SESSION['login_email'] = $email;
+                    }
+                    setcookie("login_email", $email, [
+                        'expires' => time() + $cookie_timeout,
+                        'path' => '/',
+                        'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+                        'httponly' => true,
+                        'samesite' => 'Lax',
+                    ]);
 
                     // Redirect based on control panel allow-list
                     if (in_array(strtolower($email), $controlPanelAllowedEmails, true)) {
