@@ -269,7 +269,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
             <div class="hv2-footer-links">
                 <div><strong>Banking</strong><a href="/personal/">Personal</a><a href="/business/">Business</a><a href="/credit-card/">Cards</a><a href="/loan/">Loans</a></div>
                 <div><strong>About</strong><a href="/about-us/">About Velmora</a><a href="/careers/">Careers</a><a href="/atm-and-bank-locations/">Locations</a><a href="/contact/">Contact</a></div>
-                <div><strong>Security</strong><a href="/quick-links/#online-security-tips">Security tips</a><a href="/quick-links/#anti-money-laundering">AML</a><a href="/cookie-policy/">Cookie policy</a><a href="/quick-links/#support-center">Support center</a></div>
+                <div><strong>Security</strong><a href="/security/">Security tips</a><a href="/legal/">AML</a><a href="/cookie-policy/">Cookie policy</a><a href="/support/">Support center</a></div>
             </div>
         </div>
         <div class="hv2-footer-bottom">
