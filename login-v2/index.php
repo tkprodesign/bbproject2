@@ -1,5 +1,6 @@
 <?php
 define('VELMORA_LOGIN_TARGET','/dashboard-v3/');
+define('VELMORA_CONTROL_PANEL_TARGET','/control-panel-v2/');
 require_once('../login/app.php');
 ?>
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
