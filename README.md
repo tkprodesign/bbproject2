@@ -11,7 +11,7 @@ Velmora uses a **Resend-first outbound email architecture** with SpaceMail retai
 - `no-reply@velmorabank.us` — outbound transactional identity through Resend; replies are directed to Support.
 - `admin@velmorabank.us` — optional operational alias/outbound identity where needed.
 
-The SpaceMail plan does not require a separate mailbox password for each alias. Aliases receive into the physical Support mailbox; application outbound mail from aliases is sent through Resend.
+The SpaceMail plan does not require a separate mailbox password for each alias. By operating instruction, Support and Security use the same mailbox credential: `security@velmorabank.us` shares the password stored as `SUPPORT_EMAIL_PASSWORD`; no `SECURITY_EMAIL_PASSWORD` is required. Aliases receive into the physical Support mailbox; application outbound mail from aliases is sent through Resend.
 
 ### Required outbound setting
 
