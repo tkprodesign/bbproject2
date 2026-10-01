@@ -226,6 +226,32 @@ function sendSiteEmail(string $to, string $subject, string $htmlBody, string $fr
     }
 }
 
+function createUserNotification(mysqli $db, string $email, string $title, string $body, string $type = 'General', ?string $actionUrl = null): void {
+    try {
+        $stmt = $db->prepare("INSERT INTO notifications (user_email, title, body, notification_type, action_url) VALUES (?, ?, ?, ?, ?)");
+        if (!$stmt) return;
+        $stmt->bind_param('sssss', $email, $title, $body, $type, $actionUrl);
+        $stmt->execute();
+        $stmt->close();
+    } catch (Throwable $e) {
+        error_log('Notification record skipped: ' . $e->getMessage());
+    }
+}
+
+function recordSecurityEvent(mysqli $db, string $email, string $eventType, string $description, ?string $ipAddress = null, ?string $userAgent = null): void {
+    try {
+        $ipAddress = $ipAddress !== null ? substr($ipAddress, 0, 45) : null;
+        $userAgent = $userAgent !== null ? substr($userAgent, 0, 500) : null;
+        $stmt = $db->prepare("INSERT INTO security_events (user_email, event_type, description, ip_address, user_agent) VALUES (?, ?, ?, ?, ?)");
+        if (!$stmt) return;
+        $stmt->bind_param('sssss', $email, $eventType, $description, $ipAddress, $userAgent);
+        $stmt->execute();
+        $stmt->close();
+    } catch (Throwable $e) {
+        error_log('Security event record skipped: ' . $e->getMessage());
+    }
+}
+
 //Check for item in database
 function isInTable($email, $table) {
     $dbconn = connectToDatabase();
