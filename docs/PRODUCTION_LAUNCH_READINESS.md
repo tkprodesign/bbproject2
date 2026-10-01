@@ -308,7 +308,7 @@ Added a common customer-access restriction workflow to Support, Admin and Master
 - Login shows a brief customer-readable restriction notice and directs the customer to contact the bank.
 - Customer financial records remain intact.
 - Preferred security-notice sender is `security@velmorabank.us`.
-- **Launch task:** provision the `security@velmorabank.us` SpaceMail mailbox/alias and `SECURITY_EMAIL_PASSWORD`. Until then, notices fall back to Support.
+- **Launch task:** provision the `security@velmorabank.us` SpaceMail alias routed to Support. Security intentionally uses the same SpaceMail credential as Support through `SUPPORT_EMAIL_PASSWORD`; no separate `SECURITY_EMAIL_PASSWORD` is required. Until the alias/Resend path is ready, notices fall back to Support.
 
 
 ### 2026-10-01 — Management review conversion
@@ -324,7 +324,7 @@ Added a common customer-access restriction workflow to Support, Admin and Master
 - Removed unverified physical address/service hours from customer-facing Contact and notification email templates.
 - Redirected retired *-v2 and predecessor dashboard/control-panel routes to canonical routes.
 - Added deployment smoke tests for canonical review routes and customer-auth schema.
-- SpaceMail/Spaceship mailbox provisioning for security@velmorabank.us remains provider-side; application support is complete and support@ fallback remains active until the mailbox credential exists.
+- SpaceMail/Spaceship alias provisioning for security@velmorabank.us remains provider-side; application support is complete and support@ fallback remains active until the alias/Resend path is ready. Security shares the Support mailbox credential.
 
 
 ### 2026-10-01 — Resend + single SpaceMail mailbox architecture
