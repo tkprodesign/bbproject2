@@ -42,7 +42,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['request_reset'])){
                 <p>If you did not request this, you can ignore this email. Your existing password remains unchanged.</p>
                 <p style="font-size:12px;color:#6f7b88">For your security, Velmora support should never ask you to send your full password or a one-time code.</p>
               </div>
-            </div></body></html>';
+            </div><?php include __DIR__ . '/../common-sections/smartsupp-live-chat.html'; ?></body></html>';
 
             if(!sendSiteEmail($email,'Reset your Velmora password',$body)){
                 error_log('Password reset email delivery failed for a registered profile.');
