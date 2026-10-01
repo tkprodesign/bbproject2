@@ -21,7 +21,7 @@
         <h2>Site Users Full List</h2>
         <?php
             $db = connectToDatabase();
-            $query = "SELECT id, name, email, kyc_level, date_registered FROM users ORDER BY date_registered DESC";
+            $query = "SELECT id, customer_number, name, email, user_status, kyc_level, date_registered, last_login_at FROM users ORDER BY date_registered DESC";
             $result = $db->query($query);
 
             $users = [];
@@ -34,9 +34,12 @@
             $balances = [];
             if (!empty($users)) {
                 $emailList = implode(',', array_map(fn($u) => "'" . $db->real_escape_string($u['email']) . "'", $users));
-                $balResult = $db->query("SELECT user_email, SUM(amount) AS user_balance FROM transactions WHERE user_email IN ($emailList) AND status IN ('Successful','Pending') GROUP BY user_email");
+                $balResult = $db->query("SELECT user_email, currency, SUM(amount) AS user_balance FROM transactions WHERE user_email IN ($emailList) AND status IN ('Successful','Pending') GROUP BY user_email, currency");
                 while ($brow = $balResult->fetch_assoc()) {
-                    $balances[$brow['user_email']] = $brow['user_balance'];
+                    $balances[$brow['user_email']][] = [
+                        'currency' => strtoupper((string)$brow['currency']),
+                        'amount' => (float)$brow['user_balance'],
+                    ];
                 }
             }
         ?>
@@ -45,11 +48,14 @@
             <thead>
                 <tr>
                     <td>User ID</td>
+                    <td>Customer No.</td>
                     <td>Name</td>
                     <td>Email</td>
-                    <td>Balance</td>
-                    <td>KYC Level</td>
-                    <td>Date Registered</td>
+                    <td>Balances</td>
+                    <td>Status</td>
+                    <td>KYC</td>
+                    <td>Registered</td>
+                    <td>Last Login</td>
                     <td></td>
                 </tr>
             </thead>
@@ -58,16 +64,25 @@
                     <?php foreach ($users as $row): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($row['id']); ?></td>
+                            <td><?php echo htmlspecialchars($row['customer_number'] ?: '—'); ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
-                            <td>$<?php echo number_format((float)($balances[$row['email']] ?? 0), 2); ?></td>
+                            <td>
+                                <?php if (!empty($balances[$row['email']])): ?>
+                                    <?php foreach ($balances[$row['email']] as $balance): ?>
+                                        <div><?php echo htmlspecialchars(velmoraFormatCurrency($balance['amount'], velmoraIsSupportedCurrency($balance['currency']) ? $balance['currency'] : 'USD')); ?></div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>—<?php endif; ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($row['user_status'] ?: 'Active'); ?></td>
                             <td><?php echo htmlspecialchars($row['kyc_level']); ?></td>
                             <td><?php echo htmlspecialchars(date('d M Y', (int)$row['date_registered'])); ?></td>
+                            <td><?php echo !empty($row['last_login_at']) ? htmlspecialchars(date('d M Y H:i', strtotime((string)$row['last_login_at']))) : '—'; ?></td>
                             <td><a href="/control-panel/profile-picture/?id=<?php echo htmlspecialchars($row['id']); ?>">View Profile</a></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <tr><td colspan="7">No users found</td></tr>
+                    <tr><td colspan="10">No users found</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
