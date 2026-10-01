@@ -9,7 +9,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
       <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><span class="material-symbols-rounded">call</span><?php echo htmlspecialchars($supportPhoneNumber); ?></a>
     </div>
     <div>
-      <a href="/atm-and-bank-locations/"><span class="material-symbols-rounded">location_on</span>ATM &amp; locations</a>
+      <a href="/atm-and-bank-locations/"><span class="material-symbols-rounded">location_on</span>Service access</a>
       <a href="/contact/"><span class="material-symbols-rounded">support_agent</span>Support</a>
     </div>
   </div>
