@@ -54,10 +54,10 @@ $stmt->bind_result($active_accounts);
 $stmt->fetch();
 $stmt->close();
 
-$stmt = $dbMetrics->prepare("SELECT status, date_of_birth, first_name, middle_name, last_name FROM kyc_data WHERE email = ? ORDER BY id DESC LIMIT 1");
+$stmt = $dbMetrics->prepare("SELECT status, date_of_birth, first_name, middle_name, last_name, occupation FROM kyc_data WHERE email = ? ORDER BY id DESC LIMIT 1");
 $stmt->bind_param('s', $user_email);
 $stmt->execute();
-$stmt->bind_result($latest_kyc_status, $kyc_dob, $kyc_first_name, $kyc_middle_name, $kyc_last_name);
+$stmt->bind_result($latest_kyc_status, $kyc_dob, $kyc_first_name, $kyc_middle_name, $kyc_last_name, $kyc_occupation);
 if ($stmt->fetch()) {
     if (!empty($latest_kyc_status)) {
         $kyc_status_label = $latest_kyc_status;
@@ -68,6 +68,9 @@ if ($stmt->fetch()) {
     $kycFullName = trim(implode(' ', array_filter([$kyc_first_name, $kyc_middle_name, $kyc_last_name])));
     if ($kycFullName !== '') {
         $dashboardMeta['account_holder'] = $kycFullName;
+    }
+    if (!empty($kyc_occupation)) {
+        $dashboardMeta['profession'] = $kyc_occupation;
     }
 }
 $stmt->close();
@@ -264,6 +267,7 @@ $dbMetrics->close();
                 <div><span>Date of Birth</span><strong><?php echo htmlspecialchars($dashboardMeta['date_of_birth']); ?></strong></div>
                 <div><span>Account Number</span><strong><?php echo htmlspecialchars($dashboardMeta['account_number']); ?></strong></div>
                 <div><span>Account Type</span><strong><?php echo htmlspecialchars($dashboardMeta['account_type']); ?></strong></div>
+                <div><span>Occupation</span><strong><?php echo htmlspecialchars($dashboardMeta['profession']); ?></strong></div>
             </div>
         </div>
     </div>
