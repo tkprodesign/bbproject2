@@ -112,9 +112,10 @@ function seedJenniferReferenceData($email, $name) {
 
     if (empty($existingAccountNumber)) {
         $createdAt = time();
+        $openedAt = date('Y-m-d H:i:s', $createdAt);
         $active = 'Active';
-        $createAccount = $db->prepare('INSERT INTO accounts (account_type, user_name, user_email, currency, account_number, account_status, creation_time) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $createAccount->bind_param('ssssisi', $accountType, $name, $email, $currency, $accountNumber, $active, $createdAt);
+        $createAccount = $db->prepare('INSERT INTO accounts (account_type, user_name, user_email, currency, account_number, account_status, creation_time, opened_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+        $createAccount->bind_param('ssssisis', $accountType, $name, $email, $currency, $accountNumber, $active, $createdAt, $openedAt);
         $createAccount->execute();
         $createAccount->close();
     }
@@ -137,7 +138,7 @@ function seedJenniferReferenceData($email, $name) {
         ['id' => 'JENN-20260310-1', 'type' => 'Luxury', 'description' => 'Art Collection Purchase', 'amount' => -278500.00, 'date' => '2026-03-10 10:45:00'],
     ];
 
-    $insertStmt = $db->prepare('INSERT IGNORE INTO transactions (type, transaction_id, user_email, account_number, amount, currency, description, status, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $insertStmt = $db->prepare('INSERT IGNORE INTO transactions (type, transaction_id, user_email, account_number, amount, currency, description, status, time, channel, value_date, posted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
     foreach ($referenceTransactions as $transaction) {
         $type = $transaction['type'];
@@ -146,8 +147,11 @@ function seedJenniferReferenceData($email, $name) {
         $description = $transaction['description'];
         $status = 'Successful';
         $timestamp = strtotime($transaction['date']);
+        $channel = 'Reference Data';
+        $valueDate = date('Y-m-d', $timestamp);
+        $postedAt = date('Y-m-d H:i:s', $timestamp);
 
-        $insertStmt->bind_param('sssidsssi', $type, $transactionId, $email, $accountNumber, $amount, $currency, $description, $status, $timestamp);
+        $insertStmt->bind_param('sssidsssisss', $type, $transactionId, $email, $accountNumber, $amount, $currency, $description, $status, $timestamp, $channel, $valueDate, $postedAt);
         $insertStmt->execute();
     }
 
@@ -348,11 +352,20 @@ if (isset($_POST['create_account'])) {
     
 
 
-    $sql = "INSERT INTO accounts (account_type, user_name, user_email, currency, account_number, creation_time) VALUES (?, ?, ?, ?, ?, ?)";
+    $opened_at = date('Y-m-d H:i:s', $time);
+    $sql = "INSERT INTO accounts (account_type, user_name, user_email, currency, account_number, creation_time, opened_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $dbconn->prepare($sql);
-    $stmt->bind_param('sssssi', $account_type, $user_name, $user_email, $currency, $bank_account_number, $time);
+    $stmt->bind_param('sssssis', $account_type, $user_name, $user_email, $currency, $bank_account_number, $time, $opened_at);
     if ($stmt->execute()) {
         $stmt->close();
+        createUserNotification(
+            $dbconn,
+            $user_email,
+            'New account opened',
+            $currency . ' ' . $account_type . ' account ending ' . substr((string)$bank_account_number, -4) . ' is now active.',
+            'Account',
+            '/dashboard-v3/accounts/'
+        );
         header('Location: ../success?nos='.$bank_account_number.'s');
         exit();
     } else {
@@ -598,6 +611,9 @@ if (isset($_POST['transfer_funds'])) {
     $negative_amount = -abs((float)$amount);
     $status = 'Pending';
     $type = 'Transfer';
+    $channel = 'Online Banking';
+    $value_date = date('Y-m-d', $time);
+    $posted_at = date('Y-m-d H:i:s', $time);
     $description = 'Transfer to ' . $to_bank_name . ' account number ' . $to_account_number;
     if ($source_currency !== $recipient_currency) {
         $description .= ' • Recipient amount ' . velmoraFormatCurrency($recipient_amount, $recipient_currency);
@@ -605,8 +621,9 @@ if (isset($_POST['transfer_funds'])) {
 
     $stmt = $db->prepare("INSERT INTO transactions
         (transaction_id, `type`, user_email, account_number, amount, currency, `description`, `status`, `time`,
-         to_bank_name, to_account_type, to_account_number, counter_currency, counter_amount, fx_rate, fx_spread_bps)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+         to_bank_name, to_account_type, to_account_number, counter_currency, counter_amount, fx_rate, fx_spread_bps,
+         channel, value_date, posted_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
         $db->close();
@@ -615,7 +632,7 @@ if (isset($_POST['transfer_funds'])) {
     }
 
     $stmt->bind_param(
-        "sssidsssissssddi",
+        "sssidsssissssddisss",
         $transaction_id,
         $type,
         $user_email,
@@ -631,7 +648,10 @@ if (isset($_POST['transfer_funds'])) {
         $recipient_currency,
         $recipient_amount,
         $fx_rate,
-        $fx_spread_bps
+        $fx_spread_bps,
+        $channel,
+        $value_date,
+        $posted_at
     );
 
     if (!$stmt->execute()) {
@@ -643,6 +663,14 @@ if (isset($_POST['transfer_funds'])) {
     }
 
     $stmt->close();
+    createUserNotification(
+        $db,
+        $user_email,
+        'Transfer submitted',
+        'Your transfer ' . $transaction_id . ' to ' . $to_bank_name . ' has been submitted for bank processing.',
+        'Transfer',
+        '/dashboard-v3/transactions/'
+    );
     $db->close();
 
     $sourceDisplay = velmoraFormatCurrency((float)$amount, $source_currency);
