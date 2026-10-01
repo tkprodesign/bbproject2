@@ -170,7 +170,7 @@ jobs:
 
             tmp="$HOME/.velmora-backend.env.tmp"
             awk -F= '"'"'
-              /^[[:space:]]*(SUPPORT_EMAIL|SUPPORT_EMAIL_PASSWORD|ADMIN_EMAIL|ADMIN_EMAIL_PASSWORD|DEVELOPER_EMAIL|DEVELOPER_EMAIL_PASSWORD|IMAP_HOST|IMAP_PORT|SMTP_HOST|SMTP_PORT|SMTP_ENCRYPTION)[[:space:]]*=/ {
+              /^[[:space:]]*(SUPPORT_EMAIL|SUPPORT_EMAIL_PASSWORD|ADMIN_EMAIL|ADMIN_EMAIL_PASSWORD|DEVELOPER_EMAIL|DEVELOPER_EMAIL_PASSWORD|SECURITY_EMAIL_PASSWORD|NOREPLY_EMAIL_PASSWORD|IMAP_HOST|IMAP_PORT|SMTP_HOST|SMTP_PORT|SMTP_USERNAME|SMTP_PASSWORD|SMTP_ENCRYPTION)[[:space:]]*=/ {
                 key=$1
                 gsub(/^[[:space:]]+|[[:space:]]+$/, "", key)
                 sub(/^[^=]*=/, "", $0)
@@ -276,6 +276,19 @@ jobs:
           set -euo pipefail
           ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd '$LIVE_APP_ROOT'; php create_tables.php >/tmp/velmora-migrate.log 2>&1 || { cat /tmp/velmora-migrate.log; rm -f /tmp/velmora-migrate.log; exit 1; }; grep -E 'Success|Finished with errors' /tmp/velmora-migrate.log || true; rm -f /tmp/velmora-migrate.log"
 
+      - name: Verify customer auth schema
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" "cd '$LIVE_APP_ROOT'; php -r '
+            require "common-sections/app.php";
+            $db=connectToDatabase();
+            $r=$db->query("SHOW COLUMNS FROM users LIKE \"session_version\"");
+            if(!$r || $r->num_rows!==1){fwrite(STDERR,"Missing users.session_version\n");exit(1);}
+            $r=$db->query("SHOW TABLES LIKE \"customer_remember_tokens\"");
+            if(!$r || $r->num_rows!==1){fwrite(STDERR,"Missing customer_remember_tokens\n");exit(1);}
+            echo "CUSTOMER_AUTH_SCHEMA=READY\n";
+          '"
+
       - name: Reset PHP web cache
         run: |
           set -euo pipefail
@@ -309,3 +322,43 @@ jobs:
             exit 1
           fi
           echo "LIVE_LOGIN_OK=YES"
+
+      - name: Smoke test review routes
+        run: |
+          set -euo pipefail
+          routes=(
+            "/"
+            "/login/"
+            "/signup/"
+            "/personal/"
+            "/business/"
+            "/credit-card/"
+            "/loan/"
+            "/online-banking/"
+            "/international/"
+            "/about-us/"
+            "/contact/"
+            "/atm-and-bank-locations/"
+            "/support/"
+            "/security/"
+            "/rates/"
+            "/documents/"
+            "/legal/"
+            "/privacy/"
+            "/terms/"
+            "/cookie-policy/"
+            "/accessibility/"
+          )
+          for route in "${routes[@]}"; do
+            nonce="$(date +%s%N)"
+            body="$(curl -fsSL --max-time 30 -H 'Cache-Control: no-cache' "https://velmorabank.us${route}?cb=${nonce}")"
+            if printf '%s' "$body" | grep -Eqi 'Fatal error|Access denied for user|mysqli_sql_exception'; then
+              echo "Runtime failure detected at $route"
+              exit 1
+            fi
+            if printf '%s' "$body" | grep -Eqi 'DEMO ENVIRONMENT|DEMO OPERATIONS|Demo environment|current demo|review version|approved data required|fake downloads'; then
+              echo "Pre-launch wording remains at $route"
+              exit 1
+            fi
+            echo "SMOKE_OK=$route"
+          done
