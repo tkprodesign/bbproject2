@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../_app.php';
 require_once __DIR__ . '/../_layout.php';
 $profile=v3Profile($user_email,$user_name);
+$client=v3ClientMeta($user_email);
 v3PageStart('Profile','profile',$profile,$user_profile_picture);
 ?>
 <section class="v3-heading"><div><span class="v3-kicker">CLIENT PROFILE</span><h1>Personal information</h1><p>Verified profile and KYC information associated with your banking relationship.</p></div><a class="v3-secondary-btn" href="/dashboard/profile-picture/">Update photo</a></section>
@@ -12,7 +13,13 @@ v3PageStart('Profile','profile',$profile,$user_profile_picture);
         <div><span class="v3-kicker">ACCOUNT HOLDER</span><h2><?php echo htmlspecialchars($profile['name']); ?></h2><p><?php echo htmlspecialchars($profile['occupation']); ?></p></div>
         <span class="v3-status successful"><?php echo htmlspecialchars($profile['status']); ?></span>
     </div>
+    <div class="v3-meta-grid">
+        <div><span>Customer number</span><strong><?php echo htmlspecialchars($client['customer_number']); ?></strong></div>
+        <div><span>Relationship status</span><strong class="v3-verified"><?php echo htmlspecialchars($client['user_status']); ?></strong></div>
+        <div><span>Member since</span><strong><?php echo htmlspecialchars($client['member_since']); ?></strong></div>
+    </div>
     <dl class="v3-profile-details">
+        <div><dt>Email address</dt><dd><?php echo htmlspecialchars($user_email); ?></dd></div>
         <div><dt>Date of birth</dt><dd><?php echo htmlspecialchars($profile['dob']); ?></dd></div>
         <div><dt>Phone number</dt><dd><?php echo htmlspecialchars($profile['phone']); ?></dd></div>
         <div><dt>Occupation</dt><dd><?php echo htmlspecialchars($profile['occupation']); ?></dd></div>
