@@ -29,6 +29,7 @@ require_once('../login/app.php');
     <?php if(isset($_GET['restricted'])&&$_GET['restricted']==='yes'): ?><div class="pv2-alert error" id="restrictedAccessNotice">Access to this Velmora customer profile is currently restricted. Please contact Velmora Bank Support for assistance.</div><?php endif; ?>
     <?php if(isset($_GET['error'])&&$_GET['error']==='yes'): ?><div class="pv2-alert error">The email or password was not accepted. Check your details and try again.</div><?php endif; ?>
     <form method="post" class="pv2-form">
+      <input type="hidden" name="csrf" value="<?php echo htmlspecialchars((string)($_SESSION['customer_login_csrf'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
       <label><span>Email address</span><input type="email" name="email" autocomplete="username" required placeholder="you@example.com"></label>
       <label><span>Password</span><input type="password" name="password" autocomplete="current-password" required placeholder="Enter your password"></label>
       <div class="pv2-auth-row"><label class="pv2-auth-check"><input type="checkbox" name="remember_me" value="1">Keep me signed in</label><a class="pv2-auth-link" href="/forgot-password/">Forgot password?</a></div>
