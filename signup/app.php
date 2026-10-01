@@ -22,7 +22,7 @@ if (isset($_POST['sign_up'])) {
     // Sanitize user inputs
     $name = mysqli_real_escape_string($dbconn, $_POST['full_name']);
     $email = mysqli_real_escape_string($dbconn, $_POST['email']);
-    $password = mysqli_real_escape_string($dbconn, $_POST['password']);
+    $password = (string)($_POST['password'] ?? '');
 
     // Check if user already exists in the database
     $table = 'users';
