@@ -1,11 +1,14 @@
 <?php
-function v3NavItem(string $href, string $icon, string $label, string $active, string $key): string {
+function v3NavItem(string $href, string $icon, string $label, string $active, string $key, int $badge = 0): string {
     $class = $active === $key ? ' class="active"' : '';
-    return '<a' . $class . ' href="' . htmlspecialchars($href) . '"><span class="material-symbols-rounded">' . $icon . '</span><span>' . htmlspecialchars($label) . '</span></a>';
+    $badgeHtml = $badge > 0 ? '<b class="v3-nav-badge">' . ($badge > 99 ? '99+' : $badge) . '</b>' : '';
+    return '<a' . $class . ' href="' . htmlspecialchars($href) . '"><span class="material-symbols-rounded">' . $icon . '</span><span>' . htmlspecialchars($label) . '</span>' . $badgeHtml . '</a>';
 }
 
 function v3PageStart(string $title, string $active, array $profile, ?string $profilePicture = null): void {
+    global $user_email;
     $first = explode(' ', trim((string)$profile['name']))[0] ?? 'Client';
+    $unreadNotifications = function_exists('v3UnreadNotificationCount') ? v3UnreadNotificationCount((string)$user_email) : 0;
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +31,7 @@ function v3PageStart(string $title, string $active, array $profile, ?string $pro
             <p>OVERVIEW</p>
             <?php echo v3NavItem('/dashboard-v3/','grid_view','Overview',$active,'overview'); ?>
             <?php echo v3NavItem('/dashboard-v3/transactions/','receipt_long','Transactions',$active,'transactions'); ?>
-            <?php echo v3NavItem('/dashboard-v3/notifications/','notifications','Notifications',$active,'notifications'); ?>
+            <?php echo v3NavItem('/dashboard-v3/notifications/','notifications','Notifications',$active,'notifications',$unreadNotifications); ?>
             <p>BANKING</p>
             <?php echo v3NavItem('/dashboard-v3/transfer/','north_east','Transfer funds',$active,'transfer'); ?>
             <?php echo v3NavItem('/dashboard-v3/exchange/','currency_exchange','Currency exchange',$active,'exchange'); ?>
