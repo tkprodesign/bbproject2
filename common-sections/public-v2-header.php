@@ -2,7 +2,6 @@
 $supportPhoneNumber = getSupportPhoneNumber();
 $supportWhatsappLink = getSupportWhatsappLink();
 ?>
-<div class="pv2-demo">DEMO ENVIRONMENT</div>
 <div class="pv2-utility">
   <div class="pv2-container pv2-utility-inner">
     <div>
