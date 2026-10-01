@@ -20,3 +20,38 @@
 
 # Canonical professional error experience
 ErrorDocument 404 /404/
+
+
+# Canonical redirects for retired review routes
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^home-v2/?$ / [R=301,L]
+  RewriteRule ^personal-v2/?$ /personal/ [R=301,L]
+  RewriteRule ^business-v2/?$ /business/ [R=301,L]
+  RewriteRule ^credit-card-v2/?$ /credit-card/ [R=301,L]
+  RewriteRule ^loan-v2/?$ /loan/ [R=301,L]
+  RewriteRule ^online-banking-v2/?$ /online-banking/ [R=301,L]
+  RewriteRule ^international-v2/?$ /international/ [R=301,L]
+  RewriteRule ^about-v2/?$ /about-us/ [R=301,L]
+  RewriteRule ^contact-v2/?$ /contact/ [R=301,L]
+  RewriteRule ^locations-v2/?$ /atm-and-bank-locations/ [R=301,L]
+  RewriteRule ^careers-v2/?$ /careers/ [R=301,L]
+  RewriteRule ^support-v2/?$ /support/ [R=301,L]
+  RewriteRule ^security-v2/?$ /security/ [R=301,L]
+  RewriteRule ^rates-v2/?$ /rates/ [R=301,L]
+  RewriteRule ^documents-v2/?$ /documents/ [R=301,L]
+  RewriteRule ^legal-v2/?$ /legal/ [R=301,L]
+  RewriteRule ^privacy-v2/?$ /privacy/ [R=301,L]
+  RewriteRule ^terms-v2/?$ /terms/ [R=301,L]
+  RewriteRule ^cookie-policy-v2/?$ /cookie-policy/ [R=301,L]
+  RewriteRule ^accessibility-v2/?$ /accessibility/ [R=301,L]
+  RewriteRule ^login-v2/?$ /login/ [R=301,L]
+  RewriteRule ^signup-v2/?$ /signup/ [R=301,L]
+  RewriteRule ^sign-up/?$ /signup/ [R=301,L]
+  RewriteRule ^forgot-password-v2/?$ /forgot-password/ [R=301,L]
+  RewriteRule ^reset-password-v2/?$ /reset-password/ [R=301,L]
+  RewriteRule ^onboarding-v2/?$ /onboarding/ [R=301,L]
+  RewriteRule ^not-found-v2/?$ /404/ [R=301,L]
+  RewriteRule ^dashboard-v3(?:/(.*))?/?$ /dashboard/$1 [R=302,L]
+  RewriteRule ^control-panel-v2(?:/(.*))?/?$ /control-panel/$1 [R=302,L]
+</IfModule>
