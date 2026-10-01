@@ -34,11 +34,14 @@
                         <tr>
                             <td>ID</td>
                             <td>Transaction Type</td>
+                            <td>Reference</td>
                             <td>Email</td>
                             <td>Account Number</td>
                             <td>Amount</td>
+                            <td>Channel</td>
                             <td>Status</td>
-                            <td>Time</td>
+                            <td>Value Date</td>
+                            <td>Posted</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,6 +50,7 @@
                                 <tr>
                                     <td><?php echo htmlspecialchars($row['id']); ?></td>
                                     <td><?php echo htmlspecialchars($row['type']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['transaction_id']); ?></td>
                                     <td><?php echo htmlspecialchars($row['user_email']); ?></td>
                                     <td><?php echo htmlspecialchars($row['account_number']); ?></td>
                                     <td>
@@ -56,13 +60,15 @@
                                         <?php if (!empty($row['fx_rate'])): ?><small style="display:block;color:#7a8ba0;">Rate <?php echo number_format((float)$row['fx_rate'], 6); ?><?php if ($row['fx_spread_bps'] !== null): ?> · Margin <?php echo number_format(((int)$row['fx_spread_bps']) / 100, 2); ?>%<?php endif; ?></small><?php endif; ?>
                                     <?php endif; ?>
                                 </td>
+                                    <td><?php echo htmlspecialchars(!empty($row['channel']) ? $row['channel'] : 'Online Banking'); ?></td>
                                     <td><?php echo htmlspecialchars($row['status']); ?></td>
-                                    <td><?php echo htmlspecialchars(date('d, F Y H:i:s /E/T', $row['time'])); ?></td>
+                                    <td><?php echo !empty($row['value_date']) ? htmlspecialchars(date('d M Y', strtotime((string)$row['value_date']))) : htmlspecialchars(date('d M Y', (int)$row['time'])); ?></td>
+                                    <td><?php echo !empty($row['posted_at']) ? htmlspecialchars(date('d M Y H:i', strtotime((string)$row['posted_at']))) : htmlspecialchars(date('d M Y H:i', (int)$row['time'])); ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="7">No transactions found</td>
+                                <td colspan="11">No transactions found</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
