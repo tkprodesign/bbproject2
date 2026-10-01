@@ -7,7 +7,8 @@ foreach([
  'customers'=>"SELECT COUNT(*) FROM users",
  'accounts'=>"SELECT COUNT(*) FROM accounts",
  'pending_transfers'=>"SELECT COUNT(*) FROM transactions WHERE type='Transfer' AND LOWER(status)='pending'",
- 'pending_kyc'=>"SELECT COUNT(*) FROM kyc_data WHERE LOWER(status)='pending'"
+ 'pending_kyc'=>"SELECT COUNT(*) FROM kyc_data WHERE LOWER(status)='pending'",
+ 'open_support'=>"SELECT COUNT(*) FROM support_cases WHERE status IN ('Open','In Review')"
 ] as $k=>$sql){$res=$db->query($sql);$metrics[$k]=(int)($res?$res->fetch_row()[0]:0);}
 $recentTx=$db->query("SELECT transaction_id,user_email,type,amount,currency,status,time FROM transactions ORDER BY time DESC LIMIT 8");
 $recentKyc=$db->query("SELECT id,first_name,last_name,email,status,time_uploaded FROM kyc_data ORDER BY id DESC LIMIT 6");
@@ -20,6 +21,7 @@ cpv2Start('Operations Overview','overview');
  <article class="op-stat"><span>Accounts</span><strong><?php echo $metrics['accounts']; ?></strong></article>
  <article class="op-stat"><span>Pending transfers</span><strong><?php echo $metrics['pending_transfers']; ?></strong></article>
  <article class="op-stat"><span>Pending KYC reviews</span><strong><?php echo $metrics['pending_kyc']; ?></strong></article>
+ <article class="op-stat"><span>Open support cases</span><strong><?php echo $metrics['open_support']; ?></strong></article>
 </div>
 <div class="op-two">
 <section class="op-panel"><div class="op-panel-head"><div><span class="op-kicker">LEDGER</span><h2>Recent transactions</h2></div><a href="/control-panel-v2/transactions/">View all</a></div>
