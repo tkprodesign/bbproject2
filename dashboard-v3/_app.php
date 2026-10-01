@@ -152,8 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_create_account']))
     $stmt->close();
     $db->close();
 
-    v3PostMessage('success', $currency . ' account opened successfully.');
-    v3Redirect('/dashboard-v3/accounts/');
+    v3Redirect('/dashboard-v3/accounts/opened/?account=' . urlencode($accountNumber));
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['v3_quote_exchange'])) {
