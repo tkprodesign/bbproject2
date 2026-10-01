@@ -195,7 +195,8 @@ For each email record:
 | # | Test | Result | Evidence / reference | Defect |
 |---|---|---|---|---|
 | 1 | Test plan and production function inventory created | PASS | Repository code reviewed 2026-10-01 | — |
-| 2 | Live browser execution | PENDING | Requires connected browser-capable session | — |
+| 2 | Public signup form reachability | PASS | Live TinyFish browser: form fields, Terms checkbox and Smartsupp visible; no errors | — |
+| 3 | Cody authenticated baseline | PASS | Live dashboard: Cody Woods, customer VLM-00000004, Active, 0 accounts, 0 transactions, 0 notifications, KYC not submitted | — |
 
 ## Final cleanup requirements
 - Return Cody customer relationship to Active.
