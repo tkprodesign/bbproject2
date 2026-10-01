@@ -26,7 +26,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
             <a href="<?php echo htmlspecialchars($supportWhatsappLink); ?>" target="_blank" rel="noopener"><span class="material-symbols-rounded">call</span><?php echo htmlspecialchars($supportPhoneNumber); ?></a>
         </div>
         <div>
-            <a href="/atm-and-bank-locations/"><span class="material-symbols-rounded">location_on</span>ATM &amp; locations</a>
+            <a href="/atm-and-bank-locations/"><span class="material-symbols-rounded">location_on</span>Service access</a>
             <a href="/contact/"><span class="material-symbols-rounded">support_agent</span>Support</a>
         </div>
     </div>
@@ -62,7 +62,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
         <a href="/credit-card/">Credit Cards</a>
         <a href="/loan/">Loans</a>
         <a href="/about-us/">About Velmora</a>
-        <a href="/atm-and-bank-locations/">ATM &amp; Locations</a>
+        <a href="/atm-and-bank-locations/">Service Access</a>
         <a href="/contact/">Support</a>
         <div>
             <a class="hv2-signin" href="/login/">Sign in</a>
@@ -266,7 +266,7 @@ $supportWhatsappLink = getSupportWhatsappLink();
             </div>
             <div class="hv2-footer-links">
                 <div><strong>Banking</strong><a href="/personal/">Personal</a><a href="/business/">Business</a><a href="/credit-card/">Cards</a><a href="/loan/">Loans</a></div>
-                <div><strong>About</strong><a href="/about-us/">About Velmora</a><a href="/careers/">Careers</a><a href="/atm-and-bank-locations/">Locations</a><a href="/contact/">Contact</a></div>
+                <div><strong>About</strong><a href="/about-us/">About Velmora</a><a href="/careers/">Careers</a><a href="/atm-and-bank-locations/">Service access</a><a href="/contact/">Contact</a></div>
                 <div><strong>Security</strong><a href="/security/">Security tips</a><a href="/legal/">AML</a><a href="/cookie-policy/">Cookie policy</a><a href="/support/">Support center</a></div>
             </div>
         </div>
