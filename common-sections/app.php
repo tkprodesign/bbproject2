@@ -266,6 +266,32 @@ function recordSecurityEvent(mysqli $db, string $email, string $eventType, strin
 }
 
 
+function velmoraRevokeCustomerSessions(mysqli $db, string $email): int {
+    $email = strtolower(trim($email));
+    $stmt = $db->prepare('UPDATE users SET session_version=GREATEST(1,session_version+1) WHERE email=?');
+    if ($stmt) {
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $stmt->close();
+    }
+    $stmt = $db->prepare('DELETE FROM customer_remember_tokens WHERE user_email=?');
+    if ($stmt) {
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $stmt->close();
+    }
+    $version = 1;
+    $stmt = $db->prepare('SELECT session_version FROM users WHERE email=? LIMIT 1');
+    if ($stmt) {
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $stmt->bind_result($version);
+        $stmt->fetch();
+        $stmt->close();
+    }
+    return max(1, (int)$version);
+}
+
 function velmoraCustomerCookieSecure(): bool {
     return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
 }
