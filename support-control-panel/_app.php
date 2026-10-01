@@ -54,6 +54,59 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_support_phone'])){
     $db=connectToDatabase();$stmt=$db->prepare("INSERT INTO dynamic_data (name,value) VALUES ('phone_number',?) ON DUPLICATE KEY UPDATE value=VALUES(value)");$stmt->bind_param('s',$phone);$stmt->execute();$stmt->close();$db->close();cpv2Flash('success','Support phone updated.');cpv2Go('/support-control-panel/settings/');
 }
 
+if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_restrict_customer'])){
+    cpv2Verify();
+    $id=(int)($_POST['customer_id']??0);
+    $reason=trim((string)($_POST['restriction_reason']??''));
+    if($id<=0||strlen($reason)<8||strlen($reason)>1200){cpv2Flash('error','Enter a clear restriction reason of at least 8 characters.');cpv2Go('/support-control-panel/customers/detail/?id='.$id);}
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT name,email,user_status FROM users WHERE id=? LIMIT 1");
+    $stmt->bind_param('i',$id);$stmt->execute();$user=$stmt->get_result()->fetch_assoc();$stmt->close();
+    if(!$user){$db->close();cpv2Flash('error','Customer was not found.');cpv2Go('/support-control-panel/customers/');}
+    $operator=trim((string)($_SESSION['user_email']??'operator@velmora'));
+    $status='Restricted';
+    $stmt=$db->prepare("UPDATE users SET user_status=?,restriction_reason=?,restricted_by=?,restricted_at=NOW() WHERE id=?");
+    $stmt->bind_param('sssi',$status,$reason,$operator,$id);$stmt->execute();$stmt->close();
+    recordSecurityEvent($db,(string)$user['email'],'Customer Access Restricted','Customer access restricted by '.$operator.'. Reason: '.$reason);
+    $sender=getSecurityNoticeSender();
+    $subject='Account Access Restricted - Velmora Bank';
+    $intro='<p style="margin:0;">Dear '.htmlspecialchars((string)$user['name'],ENT_QUOTES,'UTF-8').', access to your Velmora customer profile has been restricted while the bank reviews an account matter.</p>';
+    $details='<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;">'
+        .'<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Status</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">Restricted Access</td></tr>'
+        .'<tr><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;">Reason</td><td style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;font-weight:700;">'.htmlspecialchars($reason,ENT_QUOTES,'UTF-8').'</td></tr>'
+        .'<tr><td style="padding:12px 16px;">What to do</td><td style="padding:12px 16px;text-align:right;font-weight:700;">Contact Velmora Bank Support if you need assistance or additional information.</td></tr>'
+        .'</table>';
+    $body=renderControlPanelBankEmail($subject,'Account Access Restricted',$intro,$details);
+    if(!sendSiteEmail((string)$user['email'],$subject,$body,(string)$sender['email'],(string)$sender['name'])){
+        error_log('Failed to send customer restriction notice to '.(string)$user['email']);
+    }
+    $db->close();
+    cpv2Flash('success','Customer access restricted. Active customer access will terminate on the next authenticated request.');
+    cpv2Go('/support-control-panel/customers/detail/?id='.$id);
+}
+
+if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_restore_customer'])){
+    cpv2Verify();
+    $id=(int)($_POST['customer_id']??0);
+    if($id<=0){cpv2Flash('error','Invalid customer.');cpv2Go('/support-control-panel/customers/');}
+    $db=connectToDatabase();
+    $stmt=$db->prepare("SELECT name,email,user_status FROM users WHERE id=? LIMIT 1");
+    $stmt->bind_param('i',$id);$stmt->execute();$user=$stmt->get_result()->fetch_assoc();$stmt->close();
+    if(!$user){$db->close();cpv2Flash('error','Customer was not found.');cpv2Go('/support-control-panel/customers/');}
+    $operator=trim((string)($_SESSION['user_email']??'operator@velmora'));
+    $status='Active';
+    $stmt=$db->prepare("UPDATE users SET user_status=?,restriction_reason=NULL,restricted_by=NULL,restricted_at=NULL WHERE id=?");
+    $stmt->bind_param('si',$status,$id);$stmt->execute();$stmt->close();
+    recordSecurityEvent($db,(string)$user['email'],'Customer Access Restored','Customer access restored by '.$operator.'.');
+    $sender=getSecurityNoticeSender();
+    $subject='Account Access Restored - Velmora Bank';
+    $intro='<p style="margin:0;">Dear '.htmlspecialchars((string)$user['name'],ENT_QUOTES,'UTF-8').', access to your Velmora customer profile has been restored.</p>';
+    $details='<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #e2e8f2;border-radius:8px;background:#ffffff;"><tr><td style="padding:12px 16px;">Status</td><td style="padding:12px 16px;text-align:right;font-weight:700;">Active</td></tr></table>';
+    $body=renderControlPanelBankEmail($subject,'Account Access Restored',$intro,$details);
+    sendSiteEmail((string)$user['email'],$subject,$body,(string)$sender['email'],(string)$sender['name']);
+    $db->close();cpv2Flash('success','Customer access restored.');cpv2Go('/support-control-panel/customers/detail/?id='.$id);
+}
+
 if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['cpv2_customer_status'])){
     cpv2Verify();$id=(int)($_POST['customer_id']??0);$status=(string)($_POST['status']??'');
     if($id<=0||!in_array($status,['Active','Suspended'],true)){cpv2Flash('error','Invalid customer status.');cpv2Go('/support-control-panel/customers/');}
