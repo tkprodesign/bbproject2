@@ -28,3 +28,9 @@ This log records changes to shared functionality across the Support, Admin and M
 - Removed customer-specific demo seeding from the production dashboard path.
 - Canonicalized retired v2/review routes.
 - Added live deployment smoke checks for public review routes and customer-auth schema.
+
+
+### Customer-specific code cleanup — management review
+- Removed the remaining Craig-specific migration rule from `create_tables.php`.
+- Confirmed the active migration, customer dashboard, login bootstrap and shared application bootstrap contain no Jennifer/Craig/Skyline customer-specific exceptions.
+- No customer or transaction records were mass-deleted; cleanup was limited to removing special-case application behavior.
