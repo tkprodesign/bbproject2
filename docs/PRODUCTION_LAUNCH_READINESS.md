@@ -294,3 +294,18 @@ The implementation team must receive or independently verify the authoritative l
 - production support hours and escalation channels.
 
 Until those are supplied and verified, the affected pages remain launch blockers or should be removed from launch navigation.
+
+
+### 2026-10-01 — Customer investigation restriction workflow
+
+Added a common customer-access restriction workflow to Support, Admin and Master control panels.
+
+- Mandatory restriction reason.
+- Staff operator and timestamp recorded.
+- Security-event audit entry recorded.
+- Restricted customers are blocked from sign-in.
+- Existing customer access is terminated on the next authenticated request.
+- Login shows a brief customer-readable restriction notice and directs the customer to contact the bank.
+- Customer financial records remain intact.
+- Preferred security-notice sender is `security@velmorabank.us`.
+- **Launch task:** provision the `security@velmorabank.us` SpaceMail mailbox/alias and `SECURITY_EMAIL_PASSWORD`. Until then, notices fall back to Support.
